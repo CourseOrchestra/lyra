@@ -1,7 +1,35 @@
 = Lyra Grid
 :toc: left
 
-Class diagram:
+== Introduction
+
+The aim is to develop a backend for the lyra grid. This should be a .jar file
+available on Maven Central, so one can easily integrate it in their project using any modern build tool.
+
+This .jar should provide all the needed RESTful services for Lyra Grid UI (client side written in Javascript).
+
+We are going to use:
+
+* Spring Boot
+
+* https://github.com/CourseOrchestra/spring-boot-starter-celesta[Celesta Spring Boot Starter]
+
+As a prototype, and for your reference as a working example example of RESTful Celesta services, you can use the following project: https://github.com/inponomarev/celesta-demo
+
+
+For `GridDriver` usage, please refer this project: https://github.com/inponomarev/lyragrid-demo
+
+== What's Already Done
+
+* All the needed dependencies are already included into the POM file.
+
+* Also, I copied all the `ru.curs.lyra` classes into this project from Celesta project. These classes should be removed
+from Celesta 7.x.
+
+
+== Main Components
+
+The rough architectural picture can be presented as following:
 
 [plantuml, classes, png]
 ----
@@ -62,3 +90,7 @@ class AccidentsGrid <<@Component>> extends BasicGridForm {
 
 @enduml
 ----
+
+`LyraController` and `LyraService` follow layered architecture paradigm.
+
+`LyraController` provides HTTP request handlers.

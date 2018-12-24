@@ -51,9 +51,36 @@
         <maven.checkstyle.plugin.version>3.0.0</maven.checkstyle.plugin.version>
         <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>3.0.1</maven.javadoc.plugin.version>
+
+        <spring.boot.version>2.0.6.RELEASE</spring.boot.version>
+        <spring.boot.starter.celesta.version>2.0.1</spring.boot.starter.celesta.version>
+        <celesta.version>7.0.9</celesta.version>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.curs</groupId>
+            <artifactId>spring-boot-starter-celesta</artifactId>
+            <version>${spring.boot.starter.celesta.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ru.curs</groupId>
+                    <artifactId>celesta-system-services</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>ru.curs</groupId>
+            <artifactId>celesta-system-services</artifactId>
+            <version>${celesta.version}</version>
+        </dependency>
+
         <!--For Test-->
         <dependency>
             <groupId>org.junit.platform</groupId>
@@ -70,6 +97,12 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
