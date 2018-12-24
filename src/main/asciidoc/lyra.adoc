@@ -3,7 +3,7 @@
 
 == Introduction
 
-The aim is to develop a backend for the lyra grid. This should be a .jar file
+The aim is to develop a back end for the lyra grid. This should be a .jar file
 available on Maven Central, so one can easily integrate it in their project using any modern build tool.
 
 This .jar should provide all the needed RESTful services for Lyra Grid UI (client side written in Javascript).
