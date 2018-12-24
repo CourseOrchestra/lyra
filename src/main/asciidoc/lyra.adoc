@@ -1,0 +1,64 @@
+= Lyra Grid
+:toc: left
+
+Class diagram:
+
+[plantuml, classes, png]
+----
+@startuml
+package ru.curs.lyra {
+
+class LyraService <<@Component>> {
+
+ + LyraService(@Autowired celesta: Celesta)
+
+ + @CelestaTransaction getRows(...)
+
+}
+
+class LyraController {
+
+ + LyraController(@Autowired lyra: LyraService)
+
+ + @GetMapping("...") getColumns(FormName: String)
+ + @GetMapping("...") getRows(FormName: String, rowNum: int)
+ + ...()
+
+}
+
+
+abstract class BasicGridForm {
+
+
+}
+
+LyraService --* LyraController
+LyraService "1"--"*" BasicGridForm
+
+annotation FormField
+
+}
+
+
+package ru.curs.melbet {
+
+class BetsGrid <<@Component>> extends BasicGridForm {
+
+  + BetsGrid(@Autowired lyra: LyraService)
+
+  + @FormField getSmth()
+
+}
+
+}
+
+package ru.curs.iasbp {
+
+class AccidentsGrid <<@Component>> extends BasicGridForm {
+
+  + AccidentsGrid(@Autowired lyra: LyraService)
+
+}
+
+@enduml
+----
