@@ -43,7 +43,6 @@
         <junit.version>5.3.1</junit.version>
 
         <mockito.version>2.10.0</mockito.version>
-        <poi.version>3.17</poi.version>
         <xmlgraphics.version>2.1</xmlgraphics.version>
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
@@ -55,27 +54,6 @@
     </properties>
 
     <dependencies>
-        <!--Apache POI-->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>${poi.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>${poi.version}</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!--Apache xml-->
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>fop</artifactId>
-            <version>${xmlgraphics.version}</version>
-        </dependency>
-
         <!--For Test-->
         <dependency>
             <groupId>org.junit.platform</groupId>
