@@ -54,7 +54,7 @@
 
         <spring.boot.version>2.0.6.RELEASE</spring.boot.version>
         <spring.boot.starter.celesta.version>2.0.1</spring.boot.starter.celesta.version>
-        <celesta.version>7.0.9</celesta.version>
+        <celesta.version>7.0.14</celesta.version>
     </properties>
 
     <dependencies>
@@ -82,6 +82,12 @@
         </dependency>
 
         <!--For Test-->
+        <dependency>
+            <groupId>ru.curs</groupId>
+            <artifactId>celesta-unit</artifactId>
+            <version>${celesta.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-engine</artifactId>

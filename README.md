@@ -1,6 +1,6 @@
 # Lyra
 
-[![Build Status](https://ci.corchestra.ru/buildStatus/icon?job=lyra/dev)](https://ci.corchestra.ru/job/lyra/job/dev/)
+[![Build Status](https://ci.corchestra.ru/buildStatus/icon?job=lyra/master)](https://ci.corchestra.ru/job/lyra/job/master/)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/ru.curs/lyra/badge.svg)](https://maven-badges.herokuapp.com/maven-central/ru.curs/lyra)
 
 Lyra Grid backend
