@@ -13,7 +13,7 @@ import ru.curs.celesta.dbutils.Cursor;
 /**
  * Base Java class for Lyra card form.
  */
-public abstract class BasicCardForm extends BasicLyraForm {
+public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm<T> {
 
     private static final String UTF_8 = "utf-8";
     private LyraFormData lfd;
@@ -71,7 +71,7 @@ public abstract class BasicCardForm extends BasicLyraForm {
      */
     public synchronized String move(String cmd, String data) {
         try {
-            BasicCursor rec = rec();
+            T rec = rec();
             if (rec instanceof Cursor) {
                 Cursor c = (Cursor) rec;
                 ByteArrayInputStream dataIS = new ByteArrayInputStream(data.getBytes(UTF_8));
@@ -151,6 +151,6 @@ public abstract class BasicCardForm extends BasicLyraForm {
      * methods meant to be protected are called starting from underscore.
      */
 
-    public abstract void _afterReceiving(BasicCursor c);
+    public abstract void _afterReceiving(Cursor c);
     // CHECKSTYLE:ON
 }

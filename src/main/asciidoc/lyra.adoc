@@ -1,7 +1,9 @@
 = Lyra Grid
 :toc: left
 
-== Introduction
+== Tasks
+
+=== Introduction
 
 The aim is to develop a back end for the lyra grid. This should be a .jar file
 available on Maven Central, so one can easily integrate it in their project using any modern build tool. This .jar should provide all the needed RESTful services for Lyra Grid UI (client side written in Javascript).
@@ -17,7 +19,7 @@ As a prototype, and for your reference as a working example example of RESTful C
 
 For `GridDriver` usage, please refer this project: https://github.com/inponomarev/lyragrid-demo
 
-== What's Already Done
+=== What's Already Done
 
 * All the needed dependencies are already included into the POM file.
 
@@ -25,7 +27,7 @@ For `GridDriver` usage, please refer this project: https://github.com/inponomare
 from Celesta 7.x.
 
 
-== Main Components
+=== Main Components
 
 The rough architectural picture can be presented as following:
 
@@ -93,7 +95,7 @@ class AccidentsGrid <<@Component>> extends BasicGridForm {
 
 `LyraController` provides HTTP request handlers.
 
-== To Do
+=== To Do
 
 1. Parameterize `BasicForm` class with `C extends BasicCursor`.
 2. Implement `@Form` and `@FormField` annotations to support setting of Form and Field attributes.
@@ -284,13 +286,8 @@ Each form has a set of attributes that can be defined using optional named param
 === Field Attributes
 Each form field (`LyraFormField` class instance) has a set of following attributes: 
 
-* `type` — data type. Can be one of the following:
-** INT,
-** REAL,
-** VARCHAR,
-** BIT ("checkbox" element is used to represent this data type),
-** DATETIME ("calendar" element is used to represent this data type).
-* `caption` — visible caption of the field.
+
+* `caption` — 'human-readable' caption of the field.
 * `editable` — set to `false`, is the field needs to be read-only.
 * `visible` — set to `false`, if the field needs to be hidden from form.
 * `required` — required field. *Warning*: bound fields related to `not null` table fields will be always treated as required, regardless of the value of `required` property.
@@ -371,84 +368,46 @@ If multiple values of the same property are defined in different places, they ge
 Below is a UML diagram of Lyra’s Java classes:
 
 
-image::images/Lyra.png[]
+image::Lyra.png[]
 
 TODO: redraw this diagram in PlantUML
 
 
 ==== Implementation Example with Comments
 
-TODO: translate this code to Java, translate comments to English
-
-[source,python]
+[source,java]
 ----
-# coding=UTF-8
+@LyraForm(gridWidth = 100, gridHeight = 10)
+public class TestForm extends BasicGridForm<OrderLineCursor> {
 
-#импорт базового класса формы
-from lyra.cardForm import CardForm
-#импорт декораторов @form и @formfield
-from lyra.basicForm import form
-from lyra.basicForm import formfield
-#импорт класса курсора
-from _testgrain_orm import testCursor
+    //Constructor will be run only once: each form is a Spring's singleton Component
+    public TestForm(CallContext c) {
+        super(c);
+        //First, we add to the form all the table's fields in the order they declared in SQL
+        createAllBoundFields();
 
+        //Add a field to the form and then alter its caption
+        LyraFormField f = createField("field2");
+        f.setCaption("Unbound field caption");
 
-#декоратор @form ОБЯЗАТЕЛЕН
-#класс формы наследуется либо от lyra.cardForm.CardForm, либо от lyra.gridForm.GridForm
-@form()
-class TestForm(CardForm):
-    #конструктор формы вызывается один раз в рамках пользовательской сессии при первом отображении формы
-    #при последующих обращениях к форме в рамках пользовательской сессии объект формы используется повторно,
-    #переменные объекта сохраняются в оперативной памяти сервера
-    def __init__(self, context):
-        #вызов унаследованного конструктора ОБЯЗАТЕЛЕН
-        super(TestForm, self).__init__(context)
+        //Add a field to a form with default attributes (inherited from CelestaDoc or chosen by default)
+        createField("field1");
+    }
 
-        #здесь могут быть определены переменные формы и произведены иные действия, требуемые для инициализации
-        self.f1 = 0
-        self.f2 = 1
+    @Override
+    public OrderLineCursor _getCursor(CallContext callContext) {
+        //sorting and filtering can also be performed here
+        return new OrderLineCursor(callContext);
+    }
 
-        #вызов этого метода приведёт к получению формой ВСЕХ полей курсора в том порядке, в котором они определены в SQL
-        #self.createAllBoundFields()
+    @FormField(caption = "Field Caption")
+    public String getField1(CallContext ctx) {
+        return "foo";
+    }
+    
+    public void _beforeSending(OrderLineCursor c){
+        //do something before the cursor is serialized and sent to the form
+    }
 
-        #вместо этого мы явно указываем, какие связанные поля будут входить в форму, переопределяя, по необходимости, их атрибуты и порядок следования
-        f=self.createField('field2')
-        f.setCaption('Подпись первого поля')
-        f.setEditable(True)
-
-        #значение createField в этот раз мы не обрабатываем, поэтому останутся значения из CelestaDoc или по умолчанию.
-        self.createField('field1')
-
-    #метод получения объекта курсора
-    def _getCursor(self, context):
-        #здесь может быть выполнена сортировка и фильтрация в соответствии с заданными программно или пользователем ограничениями
-        return testCursor(context)
-
-    #Метод чтения значения поля объявляется декоратором @formfield с опциональным указанием параметров
-    @formfield(celestatype='INT',
-               caption='Поле 1',
-               visible=True)
-    def ff1(self):
-        return self.f1
-
-    #Метод записи значения поля.
-    @ff1.setter
-    def ff1(self, value):
-        self.f1 = value
-
-    @formfield(celestatype='INT',
-               caption='Поле 2')
-    def ff2(self):
-        return self.f2
-
-    #Метод, вызываемый после десериализации принятых от формы данных
-    #Параметр c содержит курсор
-    def _afterReceiving(self, c):
-        self.f2 = self.f1 * self.f1
-
-    #Метод, вызываемый перед сериализацией и передачей данных на форму
-    #Параметр c содержит курсор
-    def _beforeSending(self, c):
-        pass
-
+}
 ----

@@ -9,7 +9,7 @@ import ru.curs.lyra.grid.GridDriver;
 /**
  * Base Java class for Lyra grid form.
  */
-public abstract class BasicGridForm extends BasicLyraForm {
+public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm<T> {
 
     private GridDriver gd;
     private final LinkedList<BasicCursor> savedPositions = new LinkedList<>();

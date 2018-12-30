@@ -92,7 +92,7 @@ public class TestLyraForm {
         }
 
         Table t = g.getElement("table1", Table.class);
-        BasicLyraForm blf = new BasicLyraForm(t) {
+        BasicLyraForm<BasicCursor> blf = new BasicLyraForm<BasicCursor>(t) {
 
             {
                 createAllBoundFields();

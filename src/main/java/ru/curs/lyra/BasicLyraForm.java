@@ -15,7 +15,7 @@ import ru.curs.celesta.score.*;
  * Base Java class for Lyra forms. Two classes inherited from this one are
  * BasicCardForm and BasicGridForm.
  */
-public abstract class BasicLyraForm {
+public abstract class BasicLyraForm<T extends BasicCursor> {
     private final DataGrainElement meta;
     private final LyraNamedElementHolder<LyraFormField> fieldsMeta = new LyraNamedElementHolder<LyraFormField>() {
         private static final long serialVersionUID = 1L;
@@ -26,7 +26,7 @@ public abstract class BasicLyraForm {
         }
     };
 
-    private BasicCursor rec;
+    private T rec;
     private CallContext context;
 
     public BasicLyraForm(CallContext context) {
@@ -156,7 +156,7 @@ public abstract class BasicLyraForm {
      */
     // NB: never make this public, since we don't always have a correct
     // CallContext here!
-    protected synchronized BasicCursor rec() {
+    protected synchronized T rec() {
         if (rec == null) {
             if (context != null) {
                 rec = _getCursor(context);
@@ -164,7 +164,7 @@ public abstract class BasicLyraForm {
             }
         } else {
             if (rec.isClosed()) {
-                BasicCursor rec2 = _getCursor(context);
+                T rec2 = _getCursor(context);
                 rec2.copyFieldsFrom(rec);
                 rec = rec2;
                 rec.navigate("=>+");
@@ -218,7 +218,7 @@ public abstract class BasicLyraForm {
     /**
      * Should return an active filtered and sorted cursor.
      */
-    public abstract BasicCursor _getCursor(CallContext context);
+    public abstract T _getCursor(CallContext context);
 
     /**
      * Should return the form's fully qualified Python class name.
