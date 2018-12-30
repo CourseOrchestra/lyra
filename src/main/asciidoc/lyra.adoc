@@ -4,9 +4,7 @@
 == Introduction
 
 The aim is to develop a back end for the lyra grid. This should be a .jar file
-available on Maven Central, so one can easily integrate it in their project using any modern build tool.
-
-This .jar should provide all the needed RESTful services for Lyra Grid UI (client side written in Javascript).
+available on Maven Central, so one can easily integrate it in their project using any modern build tool. This .jar should provide all the needed RESTful services for Lyra Grid UI (client side written in Javascript).
 
 We are going to use:
 
@@ -94,6 +92,15 @@ class AccidentsGrid <<@Component>> extends BasicGridForm {
 `LyraController` and `LyraService` follow layered architecture paradigm.
 
 `LyraController` provides HTTP request handlers.
+
+== To Do
+
+1. Parameterize `BasicForm` class with `C extends BasicCursor`.
+2. Implement `@Form` and `@FormField` annotations to support setting of Form and Field attributes.
+3. Implement `getFormProperties`, `_createUnboundField`, `_createAllUnboundFields` in `BasicLyraForm`, using annotations.
+4. Implement `LyraService`. Implement mechanics of auto-registration of forms in `LyraService`'s internal `Map<String,BasicForm>`, where keys are class names and values are form instances.
+5. Implement `LyraController` according to front-end's needs.
+6. Build the lyra-demo project 
 
 == Lyra User Guide
 
@@ -245,37 +252,36 @@ When writing a form constructor, the developer can choose one of the strategies 
 
 |====
 
-WARNING: Note that just as in the table the column name must be unique, within the form the field name must also be unique. Therefore, rerunning the  `createAllBoundFields()` method, as well as double calling the `createField(name)` method for the same field will lead to an error. An error will result in creating an unbound field, with a name coinciding with a table field added to the form.
+WARNING: Note that field names within a form must be unique, just as field names in a table. Therefore, rerunning the  `createAllBoundFields()` method, as well as double calling the `createField(name)` method for the same field will lead to an error. Also creating an unbound field with a name coinciding with a table field added to the form will result in error.
 
-==== _afterReceiving(...) and _beforeSending(...) methods
+==== _afterReceiving(...) and _beforeSending(...) Methods
 
-Класс формы также может и должен содержать бизнес-логику, выполняющую определённые действия при изменении значений, вводимых пользователем в форму.
+A form class may and should also contain business logic that performs certain actions when changing values entered by a user into a form.
 
-Основными точками входа в бизнес-логику являются переопределяемые разработчиком решения методы
+The main entry points to business logic are redefinable by the  developer.
 
-[source,java]
+[source, java]
 ----
-void _afterReceiving(CallContext c)
+void _afterReceiving (BasicCursor c)
 
-void _beforeSending(CallContext c)
+void _beforeSending (BasicCursor c)
 ----
 
-Метод `_afterReceiving(self, c`) вызывается после получения данных формы с клиента, но перед тем, как данные будут сброшены в базу данных. Таким образом, если в нём поменять поля курсора, то в базу попадут изменённые значения. В аргументе c содержится курсор с полями, пришедшими из формы.
+The `_afterReceiving (BasicCursor c)` method is called after receiving form data from the client, but before the data is flushed to the database. Thus, if you change the cursor fields in it, then the changed values will be transfered into the database. The argument `c` contains a cursor with fields that come from the form.
 
-Метод `_beforeSending(self, c)` вызывается перед отправкой данных на сериализацию и в форму. Таким образом, если в нём поменять поля, на форме отобразятся изменённые значения. В аргументе c содержится курсор с полями, пришедшими из базы данных.
+The `_beforeSending (BasicCursor c)` method is called before sending data for serialization and to a form. Thus, if you change the fields in it, the modified values will be displayed on the form. The argument c contains a cursor with fields that come from the database.
 
-Бизнес-логика может содержаться также в getter-ах и setter-ах свободных полей.
+Business logic can also be contained in getters and setters of unbound fields.
 
-Поля объекта формы сохраняются в пределах одной пользовательской сессии, т. е. для каждой пользовательской сессии создаётся свой объект-форма.
 
-==== Метод _beforeShow(...)
+==== _beforeShow(...) Method
 Метод вызывается перед тем, как форма отображается пользователю. В данном методе могут быть произведены подготовительные действия — например, курсор может быть спозиционирован на нужную запись.
 
-==== Метод get_properties_()
+==== get_properties_() Method
 
 Для работы с гридом в Showcase необходимо иметь служебное поле _properties_, не отображаемое пользователю, а содержащее служебные данные Showcase. Метод `get_properties_(self)` является способом лёгкого определения данного столбца: достаточно определить данный метод в классе формы, и соответствующее поле в форму будет добавлено.
 
-==== Атрибуты формы
+==== Form Attributes
 Каждая форма характеризуется набором атрибутов, передаваемых через необязательные именованные параметры декоратора @form:
 
 * `profile`  — grid.properties файл.
@@ -283,7 +289,7 @@ void _beforeSending(CallContext c)
 * `gridheight` — высота грида (в пикселах)
 * `defaultaction`  — действие по умолчанию (см. справку по Showcase)
 
-==== Атрибуты полей
+==== Field Attributes
 Каждое поле формы (экземпляр класса LyraFormField) характеризуется набором атрибутов:
 
 * `type` — тип данных. Одно из значений:
@@ -300,7 +306,7 @@ void _beforeSending(CallContext c)
 * `width` — ширина поля для отображения (в пикселях).
 * `assist` — процедура, отвечающая за отображение формы-помощника выбора значения в поле.
 
-==== Способы задания свойств полей
+==== Methods of Setting Field Attributes
 Итак, свойства полей форм в Lyra могут быть заданы:
 * В *design-time*:
 ** для связанных полей в CelestaDoc на полях таблиц,
@@ -375,14 +381,14 @@ WARNING: Задание атрибутов поля в CelestaDoc удобно �
 
 
 
-=== Реализация Lyra-форм
+=== Lyra Forms Implementation
 Ниже представлена UML-диаграмма Java-классов системы Lyra:
 
 image::images/Lyra.png[]
 
 От Java-класса BasicGridForm наследуется Python-класс lyra.gridForm.GridForm, от BasicCardForm — lyra.cardForm.CardForm.
 
-==== Пример реализации класса формы с комментариями
+==== Implementation Case Study with Comments
 
 [source,python]
 ----

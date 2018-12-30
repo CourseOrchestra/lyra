@@ -80,6 +80,12 @@
             <artifactId>celesta-system-services</artifactId>
             <version>${celesta.version}</version>
         </dependency>
+        <dependency>
+            <groupId>ru.curs</groupId>
+            <artifactId>celesta-core</artifactId>
+            <version>${celesta.version}</version>
+        </dependency>
+
 
         <!--For Test-->
         <dependency>

@@ -1,4 +1,6 @@
 package ru.curs.lyra;
 
-public class FormField {
+public @interface FormField {
+    String getCaption();
+    int getWidth();
 }
