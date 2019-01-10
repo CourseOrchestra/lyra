@@ -1,12 +1,12 @@
 = Lyra Grid
 :toc: left
 
-== Introduction
+== Tasks
+
+=== Introduction
 
 The aim is to develop a back end for the lyra grid. This should be a .jar file
-available on Maven Central, so one can easily integrate it in their project using any modern build tool.
-
-This .jar should provide all the needed RESTful services for Lyra Grid UI (client side written in Javascript).
+available on Maven Central, so one can easily integrate it in their project using any modern build tool. This .jar should provide all the needed RESTful services for Lyra Grid UI (client side written in Javascript).
 
 We are going to use:
 
@@ -19,7 +19,7 @@ As a prototype, and for your reference as a working example example of RESTful C
 
 For `GridDriver` usage, please refer this project: https://github.com/inponomarev/lyragrid-demo
 
-== What's Already Done
+=== What's Already Done
 
 * All the needed dependencies are already included into the POM file.
 
@@ -27,7 +27,7 @@ For `GridDriver` usage, please refer this project: https://github.com/inponomare
 from Celesta 7.x.
 
 
-== Main Components
+=== Main Components
 
 The rough architectural picture can be presented as following:
 
@@ -95,6 +95,15 @@ class AccidentsGrid <<@Component>> extends BasicGridForm {
 
 `LyraController` provides HTTP request handlers.
 
+=== To Do
+
+1. Parameterize `BasicForm` class with `C extends BasicCursor`.
+2. Implement `@Form` and `@FormField` annotations to support setting of Form and Field attributes.
+3. Implement `getFormProperties`, `_createUnboundField`, `_createAllUnboundFields` in `BasicLyraForm`, using annotations.
+4. Implement `LyraService`. Implement mechanics of auto-registration of forms in `LyraService`'s internal `Map<String,BasicForm>`, where keys are class names and values are form instances.
+5. Implement `LyraController` according to front-end's needs.
+6. Build the lyra-demo project 
+
 == Lyra User Guide
 
 Lyra provides a quick way to develop user interface forms linked to https://courseorchestra.github.io/celesta/#data_accessors_section[Celesta cursors]. Cursors can be filtered and sorted.
@@ -114,7 +123,7 @@ In order to use lyra, one should add the following dependency to their project:
 
 Lyra forms can be of two types: Card and Grid. Each form is defined by a class inherited from the appropriate base class (`lyra.cardForm.CardForm` or `lyra.gridForm.GridForm`). The form itself is set declaratively and is characterized by:
 
-* *https://courseorchestra.github.io/celesta/#data_accessors_section[Cursor]*, to which the form is linked. Each of the Lyra forms must override the `_getCursor (CallContext context)` method, which must return the corresponding Celesta cursor. If necessary, in the same method, filters and sorting can be applied to the cursor.
+* *https://courseorchestra.github.io/celesta/#data_accessors_section[Cursor]*, to which the form is linked. Each of the Lyra forms must override the `_getCursor (CallContext context)` method, which  returns the corresponding Celesta cursor. If necessary, in the same method, filters and sorting can be applied to the cursor.
 * *set of bound and ubound fields* displayed on the form.
 
 
@@ -132,10 +141,10 @@ Fields, as already mentioned, can be of two types:
 When the user edits the bound fields, their new values are written into the fields of the cursor and stored in the database automatically.
 The values of the unbound fields are passed as parameters to the appropriate methods, and Java code executed on the server can use these values.
 
-==== Designing a form from scratch in five steps ===
+==== Designing a Form from Scratch in Five Steps
 To create a Lyra form from scratch, you must follow the following steps:
 
-*Step 1.* Create a class inherited from `BasicCardForm` or `BasicGridForm`, optionally annotated with @Form:
+*Step 1.* Create a class inherited from `BasicCardForm` or `BasicGridForm`, optionally annotated with `@LyraForm`:
 
 [source,java]
 ----
@@ -147,7 +156,7 @@ class TestForm extends BasicCardForm{
 or
 [source,java]
 ----
-@Form(gridwidth="600px",
+@LyraForm(gridwidth="600px",
       gridheight="200px")
 class TestForm extends BasicGridForm{
 ....
@@ -167,7 +176,7 @@ This cursor is going to be the source of the record set for the form:
 ----
 
 
-*Step 3 (optional).* If you need unbounded fields on the form, one must declare them as getters and, optionally, setters, annotated with `@FormField`.
+*Step 3 (optional).* If you need unbounded fields on the form, you should declare them as getters and, optionally, setters, annotated with `@FormField`.
 Getters / setters should follow the Java getter/setter names convention:
 [source,java]
 ----
@@ -183,7 +192,7 @@ Getters / setters should follow the Java getter/setter names convention:
     }
 ----
 
-*Step 3 (optional).* You may use CelestaSQL's CelestaDoc to set the bound field's properties.
+*Step 3 (optional).* You may use CelestaSQL's https://courseorchestra.github.io/celesta/#_celestadoc[CelestaDoc] to set the bound field's properties.
 You may omit this step as well: first, Lyra will choose reasonable default values (e.g. table field name for caption,
 as needed in most cases); second, all the properties definitions can be set in the form's class itself.
 
@@ -204,20 +213,19 @@ attrInt int default 3
 
 *Step 5*. In the form class constructor, define the set and order of form fields  by calling the following methods:
 
-* `LyraFormField createField(String name)` adds a field with the given name to the form and returns an object of type LyraFormField. The name value must match
+* `LyraFormField createField(String name)` adds a field with the given name to the form and returns an object of type `LyraFormField`. The name value must match
 
 ** either one of the column names of the form cursor (this creates a bound field),
 
 ** or with the name of the property of the form class declared with `@FormField` annotation, this creates and unbound field.
 
-_The `LyraFormField` object returned by the `createField` method then can be modified via its properties.
-_
+The `LyraFormField` object returned by the `createField` method afterwards can be modified via its properties.
 
 * `createAllBoundFields()`, which is equivalent to calling the `createField` method for each of the table fields.
 
-* `createAllUnboundFields()`, which is equivalent to calling the createField method for each of the properties of a class declared with `@FormField` annotation.
+* `createAllUnboundFields()`, which is equivalent to calling the `createField` method for each of the properties of a class declared with `@FormField` annotation.
 
-For example, if we want all unbound fields in the form to go first, and then all bound fields, and we are satisfied with the default / `CelestaDoc` / annotation-set field property values, then we can write this:
+For example, if we want all unbound fields in the form to go first, and then all bound fields, and we are satisfied with the default (`CelestaDoc` or annotation-set) field property values, then we can write this:
 
 [source,java]
 ----
@@ -235,224 +243,171 @@ When writing a form constructor, the developer can choose one of the strategies 
 ^.^|Scenario
 ^.^|Form construction strategy
 | There is only one table-based form in the entire application. Or there can be many forms for one table, but on any form you need to display all the fields of the table or view in accordance with the CelestaDoc-specified properties.
-| You should use the `createAllBoundFields ()` method, setting the CelestaDoc for the fields, if necessary. In particular, if no CelestaDoc is specified, a form containing all fields of the table will be constructed, and the names of these fields will be used as captions, which is very convenient for quickly constructing grids. Fields that have `visible = False` at the CelestaDoc level will not be displayed on the form. To add all unbound fields, use the `createAllUnboundFields ()` method.
+| You should use the `createAllBoundFields()` method, setting the CelestaDoc for the fields, if necessary. In particular, if no CelestaDoc is specified, a form containing all fields of the table will be constructed, and the names of these fields will be used as captions, which is very convenient for quick-and-dirty grid construction. Fields that have `visible = False` at the CelestaDoc level will not be displayed on the form. To add all unbound fields, use the `createAllUnboundFields()` method.
 
 | Only a very small quantity of the fields should be displayed on the form, or the form should be made very specific, not paying attention to what is indicated in CelestaDoc.
-| You should use several calls to the `createField (name)` method for each of the fields. If necessary, the properties of objects returned by calls to this method can be changed.
+| You should use several calls to the `createField(name)` method for each of the fields. If necessary, the properties of objects returned by calls to this method can be changed.
 
 | In general, the properties specified in CelestaDoc are fine, but for some of the fields you need to override them.
-| You must first use the `createAllBoundFields ()` method to add all the fields with their properties taken from CelestaDoc, and then, after receiving the metadata for each of the created fields using the `getFieldsMeta (...)` method, alter them via their  properties.
+| You must first use the `createAllBoundFields()` method to add all the fields with their properties taken from CelestaDoc, and then, after receiving the metadata for each of the created fields using the `getFieldsMeta(...)` method, alter them via their  property setters.
 
 |====
 
-WARNING: Note that just as in the table the column name must be unique, within the form the field name must also be unique. Therefore, rerunning the  `createAllBoundFields()` method, as well as double calling the `createField(name)` method for the same field will lead to an error. An error will result in creating an unbound field, with a name coinciding with a table field added to the form.
+WARNING: Note that field names within a form must be unique, just as field names in a table. Therefore, calling the  `createAllBoundFields()` method twice, as well as  calling the `createField(name)` method twice for the same name, will lead to an error. An error will also result in creating an unbound field with a name coinciding with a table field added to the form.
 
-==== _afterReceiving(...) and _beforeSending(...) methods
+==== _afterReceiving(...) and _beforeSending(...) Methods
 
-Класс формы также может и должен содержать бизнес-логику, выполняющую определённые действия при изменении значений, вводимых пользователем в форму.
+A form class may and should also contain business logic that performs certain actions when values are entered by a user into a form. Two main entry points available in each of form classes are 
 
-Основными точками входа в бизнес-логику являются переопределяемые разработчиком решения методы
-
-[source,java]
+[source, java]
 ----
-void _afterReceiving(CallContext c)
+void _afterReceiving (BasicCursor c)
 
-void _beforeSending(CallContext c)
+void _beforeSending (BasicCursor c)
 ----
 
-Метод `_afterReceiving(self, c`) вызывается после получения данных формы с клиента, но перед тем, как данные будут сброшены в базу данных. Таким образом, если в нём поменять поля курсора, то в базу попадут изменённые значения. В аргументе c содержится курсор с полями, пришедшими из формы.
+The `_afterReceiving (BasicCursor c)` method is called after receiving form data from the client, but before the data is flushed to the database. Thus, if you change the cursor fields in it, then the changed values will be transferred into the database. The argument `c` contains a cursor with fields that come from the form.
 
-Метод `_beforeSending(self, c)` вызывается перед отправкой данных на сериализацию и в форму. Таким образом, если в нём поменять поля, на форме отобразятся изменённые значения. В аргументе c содержится курсор с полями, пришедшими из базы данных.
+The `_beforeSending (BasicCursor c)` method is called before serialization of data and sending it to the form. Thus, if you change the fields in it, the modified values will be displayed on the form. The argument `c` contains a cursor with fields that come from the database.
 
-Бизнес-логика может содержаться также в getter-ах и setter-ах свободных полей.
+Business logic can also be contained in getters and setters of unbound fields.
 
-Поля объекта формы сохраняются в пределах одной пользовательской сессии, т. е. для каждой пользовательской сессии создаётся свой объект-форма.
 
-==== Метод _beforeShow(...)
-Метод вызывается перед тем, как форма отображается пользователю. В данном методе могут быть произведены подготовительные действия — например, курсор может быть спозиционирован на нужную запись.
+==== _beforeShow(...) Method
+The method is invoked before the form is displayed to the user. In this method, some preparatory actions can be performed: for example, the cursor can be positioned on the desired record.
 
-==== Метод get_properties_()
+=== Form Attributes
 
-Для работы с гридом в Showcase необходимо иметь служебное поле _properties_, не отображаемое пользователю, а содержащее служебные данные Showcase. Метод `get_properties_(self)` является способом лёгкого определения данного столбца: достаточно определить данный метод в классе формы, и соответствующее поле в форму будет добавлено.
+Each form has a set of attributes that can be defined using optional named parameters of `@LyraForm` annotation:
 
-==== Атрибуты формы
-Каждая форма характеризуется набором атрибутов, передаваемых через необязательные именованные параметры декоратора @form:
-
-* `profile`  — grid.properties файл.
 * `gridwidth` — ширина грида (в пискелах)
 * `gridheight` — высота грида (в пикселах)
-* `defaultaction`  — действие по умолчанию (см. справку по Showcase)
 
-==== Атрибуты полей
-Каждое поле формы (экземпляр класса LyraFormField) характеризуется набором атрибутов:
+=== Field Attributes
+Each form field (`LyraFormField` class instance) has a set of following attributes: 
 
-* `type` — тип данных. Одно из значений:
-** INT  целое значение,
-** REAL числовое значение,
-** VARCHAR строка,
-** BIT битовое поле (используется элемент управления "checkbox"),
-** DATETIME дата (используется элемент управления "календарь").
-* `caption` — подпись. Отображаемая на поле подпись поля.
-* `editable` — признак редактируемости. Если значение равно False, то поле только для чтения.
-* `visible` — признак отображения. Если значение равно False, то поле не отображается на форме.
-* `required` — признак обязательности заполнения. *Внимание*: связанные поля, объявленные в базе как not null, всегда будут иметь признак required. Установка этого признака в false любым методом игнорируется.
-* `scale` — максимальное число десятичных знаков после запятой (актуально для REAL-полей).
-* `width` — ширина поля для отображения (в пикселях).
-* `assist` — процедура, отвечающая за отображение формы-помощника выбора значения в поле.
 
-==== Способы задания свойств полей
-Итак, свойства полей форм в Lyra могут быть заданы:
-* В *design-time*:
-** для связанных полей в CelestaDoc на полях таблиц,
-** для свободных полей в параметрах декоратора `@formfield`.
-* В *run-time*: для любых полей во время выполнения путём изменения свойств объекта LyraFormField, полученного либо при вызове метода `createField(name)`, либо путём извлечения из словаря, возвращаемого методом `getFieldsMeta()`.
+* `caption` — 'human-readable' caption of the field.
+* `editable` — set to `false`, is the field needs to be read-only.
+* `visible` — set to `false`, if the field needs to be hidden from form.
+* `required` — required field. *Warning*: bound fields related to `not null` table fields will be always treated as required, regardless of the value of `required` property.
+* `scale` — maximum decimal point numbers  (for `REAL`-typed fields).
+* `width` — visible width of the field (in pixels).
 
-Чтобы задать атрибуты поля для Lyra в CelestaDoc, необходимо в скрипте CelestaSQL вставить в CelestaDoc объект в формате JSON, например, так:
+==== Methods of Setting Field Attributes
+So, the properties of form fields in Lyra can be set:
+
+* In *design time*:
+** for bound fields in table fields' `CelestaDoc`,
+** for unbound fields by setting the properties of the `@FormField` annotation.
+* In *run time*: for any fields by changing the properties of the `LyraFormField` object, obtained either by calling the `createField(name)` method, or by retrieving from the dictionary returned by the `getFieldsMeta()` method.
+
+To set the field attributes for Lyra in CelestaDoc, you need to insert an object in JSON format into CelestaDoc, for example, like this:
 
 [source,sql]
 ----
 CREATE TABLE table1
 (
-  /** {"caption": "название поля",
+  /** {"caption": "human-readable field name",
        "visible": false}*/
   column1  INT NOT NULL IDENTITY PRIMARY KEY,
-  /** игнорируемый текст {"caption": "название поля с \"кавычками\"",
+  /** игнорируемый текст {"caption": "field name with \"quoted\" words",
        "editable": false,
-       "visible": true} игнорируемый текст*/
+       "visible": true} this text will be ignored*/
   column2  REAL,
   column3 BIT NOT NULL DEFAULT 'FALSE'
  );
 ----
 
-WARNING: Задание атрибутов поля в CelestaDoc удобно тем, что атрибут, заданный в одном месте (в скрипте CelestaSQL) будет по умолчанию использоваться во всех формах, использующих соответствующую таблицу в качестве источника данных. При этом в каждой конкретной форме всегда можно переопределить атрибуты во время выполнения. Если же форма, использующая таблицу, всего одна, то правильным подходом является задание соответствующих атрибутов полей прямо в CelestaDoc. Обратите внимание, что система автоматически выделяет из текста CelestaDoc *первый встречающийся JSON-объект*, проигнорировав остальное текстовое содержимое, которое также может присутствовать там для других целей.
+WARNING: Setting the field attributes in CelestaDoc is convenient because the attribute specified in one place (i. e. in the CelestaSQL script) will be used by default in all forms that use the corresponding table as a data source. If needed, in each specific form, you can always redefine attributes at run time. If the form using the table is only one, then the correct approach is to set the corresponding field attributes directly in CelestaDoc. Note that the system automatically selects from the CelestaDoc *text the first occurring JSON object*, ignoring the rest of the text content that may also be present there for other purposes.
 
-Декоратор `@formfield` добавляется к функциям, возвращающим значения свободных полей, и также имеет следующие параметры:
-* `type` — тип данных поля. Обязательный параметр, т. к. Python не строго типизированный язык и система не может без явного указания определить тип данных свободного поля — а значит, и подходящий тип соответствующего визуального элемента управления на формы.
-* `caption`, `editable`, `visible` и т. д.  — необязательные параметры, соответствующие одноименным атрибутам поля.
+The `@FormField` decorator is added to functions that return the values of unbound fields, and also has parameters `caption`, `editable`,` visible`, etc. These are optional parameters that correspond to the field attributes of the same name.
+
+If multiple values of the same property are defined in different places, they get overwritten in a certain order.
 
 
 [cols="1, 1, 1, options="header"]
 |====
-^.^|Свойство
-^.^|Порядок подстановки значений для свободного поля
-^.^|Порядок подстановки значений для связанного поля
-
-| `type`
-| Обязательный параметр `type` декоратора @formfield.
-| Определяется на основании типа данных поля в таблице.
+^.^|Property
+^.^|Precedence order for unbound fields
+^.^|Precedence order for bound fields
 
 | `caption`
 |
-1. Параметр `caption` декоратора @formfield,
+1.  @FormField annotation's `caption` parameter,
 
-2. если не задано, то название функции-геттера.
+2. if not set, then the getter method name.
 |
-1. Celestadoc поля в таблице (атрибут `caption`),
-2. если не задано, то идентификатор (название) поля в таблице
+1. table field's CelestaDoc (`caption` attribute),
+2. if not set, then the table field's name.
 
 | `editable`
 |
-1. Параметр `editable` декоратора @formfield,
+1. @FormField annotation's `editable` parameter,
 
-2. иначе True.
+2. or else `true`.
 |
-1. Celestadoc поля в таблице (атрибут `editable`),
+1. CelestaDoc's `editable` attribute,
 
-2. если не задано, то True.
+2. if not set, then `true`.
 
 | `visible`
 |
-1. Параметр `visible` декоратора @formfield,
+1.  @FormField annotation's `visible` parameter,
 
-2. если не задано, то True.
+2. if not set, then `true`.
 |
-1. Celestadoc поля в таблице (атрибут `visible`),
+1. table field's CelestaDoc (`visible` attribute),
 
-2. если не задано, то True.
+2. if not set, then `true`.
 
 |====
 
 
+=== Lyra Forms Implementation
+Below is a UML diagram of Lyra’s Java classes:
 
 
-=== Реализация Lyra-форм
-Ниже представлена UML-диаграмма Java-классов системы Lyra:
+image::Lyra.png[]
 
-image::images/Lyra.png[]
+TODO: redraw this diagram in PlantUML
 
-От Java-класса BasicGridForm наследуется Python-класс lyra.gridForm.GridForm, от BasicCardForm — lyra.cardForm.CardForm.
 
-==== Пример реализации класса формы с комментариями
+==== Implementation Example with Comments
 
-[source,python]
+[source,java]
 ----
-# coding=UTF-8
+@LyraForm(gridWidth = 100, gridHeight = 10)
+public class TestForm extends BasicGridForm<OrderLineCursor> {
 
-#импорт базового класса формы
-from lyra.cardForm import CardForm
-#импорт декораторов @form и @formfield
-from lyra.basicForm import form
-from lyra.basicForm import formfield
-#импорт класса курсора
-from _testgrain_orm import testCursor
+    //Constructor will be run only once: each form is a Spring's singleton Component
+    public TestForm(CallContext c) {
+        super(c);
+        //First, we add to the form all the table's fields in the order they declared in SQL
+        createAllBoundFields();
 
+        //Add a field to the form and then alter its caption
+        LyraFormField f = createField("field2");
+        f.setCaption("Unbound field caption");
 
-#декоратор @form ОБЯЗАТЕЛЕН
-#класс формы наследуется либо от lyra.cardForm.CardForm, либо от lyra.gridForm.GridForm
-@form()
-class TestForm(CardForm):
-    #конструктор формы вызывается один раз в рамках пользовательской сессии при первом отображении формы
-    #при последующих обращениях к форме в рамках пользовательской сессии объект формы используется повторно,
-    #переменные объекта сохраняются в оперативной памяти сервера
-    def __init__(self, context):
-        #вызов унаследованного конструктора ОБЯЗАТЕЛЕН
-        super(TestForm, self).__init__(context)
+        //Add a field to a form with default attributes (inherited from CelestaDoc or chosen by default)
+        createField("field1");
+    }
 
-        #здесь могут быть определены переменные формы и произведены иные действия, требуемые для инициализации
-        self.f1 = 0
-        self.f2 = 1
+    @Override
+    public OrderLineCursor _getCursor(CallContext callContext) {
+        //sorting and filtering can also be performed here
+        return new OrderLineCursor(callContext);
+    }
 
-        #вызов этого метода приведёт к получению формой ВСЕХ полей курсора в том порядке, в котором они определены в SQL
-        #self.createAllBoundFields()
+    @FormField(caption = "Field Caption")
+    public String getField1(CallContext ctx) {
+        return "foo";
+    }
+    
+    public void _beforeSending(OrderLineCursor c){
+        //do something before the cursor is serialized and sent to the form
+    }
 
-        #вместо этого мы явно указываем, какие связанные поля будут входить в форму, переопределяя, по необходимости, их атрибуты и порядок следования
-        f=self.createField('field2')
-        f.setCaption('Подпись первого поля')
-        f.setEditable(True)
-
-        #значение createField в этот раз мы не обрабатываем, поэтому останутся значения из CelestaDoc или по умолчанию.
-        self.createField('field1')
-
-    #метод получения объекта курсора
-    def _getCursor(self, context):
-        #здесь может быть выполнена сортировка и фильтрация в соответствии с заданными программно или пользователем ограничениями
-        return testCursor(context)
-
-    #Метод чтения значения поля объявляется декоратором @formfield с опциональным указанием параметров
-    @formfield(celestatype='INT',
-               caption='Поле 1',
-               visible=True)
-    def ff1(self):
-        return self.f1
-
-    #Метод записи значения поля.
-    @ff1.setter
-    def ff1(self, value):
-        self.f1 = value
-
-    @formfield(celestatype='INT',
-               caption='Поле 2')
-    def ff2(self):
-        return self.f2
-
-    #Метод, вызываемый после десериализации принятых от формы данных
-    #Параметр c содержит курсор
-    def _afterReceiving(self, c):
-        self.f2 = self.f1 * self.f1
-
-    #Метод, вызываемый перед сериализацией и передачей данных на форму
-    #Параметр c содержит курсор
-    def _beforeSending(self, c):
-        pass
-
+}
 ----

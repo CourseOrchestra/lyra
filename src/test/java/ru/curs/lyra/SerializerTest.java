@@ -5,22 +5,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import ru.curs.celesta.*;
 import ru.curs.celesta.dbutils.BasicCursor;
+import ru.curs.celesta.dbutils.Cursor;
 import ru.curs.celesta.syscursors.GrainsCursor;
 import ru.curs.celesta.syscursors.TablesCursor;
-import ru.curs.celestaunit.CelestaTest;
 import ru.curs.celestaunit.CelestaUnitExtension;
 
 public class SerializerTest {
@@ -134,16 +131,14 @@ public class SerializerTest {
 
         GrainsCursor c = new GrainsCursor(cc);
 
-        BasicCardForm bcf = new BasicCardForm(
-                cc
-        ) {
+        BasicCardForm<GrainsCursor> bcf = new BasicCardForm<GrainsCursor>(cc) {
             {
                 createAllBoundFields();
                 createField("aab");
             }
 
             @Override
-            public BasicCursor _getCursor(CallContext context) {
+            public GrainsCursor _getCursor(CallContext context) {
                 try {
                     return new GrainsCursor(context);
                 } catch (CelestaException e) {
@@ -187,7 +182,7 @@ public class SerializerTest {
             }
 
             @Override
-            public void _afterReceiving(BasicCursor c) {
+            public void _afterReceiving(Cursor c) {
 
             }
 
