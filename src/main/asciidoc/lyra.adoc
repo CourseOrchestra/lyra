@@ -99,7 +99,7 @@ class AccidentsGrid <<@Component>> extends BasicGridForm {
 
 1. Parameterize `BasicForm` class with `C extends BasicCursor`.
 2. Implement `@Form` and `@FormField` annotations to support setting of Form and Field attributes.
-3. Implement `getFormProperties`, `_createUnboundField`, `_createAllUnboundFields` in `BasicLyraForm`, using annotations.
+3. Implement `getFormProperties`, `createUnboundField`, `createAllUnboundFields` in `BasicLyraForm`, using annotations.
 4. Implement `LyraService`. Implement mechanics of auto-registration of forms in `LyraService`'s internal `Map<String,BasicForm>`, where keys are class names and values are form instances.
 5. Implement `LyraController` according to front-end's needs.
 6. Build the lyra-demo project 
@@ -123,7 +123,7 @@ In order to use lyra, one should add the following dependency to their project:
 
 Lyra forms can be of two types: Card and Grid. Each form is defined by a class inherited from the appropriate base class (`lyra.cardForm.CardForm` or `lyra.gridForm.GridForm`). The form itself is set declaratively and is characterized by:
 
-* *https://courseorchestra.github.io/celesta/#data_accessors_section[Cursor]*, to which the form is linked. Each of the Lyra forms must override the `_getCursor (CallContext context)` method, which  returns the corresponding Celesta cursor. If necessary, in the same method, filters and sorting can be applied to the cursor.
+* *https://courseorchestra.github.io/celesta/#data_accessors_section[Cursor]*, to which the form is linked. Each of the Lyra forms must override the `getCursor (CallContext context)` method, which  returns the corresponding Celesta cursor. If necessary, in the same method, filters and sorting can be applied to the cursor.
 * *set of bound and ubound fields* displayed on the form.
 
 
@@ -255,20 +255,20 @@ When writing a form constructor, the developer can choose one of the strategies 
 
 WARNING: Note that field names within a form must be unique, just as field names in a table. Therefore, calling the  `createAllBoundFields()` method twice, as well as  calling the `createField(name)` method twice for the same name, will lead to an error. An error will also result in creating an unbound field with a name coinciding with a table field added to the form.
 
-==== _afterReceiving(...) and _beforeSending(...) Methods
+==== afterReceiving(...) and beforeSending(...) Methods
 
 A form class may and should also contain business logic that performs certain actions when values are entered by a user into a form. Two main entry points available in each of form classes are 
 
 [source, java]
 ----
-void _afterReceiving (BasicCursor c)
+void afterReceiving (BasicCursor c)
 
-void _beforeSending (BasicCursor c)
+void beforeSending (BasicCursor c)
 ----
 
-The `_afterReceiving (BasicCursor c)` method is called after receiving form data from the client, but before the data is flushed to the database. Thus, if you change the cursor fields in it, then the changed values will be transferred into the database. The argument `c` contains a cursor with fields that come from the form.
+The `afterReceiving (BasicCursor c)` method is called after receiving form data from the client, but before the data is flushed to the database. Thus, if you change the cursor fields in it, then the changed values will be transferred into the database. The argument `c` contains a cursor with fields that come from the form.
 
-The `_beforeSending (BasicCursor c)` method is called before serialization of data and sending it to the form. Thus, if you change the fields in it, the modified values will be displayed on the form. The argument `c` contains a cursor with fields that come from the database.
+The `beforeSending (BasicCursor c)` method is called before serialization of data and sending it to the form. Thus, if you change the fields in it, the modified values will be displayed on the form. The argument `c` contains a cursor with fields that come from the database.
 
 Business logic can also be contained in getters and setters of unbound fields.
 
@@ -395,7 +395,7 @@ public class TestForm extends BasicGridForm<OrderLineCursor> {
     }
 
     @Override
-    public OrderLineCursor _getCursor(CallContext callContext) {
+    public OrderLineCursor getCursor(CallContext callContext) {
         //sorting and filtering can also be performed here
         return new OrderLineCursor(callContext);
     }
@@ -405,7 +405,7 @@ public class TestForm extends BasicGridForm<OrderLineCursor> {
         return "foo";
     }
     
-    public void _beforeSending(OrderLineCursor c){
+    public void beforeSending(OrderLineCursor c){
         //do something before the cursor is serialized and sent to the form
     }
 
