@@ -29,12 +29,15 @@ import java.util.*;
 @Service
 public class LyraService {
 
+    //TODO: What is THIS?
     private static final String STRING_SELECTED_RECORD_IDS_SEPARATOR = "D13&82#9g7";
     private static final String KEYVALUES_SEPARATOR = "_D13k82F9g7_";
     private static final String ADDDATA_COLUMN = "addData" + KEYVALUES_SEPARATOR;
 
     private static final String GRID_WIDTH_DEF_VALUE = "95%";
     private static final String GRID_HEIGHT_DEF_VALUE = "400px";
+    public static final String GRID_WIDTH = "gridWidth";
+    public static final String COMMON = "common";
 
     private Map<String, BasicGridForm<? extends BasicCursor>> forms = new HashMap<>();
 
@@ -50,7 +53,7 @@ public class LyraService {
     }
 
 
-    private <T extends BasicCursor> BasicGridForm<T> getFormInstance(LyraCallContext callContext, String formClass, String instanceId) throws Exception {
+    private <T extends BasicCursor> BasicGridForm<T> getFormInstance(CallContext callContext, String formClass, String instanceId) {
         String dgridId = getDgridId(formClass, instanceId);
         @SuppressWarnings("unchecked")
         BasicGridForm<T> form = (BasicGridForm<T>) forms.computeIfAbsent(dgridId, key -> getBasicGridFormInstance(callContext, formClass, dgridId));
@@ -58,7 +61,7 @@ public class LyraService {
         return form;
     }
 
-    private <T extends BasicCursor> BasicGridForm<T> getBasicGridFormInstance(LyraCallContext callContext, String formClass, String dgridId) throws CelestaException {
+    private <T extends BasicCursor> BasicGridForm<T> getBasicGridFormInstance(CallContext callContext, String formClass, String dgridId) throws CelestaException {
         try {
             Class<?> clazz = Class.forName(formClass);
             Constructor<?> constructor = clazz.getConstructor(CallContext.class);
@@ -78,15 +81,16 @@ public class LyraService {
     }
 
 
+    //TODO: get rid of transaction here. Maybe this requires changing the API for BasicGridForm
     @CelestaTransaction
-    public String getMetadata(LyraCallContext callContext, MetaDataParams params) throws Exception {
+    public JSONObject getMetadata(CallContext callContext, String formClass, String instanceId) {
 
-        BasicGridForm<? extends BasicCursor> basicGridForm = getFormInstance(callContext, params.getFormClass(), params.getInstanceId());
+        BasicGridForm<? extends BasicCursor> basicGridForm = getFormInstance(callContext, formClass, instanceId);
 
         JSONObject metadata = new JSONObject();
 
         JSONObject common = new JSONObject();
-        common.put("gridWidth", Optional.ofNullable(basicGridForm.getFormProperties().getGridwidth()).filter(s -> !s.isEmpty()).orElse(GRID_WIDTH_DEF_VALUE));
+        common.put(GRID_WIDTH, Optional.ofNullable(basicGridForm.getFormProperties().getGridwidth()).filter(s -> !s.isEmpty()).orElse(GRID_WIDTH_DEF_VALUE));
         common.put("gridHeight", Optional.ofNullable(basicGridForm.getFormProperties().getGridheight()).filter(s -> !s.isEmpty()).orElse(GRID_HEIGHT_DEF_VALUE));
         common.put("limit", String.valueOf(basicGridForm.getGridHeight()));
         common.put("totalCount", basicGridForm.getApproxTotalCount());
@@ -118,7 +122,7 @@ public class LyraService {
             common.put("summaryRow", summaryRow);
         }
 
-        metadata.put("common", common);
+        metadata.put(COMMON, common);
 
         List<String> lyraGridAvailableSorting = new ArrayList<>();
         if (basicGridForm.meta() instanceof Table) {
@@ -157,7 +161,7 @@ public class LyraService {
 
         metadata.put("columns", columns);
 
-        return metadata.toString();
+        return metadata;
 
     }
 

@@ -1,0 +1,1 @@
+create schema foo version '1.0';

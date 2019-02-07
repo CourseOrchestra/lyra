@@ -29,7 +29,8 @@ public class LyraController {
 
     @PostMapping("/metadata")
     public String getMetadata(@RequestParam Map<String, String> body) throws Exception {
-
+        //TODO: MetaDataParams should be deserialized automatically
+        //we should smoke some Spring documentation here
         MetaDataParams params = new MetaDataParams();
         params.setContext(body.get("context"));
         params.setFormClass(body.get("formClass"));
@@ -38,7 +39,7 @@ public class LyraController {
         LyraCallContext ctx = new LyraCallContext();
         ctx.setLyraContext(new JSONObject(params.getContext()));
 
-        return srv.getMetadata(ctx, params);
+        return srv.getMetadata(ctx, params.getFormClass(), params.getInstanceId()).toString();
     }
 
 
