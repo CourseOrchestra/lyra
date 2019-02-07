@@ -1,7 +1,9 @@
-package ru.curs.lyra.service;
+package ru.curs.lyra.dto;
 
 
-class LyraGridAddInfo {
+import ru.curs.lyra.service.GridToExcelExportType;
+
+public class LyraGridAddInfo {
 
     private int lyraOldPosition = 0;
     private int dgridOldTotalCount = 0;
@@ -10,35 +12,35 @@ class LyraGridAddInfo {
 
     private boolean needRecreateWebsocket = false;
 
-    int getLyraOldPosition() {
+    public int getLyraOldPosition() {
         return lyraOldPosition;
     }
 
-    void setLyraOldPosition(final int aLyraOldPosition) {
+    public void setLyraOldPosition(final int aLyraOldPosition) {
         lyraOldPosition = aLyraOldPosition;
     }
 
-    int getDgridOldTotalCount() {
+    public int getDgridOldTotalCount() {
         return dgridOldTotalCount;
     }
 
-    void setDgridOldTotalCount(final int aDgridOldTotalCount) {
+    public void setDgridOldTotalCount(final int aDgridOldTotalCount) {
         dgridOldTotalCount = aDgridOldTotalCount;
     }
 
-    GridToExcelExportType getExcelExportType() {
+    public GridToExcelExportType getExcelExportType() {
         return excelExportType;
     }
 
-    void setExcelExportType(final GridToExcelExportType excelExportType) {
+    public void setExcelExportType(final GridToExcelExportType excelExportType) {
         this.excelExportType = excelExportType;
     }
 
-    boolean isNeedRecreateWebsocket() {
+    public boolean isNeedRecreateWebsocket() {
         return needRecreateWebsocket;
     }
 
-    void setNeedRecreateWebsocket(final boolean needRecreateWebsocket) {
+    public void setNeedRecreateWebsocket(final boolean needRecreateWebsocket) {
         this.needRecreateWebsocket = needRecreateWebsocket;
     }
 

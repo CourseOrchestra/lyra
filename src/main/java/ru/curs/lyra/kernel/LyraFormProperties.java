@@ -5,7 +5,11 @@ import java.util.function.Function;
 
 /**
  * Lyra form properties.
+ *
+ * TODO: it is now unclear if we really need 'parent' functionality here
+ * maybe this functionality should be removed
  */
+
 public class LyraFormProperties {
     private Optional<String> gridwidth = Optional.empty();
     private Optional<String> gridheight = Optional.empty();
@@ -43,8 +47,9 @@ public class LyraFormProperties {
      *
      * @param gridwidth grid width in HTML units.
      */
-    public void setGridwidth(String gridwidth) {
+    public LyraFormProperties setGridwidth(String gridwidth) {
         this.gridwidth = Optional.ofNullable(gridwidth);
+        return this;
     }
 
     /**
@@ -59,8 +64,9 @@ public class LyraFormProperties {
      *
      * @param gridheight grid height in pixels.
      */
-    public void setGridheight(String gridheight) {
+    public LyraFormProperties setGridheight(String gridheight) {
         this.gridheight = Optional.ofNullable(gridheight);
+        return this;
     }
 
     /**
@@ -75,8 +81,9 @@ public class LyraFormProperties {
      *
      * @param footer new form's footer.
      */
-    public void setFooter(String footer) {
+    public LyraFormProperties setFooter(String footer) {
         this.footer = Optional.ofNullable(footer);
+        return this;
     }
 
     /**
@@ -93,8 +100,9 @@ public class LyraFormProperties {
      *
      * @param header new form's header.
      */
-    public void setHeader(String header) {
+    public LyraFormProperties setHeader(String header) {
         this.header = Optional.ofNullable(header);
+        return this;
     }
 
 
@@ -102,16 +110,18 @@ public class LyraFormProperties {
         return getValue(visibleColumnsHeader, LyraFormProperties::getVisibleColumnsHeader);
     }
 
-    public void setVisibleColumnsHeader(Boolean visibleColumnsHeader) {
+    public LyraFormProperties setVisibleColumnsHeader(Boolean visibleColumnsHeader) {
         this.visibleColumnsHeader = Optional.ofNullable(visibleColumnsHeader);
+        return this;
     }
 
     public Boolean getAllowTextSelection() {
         return getValue(allowTextSelection, LyraFormProperties::getAllowTextSelection);
     }
 
-    public void setAllowTextSelection(Boolean allowTextSelection) {
+    public LyraFormProperties setAllowTextSelection(Boolean allowTextSelection) {
         this.allowTextSelection = Optional.ofNullable(allowTextSelection);
+        return this;
     }
 
 }

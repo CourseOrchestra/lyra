@@ -43,17 +43,15 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
 
         LyraForm lyraForm = getClass().getAnnotation(LyraForm.class);
         if (lyraForm != null) {
-            lyraFormProperties.setGridwidth(lyraForm.gridWidth());
-            lyraFormProperties.setGridheight(lyraForm.gridHeight());
-            lyraFormProperties.setHeader(lyraForm.gridHeader());
-            lyraFormProperties.setFooter(lyraForm.gridFooter());
-            lyraFormProperties.setVisibleColumnsHeader(lyraForm.visibleColumnsHeader());
-            lyraFormProperties.setAllowTextSelection(lyraForm.allowTextSelection());
+            lyraFormProperties.setGridwidth(lyraForm.gridWidth())
+                    .setGridheight(lyraForm.gridHeight())
+                    .setHeader(lyraForm.gridHeader())
+                    .setFooter(lyraForm.gridFooter())
+                    .setVisibleColumnsHeader(lyraForm.visibleColumnsHeader())
+                    .setAllowTextSelection(lyraForm.allowTextSelection());
         }
 
-
         createUnboundField(fieldsMeta, PROPERTIES);
-
 
         this.context = context;
         rec = getCursor(context);
@@ -268,6 +266,9 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
         LyraFormField f = null;
 
         try {
+            //TODO: use standard way to invoke getter dynamically
+            //(either standard Java Reflection API or Spring Reflection utils)
+            //WRONG!!!
             String getterName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
             Method getter = getClass().getMethod(getterName, CallContext.class);
             UnboundFieldAccessor ufa = new UnboundFieldAccessor(getter, null, this);
@@ -276,21 +277,19 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
 
             FormField formField = getter.getAnnotation(FormField.class);
             if (formField != null) {
-                f.setCaption(formField.caption());
-                f.setVisible(formField.visible());
-                f.setEditable(formField.editable());
-                f.setRequired(formField.required());
-                f.setScale(formField.scale());
-                f.setType(formField.type());
-                f.setLookup(formField.lookup());
-
+                f.setCaption(formField.caption())
+                .setVisible(formField.visible())
+                .setEditable(formField.editable())
+                .setRequired(formField.required())
+                .setScale(formField.scale())
+                .setType(formField.type())
+                .setLookup(formField.lookup())
                 // adding_field's_property
-                f.setCssClassName(formField.cssClassName());
-                f.setCssStyle(formField.cssStyle());
-                f.setDateFormat(formField.dateFormat());
-                f.setDecimalSeparator(formField.decimalSeparator());
-                f.setGroupingSeparator(formField.groupingSeparator());
-
+                .setCssClassName(formField.cssClassName())
+                .setCssStyle(formField.cssStyle())
+                .setDateFormat(formField.dateFormat())
+                .setDecimalSeparator(formField.decimalSeparator())
+                .setGroupingSeparator(formField.groupingSeparator());
             }
 
             ufa.setLyraFieldType(f.getType());

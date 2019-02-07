@@ -71,8 +71,7 @@ public class LyraController {
         responseHeaders.set("Content-Range", "items " + firstIndex + "-"
                 + lastIndex + "/" + totalCount);
 
-        @SuppressWarnings("unchecked")
-        ResponseEntity responseEntity = new ResponseEntity(data, responseHeaders, HttpStatus.OK);
+        ResponseEntity<String> responseEntity = new ResponseEntity<>(data, responseHeaders, HttpStatus.OK);
 
         return responseEntity;
 

@@ -5,11 +5,14 @@ import org.json.JSONObject;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import ru.curs.celesta.CallContext;
+import ru.curs.celesta.CelestaException;
+import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.dbutils.Cursor;
 import ru.curs.celesta.score.Index;
 import ru.curs.celesta.score.Table;
 import ru.curs.celesta.transaction.CelestaTransaction;
 import ru.curs.lyra.dto.DataParams;
+import ru.curs.lyra.dto.LyraGridAddInfo;
 import ru.curs.lyra.dto.MetaDataParams;
 import ru.curs.lyra.dto.ScrollBackParams;
 import ru.curs.lyra.kernel.*;
@@ -33,7 +36,7 @@ public class LyraService {
     private static final String GRID_WIDTH_DEF_VALUE = "95%";
     private static final String GRID_HEIGHT_DEF_VALUE = "400px";
 
-    private Map<String, BasicGridForm> forms = new HashMap<>();
+    private Map<String, BasicGridForm<? extends BasicCursor>> forms = new HashMap<>();
 
     private SimpMessageSendingOperations messagingTemplate;
 
@@ -46,67 +49,56 @@ public class LyraService {
         return formClass + "." + instanceId;
     }
 
-    private BasicGridForm getFormInstance(LyraCallContext callContext, String formClass, String instanceId) throws Exception {
 
+    private <T extends BasicCursor> BasicGridForm<T> getFormInstance(LyraCallContext callContext, String formClass, String instanceId) throws Exception {
         String dgridId = getDgridId(formClass, instanceId);
-        BasicGridForm form = forms.get(dgridId);
+        @SuppressWarnings("unchecked")
+        BasicGridForm<T> form = (BasicGridForm<T>) forms.computeIfAbsent(dgridId, key -> getBasicGridFormInstance(callContext, formClass, dgridId));
+        form.setCallContext(callContext);
+        return form;
+    }
 
-        if (form == null) {
+    private <T extends BasicCursor> BasicGridForm<T> getBasicGridFormInstance(LyraCallContext callContext, String formClass, String dgridId) throws CelestaException {
+        try {
             Class<?> clazz = Class.forName(formClass);
             Constructor<?> constructor = clazz.getConstructor(CallContext.class);
             Object instance = constructor.newInstance(callContext);
-
-            form = (BasicGridForm) instance;
-
+            @SuppressWarnings("unchecked")
+            BasicGridForm<T> form = (BasicGridForm<T>) instance;
             final int maxExactScrollValue = 120;
             form.setMaxExactScrollValue(maxExactScrollValue);
-
-
             LyraGridScrollBack scrollBack = new LyraGridScrollBack(this, dgridId);
             scrollBack.setBasicGridForm(form);
             form.setChangeNotifier(scrollBack);
-
             forms.put(dgridId, form);
-        } else {
-            form.setCallContext(callContext);
             return form;
+        } catch (Exception e) {
+            throw new CelestaException(e);
         }
-
-        return form;
-
     }
 
 
     @CelestaTransaction
     public String getMetadata(LyraCallContext callContext, MetaDataParams params) throws Exception {
 
-        BasicGridForm basicGridForm = getFormInstance(callContext, params.getFormClass(), params.getInstanceId());
+        BasicGridForm<? extends BasicCursor> basicGridForm = getFormInstance(callContext, params.getFormClass(), params.getInstanceId());
 
         JSONObject metadata = new JSONObject();
 
         JSONObject common = new JSONObject();
-
-        common.put("gridWidth", (basicGridForm.getFormProperties().getGridwidth() != null) && (!basicGridForm.getFormProperties().getGridwidth().isEmpty()) ? basicGridForm.getFormProperties().getGridwidth() : GRID_WIDTH_DEF_VALUE);
-        common.put("gridHeight", (basicGridForm.getFormProperties().getGridheight() != null) && (!basicGridForm.getFormProperties().getGridheight().isEmpty()) ? basicGridForm.getFormProperties().getGridheight() : GRID_HEIGHT_DEF_VALUE);
-
+        common.put("gridWidth", Optional.ofNullable(basicGridForm.getFormProperties().getGridwidth()).filter(s -> !s.isEmpty()).orElse(GRID_WIDTH_DEF_VALUE));
+        common.put("gridHeight", Optional.ofNullable(basicGridForm.getFormProperties().getGridheight()).filter(s -> !s.isEmpty()).orElse(GRID_HEIGHT_DEF_VALUE));
         common.put("limit", String.valueOf(basicGridForm.getGridHeight()));
         common.put("totalCount", basicGridForm.getApproxTotalCount());
-
         common.put("selectionModel", "RECORDS");
-
         common.put("isVisibleColumnsHeader", basicGridForm.getFormProperties().getVisibleColumnsHeader());
         common.put("isAllowTextSelection", basicGridForm.getFormProperties().getAllowTextSelection());
-
         common.put("stringSelectedRecordIdsSeparator", STRING_SELECTED_RECORD_IDS_SEPARATOR);
-
-
 /*
         if (gridMetadata.isNeedCreateWebSocket()) {
             common.put("isNeedCreateWebSocket", "true");
         }
 */
-
-
         if (basicGridForm.meta() instanceof Table) {
             Object[] arr = ((Table) basicGridForm.meta()).getPrimaryKey().keySet().toArray();
 
@@ -138,7 +130,6 @@ public class LyraService {
             }
         }
 
-        @SuppressWarnings("unchecked")
         Map<String, LyraFormField> lyraFields = basicGridForm.getFieldsMeta();
 
 
@@ -188,10 +179,9 @@ public class LyraService {
 
 
     @CelestaTransaction
-    @SuppressWarnings("unchecked")
     public String getData(LyraCallContext callContext, DataParams params) throws Exception {
 
-        BasicGridForm basicGridForm = getFormInstance(callContext, params.getFormClass(), params.getInstanceId());
+        BasicGridForm<? extends BasicCursor> basicGridForm = getFormInstance(callContext, params.getFormClass(), params.getInstanceId());
 
 /*
         if (basicGridForm.getChangeNotifier() == null) {

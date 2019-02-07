@@ -8,8 +8,6 @@ import java.util.regex.Pattern;
 /**
  * Lyra named element (field or field value). This class ensures that name is a
  * valid itentifier.
- * <p>
- * This class is valid for RPC use.
  */
 public abstract class LyraNamedElement {
     /**

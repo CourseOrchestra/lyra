@@ -83,16 +83,18 @@ public class LyraFormField extends LyraNamedElement {
         return cssClassName;
     }
 
-    public void setCssClassName(String cssClassName) {
+    public LyraFormField setCssClassName(String cssClassName) {
         this.cssClassName = cssClassName;
+        return this;
     }
 
     public String getCssStyle() {
         return cssStyle;
     }
 
-    public void setCssStyle(String cssStyle) {
+    public LyraFormField setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
+        return this;
     }
 
     public LyraFormField(String name) {
@@ -117,8 +119,9 @@ public class LyraFormField extends LyraNamedElement {
      *
      * @param type the type to set
      */
-    public void setType(LyraFieldType type) {
+    public LyraFormField setType(LyraFieldType type) {
         this.type = type;
+        return this;
     }
 
     /**
@@ -133,8 +136,9 @@ public class LyraFormField extends LyraNamedElement {
      *
      * @param editable editable property.
      */
-    public void setEditable(boolean editable) {
+    public LyraFormField setEditable(boolean editable) {
         this.editable = editable;
+        return this;
     }
 
     /**
@@ -149,8 +153,9 @@ public class LyraFormField extends LyraNamedElement {
      *
      * @param visible the visible to set
      */
-    public void setVisible(boolean visible) {
+    public LyraFormField setVisible(boolean visible) {
         this.visible = visible;
+        return this;
     }
 
     /**
@@ -165,8 +170,9 @@ public class LyraFormField extends LyraNamedElement {
      *
      * @param caption the caption to set
      */
-    public void setCaption(String caption) {
+    public LyraFormField setCaption(String caption) {
         this.caption = caption;
+        return this;
     }
 
     /**
@@ -181,8 +187,11 @@ public class LyraFormField extends LyraNamedElement {
      *
      * @param lookup the lookup procedure to set
      */
-    public void setLookup(String lookup) {
+    public LyraFormField setLookup(String lookup) {
         this.lookup = lookup;
+
+        return this;
+
     }
 
     /**
@@ -204,8 +213,10 @@ public class LyraFormField extends LyraNamedElement {
      *
      * @param scale new value.
      */
-    public void setScale(int scale) {
+    public LyraFormField setScale(int scale) {
         this.scale = scale;
+        return this;
+
     }
 
     /**
@@ -220,32 +231,36 @@ public class LyraFormField extends LyraNamedElement {
      *
      * @param required new value
      */
-    public void setRequired(boolean required) {
+    public LyraFormField setRequired(boolean required) {
         this.required = required;
+        return this;
     }
 
     public int getDateFormat() {
         return dateFormat;
     }
 
-    public void setDateFormat(int dateFormat) {
+    public LyraFormField setDateFormat(int dateFormat) {
         this.dateFormat = dateFormat;
+        return this;
     }
 
     public String getDecimalSeparator() {
         return decimalSeparator;
     }
 
-    public void setDecimalSeparator(String decimalSeparator) {
+    public LyraFormField setDecimalSeparator(String decimalSeparator) {
         this.decimalSeparator = decimalSeparator;
+        return this;
     }
 
     public String getGroupingSeparator() {
         return groupingSeparator;
     }
 
-    public void setGroupingSeparator(String groupingSeparator) {
+    public LyraFormField setGroupingSeparator(String groupingSeparator) {
         this.groupingSeparator = groupingSeparator;
+        return this;
     }
 
 }

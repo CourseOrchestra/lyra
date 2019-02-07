@@ -1,5 +1,6 @@
 package ru.curs.lyra.service;
 
+import ru.curs.lyra.dto.LyraGridAddInfo;
 import ru.curs.lyra.dto.ScrollBackParams;
 import ru.curs.lyra.kernel.BasicGridForm;
 
