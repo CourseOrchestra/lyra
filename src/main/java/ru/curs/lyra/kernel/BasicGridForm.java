@@ -202,6 +202,14 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
     }
 
     /**
+     * If the grid is scrolled less than for given amount of records, the exact
+     * positioning in cycle will be used instead of interpolation.
+     */
+    public int getMaxExactScrollValue(){
+        return gd.getMaxExactScrollValue();
+    }
+
+    /**
      * Returns (approximate) total record count.
      * <p>
      * Just after creation of the form this method returns DEFAULT_COUNT value,

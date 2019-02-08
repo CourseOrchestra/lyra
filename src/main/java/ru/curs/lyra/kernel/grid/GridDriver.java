@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  */
 public final class GridDriver {
 
-    private static final int DEFAULT_SMALL_SCROLL = 11;
+    public static final int DEFAULT_SMALL_SCROLL = 120;
 
     /**
      * The default assumption for a records count in a table.

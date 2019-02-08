@@ -53,8 +53,6 @@ public class FormFactory {
                 instance = constructor.newInstance(callContext);
             }
             BasicGridForm<? extends BasicCursor> form = (BasicGridForm<?>) instance;
-            final int maxExactScrollValue = 120;
-            form.setMaxExactScrollValue(maxExactScrollValue);
             LyraGridScrollBack scrollBack = new LyraGridScrollBack(srv, parameters.getDgridId());
             scrollBack.setBasicGridForm(form);
             form.setChangeNotifier(scrollBack);

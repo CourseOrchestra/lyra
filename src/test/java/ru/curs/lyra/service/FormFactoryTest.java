@@ -7,6 +7,7 @@ import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celestaunit.CelestaUnitExtension;
 import ru.curs.lyra.kernel.BasicGridForm;
+import ru.curs.lyra.kernel.grid.GridDriver;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ class FormFactoryTest {
 
         FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.TestForm", "foo");
         BasicGridForm<? extends BasicCursor> fooForm = formFactory.getFormInstance(ctx, ip, srv);
+        assertEquals(GridDriver.DEFAULT_SMALL_SCROLL, fooForm.getMaxExactScrollValue());
         assertTrue(fooForm instanceof TestForm);
         BasicGridForm<? extends BasicCursor> fooForm2 = formFactory.getFormInstance(ctx, ip, srv);
         assertSame(fooForm, fooForm2);
