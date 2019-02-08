@@ -150,7 +150,7 @@ public class LyraService {
 
 
     @CelestaTransaction
-    public String getData(CallContext callContext,
+    public Object getData(CallContext callContext,
                           FormInstantiationParameters formInstantiationParameters,
                           DataRetrievalParams dataRetrievalParams) {
         BasicGridForm<? extends BasicCursor> basicGridForm = formFactory.getFormInstance(callContext,
@@ -362,12 +362,11 @@ public class LyraService {
             objAddData.put(ADDDATA_COLUMN, labels);
         }
 
-        String ret = data.toString();
         if ((data.length() == 0) && (objAddData != null)) {
-            ret = objAddData.toString();
+            return objAddData;
+        } else {
+            return data;
         }
-        return ret;
-
     }
 
     private String getStringValueOfDate(LyraFieldValue lyraFieldValue) {

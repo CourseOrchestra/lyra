@@ -1,5 +1,7 @@
 package ru.curs.lyra.service;
 
+import foo.FooCursor;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -23,5 +25,25 @@ class LyraServiceTest {
         JSONObject metadata = srv.getMetadata(ctx, ip);
         System.out.println(metadata.toString());
         assertEquals("95%", metadata.getJSONObject(LyraService.COMMON).get(LyraService.GRID_WIDTH));
+    }
+
+    @Test
+    void getData(CallContext ctx){
+        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.TestParameterizedForm", "foo");
+        DataRetrievalParams drp = new DataRetrievalParams();
+        drp.setLimit(50);
+        FooCursor fooCursor = new FooCursor(ctx);
+        fooCursor.setId(1);
+        fooCursor.setName("Name");
+        fooCursor.insert();
+
+        fooCursor.setId(2);
+        fooCursor.setName("Name 2");
+        fooCursor.insert();
+        JSONArray data = (JSONArray) srv.getData(ctx, ip, drp);
+
+        assertEquals(2, data.length());
+
+        System.out.println(data.get(1));
     }
 }

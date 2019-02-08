@@ -74,7 +74,7 @@ public class LyraController {
                 body.get("instanceId"),
                 clientParams
         );
-        String data = srv.getData(ctx, formInstantiationParameters, params);
+        String data = srv.getData(ctx, formInstantiationParameters, params).toString();
 
 
         HttpHeaders responseHeaders = new HttpHeaders();
