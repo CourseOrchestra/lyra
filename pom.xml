@@ -187,6 +187,28 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>ru.curs</groupId>
+                <artifactId>celesta-maven-plugin</artifactId>
+                <version>${celesta.version}</version>
+                <configuration>
+                    <scores>
+                        <score>
+                            <path>${project.basedir}/src/test/resources/score</path>
+                        </score>
+                    </scores>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>gen-cursors</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

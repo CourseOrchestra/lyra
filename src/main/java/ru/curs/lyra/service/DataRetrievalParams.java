@@ -1,28 +1,14 @@
-package ru.curs.lyra.dto;
+package ru.curs.lyra.service;
 
-public class DataParams {
-
-
-    private String context;
+//TODO: make immutable with builder
+public class DataRetrievalParams {
     private int offset;
     private int limit;
     private int dgridOldPosition;
     private boolean sortingOrFilteringChanged;
     private boolean firstLoading;
     private String refreshId;
-    private String formClass;
-    private String instanceId;
-
     private int totalCount;
-
-
-    public String getContext() {
-        return context;
-    }
-
-    public void setContext(String context) {
-        this.context = context;
-    }
 
     public int getOffset() {
         return offset;
@@ -70,22 +56,6 @@ public class DataParams {
 
     public void setRefreshId(String refreshId) {
         this.refreshId = refreshId;
-    }
-
-    public String getFormClass() {
-        return formClass;
-    }
-
-    public void setFormClass(String formClass) {
-        this.formClass = formClass;
-    }
-
-    public String getInstanceId() {
-        return instanceId;
-    }
-
-    public void setInstanceId(String instanceId) {
-        this.instanceId = instanceId;
     }
 
     public int getTotalCount() {

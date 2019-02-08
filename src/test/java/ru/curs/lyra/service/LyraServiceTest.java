@@ -4,9 +4,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import ru.curs.celesta.CallContext;
-import ru.curs.celestaunit.CelestaTest;
 import ru.curs.celestaunit.CelestaUnitExtension;
-import ru.curs.lyra.kernel.LyraCallContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +19,8 @@ class LyraServiceTest {
 
     @Test
     void getMetadata(CallContext ctx) {
-        JSONObject metadata = srv.getMetadata(ctx, "ru.curs.lyra.service.TestForm", "foo");
+        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.TestForm", "foo");
+        JSONObject metadata = srv.getMetadata(ctx, ip);
         System.out.println(metadata.toString());
         assertEquals("95%", metadata.getJSONObject(LyraService.COMMON).get(LyraService.GRID_WIDTH));
     }

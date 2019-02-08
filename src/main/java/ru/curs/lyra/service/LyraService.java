@@ -5,19 +5,15 @@ import org.json.JSONObject;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import ru.curs.celesta.CallContext;
-import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.dbutils.Cursor;
 import ru.curs.celesta.score.Index;
 import ru.curs.celesta.score.Table;
 import ru.curs.celesta.transaction.CelestaTransaction;
-import ru.curs.lyra.dto.DataParams;
 import ru.curs.lyra.dto.LyraGridAddInfo;
-import ru.curs.lyra.dto.MetaDataParams;
 import ru.curs.lyra.dto.ScrollBackParams;
 import ru.curs.lyra.kernel.*;
 
-import java.lang.reflect.Constructor;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -48,19 +44,15 @@ public class LyraService {
     }
 
 
-
-
-
-
     //TODO: get rid of transaction here. Maybe this requires changing the API for BasicGridForm
     @CelestaTransaction
-    public JSONObject getMetadata(CallContext callContext, String formClass, String instanceId) {
+    public JSONObject getMetadata(CallContext callContext, FormInstantiationParameters parameters) {
 
 
-        BasicGridForm<? extends BasicCursor> basicGridForm = formFactory.getFormInstance(callContext,
-                formClass,
-                instanceId,
-                this);
+        BasicGridForm<? extends BasicCursor> basicGridForm =
+                formFactory.getFormInstance(callContext,
+                        parameters,
+                        this);
 
         JSONObject metadata = new JSONObject();
 
@@ -158,10 +150,11 @@ public class LyraService {
 
 
     @CelestaTransaction
-    public String getData(LyraCallContext callContext, DataParams params) {
+    public String getData(CallContext callContext,
+                          FormInstantiationParameters formInstantiationParameters,
+                          DataRetrievalParams dataRetrievalParams) {
         BasicGridForm<? extends BasicCursor> basicGridForm = formFactory.getFormInstance(callContext,
-                params.getFormClass(),
-                params.getInstanceId(),
+                formInstantiationParameters,
                 this);
 
 /*
@@ -173,7 +166,7 @@ public class LyraService {
 */
 
 
-        if (params.isSortingOrFilteringChanged()) {
+        if (dataRetrievalParams.isSortingOrFilteringChanged()) {
             ((LyraGridScrollBack) basicGridForm.getChangeNotifier())
                     .setLyraGridAddInfo(new LyraGridAddInfo());
         }
@@ -187,21 +180,22 @@ public class LyraService {
 
         int position = -1;
         int lyraApproxTotalCount = basicGridForm.getApproxTotalCount();
-        int dgridDelta = params.getOffset() - params.getDgridOldPosition();
+        int dgridDelta = dataRetrievalParams.getOffset() - dataRetrievalParams.getDgridOldPosition();
 
 
         List<LyraFormData> records;
 
 
-        if (params.isFirstLoading()) {
+        if (dataRetrievalParams.isFirstLoading()) {
 
-            JSONObject json = new JSONObject(params.getContext());
+            JSONObject json = new JSONObject(
+                    formInstantiationParameters.getClientParams().get("context"));
             String selectKey = (String) ((JSONObject) json.get("refreshParams")).get("selectKey");
 
             if ((selectKey == null) || selectKey.trim().isEmpty()) {
                 records = basicGridForm.getRows(0);
             } else {
-                if (params.isSortingOrFilteringChanged()) {
+                if (dataRetrievalParams.isSortingOrFilteringChanged()) {
                     basicGridForm.getRows(0);
                 }
                 records = basicGridForm.setPosition(getKeyValuesById(selectKey));
@@ -209,9 +203,9 @@ public class LyraService {
 
         } else {
 
-            if (params.getRefreshId() == null) {
+            if (dataRetrievalParams.getRefreshId() == null) {
 
-                if (params.getOffset() == 0) {
+                if (dataRetrievalParams.getOffset() == 0) {
 
                     position = 0;
 
@@ -219,7 +213,7 @@ public class LyraService {
 
                     if (lyraApproxTotalCount <= LyraGridScrollBack.DGRID_MAX_TOTALCOUNT) {
 
-                        position = params.getOffset();
+                        position = dataRetrievalParams.getOffset();
 
                     } else {
 
@@ -229,16 +223,16 @@ public class LyraService {
 
                         } else {
 
-                            if (Math.abs(params.getOffset()
+                            if (Math.abs(dataRetrievalParams.getOffset()
                                     - LyraGridScrollBack.DGRID_MAX_TOTALCOUNT) < LyraGridScrollBack.DGRID_SMALLSTEP) {
 
-                                position = lyraApproxTotalCount - params.getLimit();
+                                position = lyraApproxTotalCount - dataRetrievalParams.getLimit();
 
                             } else {
 
                                 double d = lyraApproxTotalCount;
                                 d = d / LyraGridScrollBack.DGRID_MAX_TOTALCOUNT;
-                                d = d * params.getOffset();
+                                d = d * dataRetrievalParams.getOffset();
                                 position = (int) d;
 
                             }
@@ -251,19 +245,19 @@ public class LyraService {
 
                 records = basicGridForm.getRows(position);
             } else {
-                records = basicGridForm.setPosition(getKeyValuesById(params.getRefreshId()));
+                records = basicGridForm.setPosition(getKeyValuesById(dataRetrievalParams.getRefreshId()));
             }
 
         }
 
 
-        if (records.size() < params.getLimit()) {
-            params.setTotalCount(records.size());
+        if (records.size() < dataRetrievalParams.getLimit()) {
+            dataRetrievalParams.setTotalCount(records.size());
         } else {
             if (basicGridForm.getApproxTotalCount() <= LyraGridScrollBack.DGRID_MAX_TOTALCOUNT) {
-                params.setTotalCount(basicGridForm.getApproxTotalCount());
+                dataRetrievalParams.setTotalCount(basicGridForm.getApproxTotalCount());
             } else {
-                params.setTotalCount(LyraGridScrollBack.DGRID_MAX_TOTALCOUNT);
+                dataRetrievalParams.setTotalCount(LyraGridScrollBack.DGRID_MAX_TOTALCOUNT);
             }
         }
 
@@ -271,7 +265,7 @@ public class LyraService {
         System.out.println("LyraGridDataFactory.ddddddddddddd1");
         System.out.println("className: " + basicGridForm.getClass().getSimpleName());
         System.out.println("date: " + LocalDateTime.now());
-        System.out.println("params.isFirstLoading(): " + params.isFirstLoading());
+        System.out.println("params.isFirstLoading(): " + dataRetrievalParams.isFirstLoading());
         System.out.println("position: " + position);
         System.out.println("lyraNewPosition: " + basicGridForm.getTopVisiblePosition());
         System.out.println("lyraOldPosition: " + lyraGridAddInfo.getLyraOldPosition());
@@ -279,11 +273,11 @@ public class LyraService {
         System.out.println(
                 "getApproxTotalCount(after getRows): " + basicGridForm.getApproxTotalCount());
         System.out.println("records.size(): " + records.size());
-        System.out.println("dGridLimit(): " + params.getLimit());
-        System.out.println("dGridTotalCount: " + params.getTotalCount());
+        System.out.println("dGridLimit(): " + dataRetrievalParams.getLimit());
+        System.out.println("dGridTotalCount: " + dataRetrievalParams.getTotalCount());
 
         lyraGridAddInfo.setLyraOldPosition(basicGridForm.getTopVisiblePosition());
-        lyraGridAddInfo.setDgridOldTotalCount(params.getTotalCount());
+        lyraGridAddInfo.setDgridOldTotalCount(dataRetrievalParams.getTotalCount());
 
 
         // --------------------------------------------------------
@@ -291,7 +285,7 @@ public class LyraService {
 
         JSONArray data = new JSONArray();
 
-        int length = Math.min(records.size(), params.getLimit());
+        int length = Math.min(records.size(), dataRetrievalParams.getLimit());
         for (int i = 0; i < length; i++) {
             LyraFormData rec = records.get(i);
 
@@ -338,7 +332,7 @@ public class LyraService {
         }
 
         // Позиционирование по ключу записи
-        if (params.isFirstLoading() && (data.length() > 0)
+        if (dataRetrievalParams.isFirstLoading() && (data.length() > 0)
                 && (basicGridForm.getTopVisiblePosition() > 0)) {
 
             double d = basicGridForm.getTopVisiblePosition();

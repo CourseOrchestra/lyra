@@ -1,7 +1,6 @@
 package ru.curs.lyra.controller;
 
 
-import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +8,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.curs.lyra.dto.DataParams;
+import ru.curs.celesta.CallContext;
+import ru.curs.celesta.SystemCallContext;
+import ru.curs.lyra.service.DataRetrievalParams;
 import ru.curs.lyra.dto.MetaDataParams;
-import ru.curs.lyra.kernel.LyraCallContext;
+import ru.curs.lyra.service.FormInstantiationParameters;
 import ru.curs.lyra.service.LyraService;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -35,32 +37,44 @@ public class LyraController {
         params.setContext(body.get("context"));
         params.setFormClass(body.get("formClass"));
         params.setInstanceId(body.get("instanceId"));
+        //TODO: take into account user name here
+        //call context should be created with real user name
+        CallContext ctx = new SystemCallContext();
 
-        LyraCallContext ctx = new LyraCallContext();
-        ctx.setLyraContext(new JSONObject(params.getContext()));
+        Map<String, String> clientParams = new HashMap<>();
+        clientParams.put("context", params.getContext());
+        FormInstantiationParameters formInstantiationParameters = new FormInstantiationParameters(params.getFormClass(),
+                params.getInstanceId(),
+                clientParams
+        );
 
-        return srv.getMetadata(ctx, params.getFormClass(), params.getInstanceId()).toString();
+        return srv.getMetadata(ctx, formInstantiationParameters).toString();
     }
 
 
     @PostMapping("/data")
     public ResponseEntity getData(@RequestParam Map<String, String> body) throws Exception {
 
-        DataParams params = new DataParams();
-        params.setContext(body.get("context"));
+        DataRetrievalParams params = new DataRetrievalParams();
         params.setOffset(Integer.parseInt(body.get("offset")));
         params.setLimit(Integer.parseInt(body.get("limit")));
         params.setDgridOldPosition(Integer.parseInt(body.get("dgridOldPosition")));
         params.setSortingOrFilteringChanged(Boolean.parseBoolean(body.get("sortingOrFilteringChanged")));
         params.setFirstLoading(Boolean.parseBoolean(body.get("firstLoading")));
         params.setRefreshId(body.get("refreshId"));
-        params.setFormClass(body.get("formClass"));
-        params.setInstanceId(body.get("instanceId"));
 
-        LyraCallContext ctx = new LyraCallContext();
-        ctx.setLyraContext(new JSONObject(params.getContext()));
+        //TODO: take into account user name here
+        //call context should be created with real user name
+        CallContext ctx = new SystemCallContext();
 
-        String data = srv.getData(ctx, params);
+        Map<String, String> clientParams = new HashMap<>();
+        clientParams.put("context", body.get("context"));
+        FormInstantiationParameters formInstantiationParameters = new FormInstantiationParameters(
+                body.get("formClass"),
+                body.get("instanceId"),
+                clientParams
+        );
+        String data = srv.getData(ctx, formInstantiationParameters, params);
 
 
         HttpHeaders responseHeaders = new HttpHeaders();
