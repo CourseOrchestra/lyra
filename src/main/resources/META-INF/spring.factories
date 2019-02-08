@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-ru.curs.lyra.spring.boot.LyraConfiguration
+ru.curs.lyra.spring.boot.LyraConfiguration,\
+ru.curs.lyra.spring.boot.WebSocketConfig
