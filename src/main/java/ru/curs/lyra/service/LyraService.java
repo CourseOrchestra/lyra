@@ -39,7 +39,7 @@ public class LyraService {
     public static final String GRID_WIDTH = "gridWidth";
     public static final String COMMON = "common";
 
-    private Map<String, BasicGridForm<? extends BasicCursor>> forms = new HashMap<>();
+    private final FormFactory formFactory = new FormFactory();
 
     private SimpMessageSendingOperations messagingTemplate;
 
@@ -48,44 +48,19 @@ public class LyraService {
     }
 
 
-    private String getDgridId(String formClass, String instanceId) {
-        return formClass + "." + instanceId;
-    }
 
 
-    private <T extends BasicCursor> BasicGridForm<T> getFormInstance(CallContext callContext, String formClass, String instanceId) {
-        String dgridId = getDgridId(formClass, instanceId);
-        @SuppressWarnings("unchecked")
-        BasicGridForm<T> form = (BasicGridForm<T>) forms.computeIfAbsent(dgridId, key -> getBasicGridFormInstance(callContext, formClass, dgridId));
-        form.setCallContext(callContext);
-        return form;
-    }
-
-    private <T extends BasicCursor> BasicGridForm<T> getBasicGridFormInstance(CallContext callContext, String formClass, String dgridId) throws CelestaException {
-        try {
-            Class<?> clazz = Class.forName(formClass);
-            Constructor<?> constructor = clazz.getConstructor(CallContext.class);
-            Object instance = constructor.newInstance(callContext);
-            @SuppressWarnings("unchecked")
-            BasicGridForm<T> form = (BasicGridForm<T>) instance;
-            final int maxExactScrollValue = 120;
-            form.setMaxExactScrollValue(maxExactScrollValue);
-            LyraGridScrollBack scrollBack = new LyraGridScrollBack(this, dgridId);
-            scrollBack.setBasicGridForm(form);
-            form.setChangeNotifier(scrollBack);
-            forms.put(dgridId, form);
-            return form;
-        } catch (Exception e) {
-            throw new CelestaException(e);
-        }
-    }
 
 
     //TODO: get rid of transaction here. Maybe this requires changing the API for BasicGridForm
     @CelestaTransaction
     public JSONObject getMetadata(CallContext callContext, String formClass, String instanceId) {
 
-        BasicGridForm<? extends BasicCursor> basicGridForm = getFormInstance(callContext, formClass, instanceId);
+
+        BasicGridForm<? extends BasicCursor> basicGridForm = formFactory.getFormInstance(callContext,
+                formClass,
+                instanceId,
+                this);
 
         JSONObject metadata = new JSONObject();
 
@@ -183,9 +158,11 @@ public class LyraService {
 
 
     @CelestaTransaction
-    public String getData(LyraCallContext callContext, DataParams params) throws Exception {
-
-        BasicGridForm<? extends BasicCursor> basicGridForm = getFormInstance(callContext, params.getFormClass(), params.getInstanceId());
+    public String getData(LyraCallContext callContext, DataParams params) {
+        BasicGridForm<? extends BasicCursor> basicGridForm = formFactory.getFormInstance(callContext,
+                params.getFormClass(),
+                params.getInstanceId(),
+                this);
 
 /*
         if (basicGridForm.getChangeNotifier() == null) {
@@ -207,9 +184,6 @@ public class LyraService {
 
         LyraGridAddInfo lyraGridAddInfo =
                 ((LyraGridScrollBack) basicGridForm.getChangeNotifier()).getLyraGridAddInfo();
-
-        lyraGridAddInfo.setExcelExportType(null);
-
 
         int position = -1;
         int lyraApproxTotalCount = basicGridForm.getApproxTotalCount();

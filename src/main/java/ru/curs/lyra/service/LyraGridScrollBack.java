@@ -24,9 +24,9 @@ public class LyraGridScrollBack implements Runnable {
     private LyraGridAddInfo lyraGridAddInfo = new LyraGridAddInfo();
 
 
-    LyraGridScrollBack(LyraService srv, String dgridId) {
+    LyraGridScrollBack(LyraService srv, String dGridId) {
         this.srv = srv;
-        this.dgridId = dgridId;
+        this.dgridId = dGridId;
     }
 
     LyraGridAddInfo getLyraGridAddInfo() {
@@ -49,10 +49,6 @@ public class LyraGridScrollBack implements Runnable {
     @Override
     public void run() {
 
-        if (lyraGridAddInfo.getExcelExportType() == GridToExcelExportType.ALL) {
-            return;
-        }
-
         System.out.println("LyraGridScrollBack.ddddddddddddd2");
         System.out.println("className: " + basicGridForm.getClass().getSimpleName());
         System.out.println("date: " + LocalDateTime.now());
@@ -73,10 +69,6 @@ public class LyraGridScrollBack implements Runnable {
                 - lyraGridAddInfo.getLyraOldPosition()) <= lyraApproxTotalCount / LYRA_SMALLFACTOR)
                 || (basicGridForm.getApproxTotalCount() < basicGridForm.getGridHeight() * 2)) {
             lyraGridAddInfo.setLyraOldPosition(basicGridForm.getTopVisiblePosition());
-            return;
-        }
-
-        if (lyraGridAddInfo.getExcelExportType() == GridToExcelExportType.CURRENTPAGE) {
             return;
         }
 

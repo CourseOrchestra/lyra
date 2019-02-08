@@ -23,7 +23,6 @@ class LyraServiceTest {
     void getMetadata(CallContext ctx) {
         JSONObject metadata = srv.getMetadata(ctx, "ru.curs.lyra.service.TestForm", "foo");
         System.out.println(metadata.toString());
-
         assertEquals("95%", metadata.getJSONObject(LyraService.COMMON).get(LyraService.GRID_WIDTH));
     }
 }
