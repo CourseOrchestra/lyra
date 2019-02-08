@@ -58,7 +58,7 @@ class FormFactoryTest {
                 "foo", params);
         TestParameterizedForm fooForm = (TestParameterizedForm) formFactory.getFormInstance(ctx, parameters, srv);
 
-        assertEquals("filter conditions", fooForm.getParams().get("filter"));
-        assertEquals("part1", fooForm.getParams().get("part1"));
+        assertSame(parameters, fooForm.getParams());
+        assertSame(parameters, fooForm.getConstructorParams());
     }
 }
