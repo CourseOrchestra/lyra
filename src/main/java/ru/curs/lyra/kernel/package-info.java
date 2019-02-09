@@ -1,4 +1,4 @@
 /**
- * Classes used for building forms in Lyra.
+ * Kernel classes for Lyra.
  */
 package ru.curs.lyra.kernel;

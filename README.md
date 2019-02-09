@@ -8,3 +8,5 @@ Lyra Grid backend
 * [Documentation](https://courseorchestra.github.io/lyra/)
 
 * [Working principle](https://dzone.com/articles/hidden-complexity-of-a-routine-task-presenting-tab)
+
+* [JavaDoc](https://courseorchestra.github.io/lyra/apidocs)
