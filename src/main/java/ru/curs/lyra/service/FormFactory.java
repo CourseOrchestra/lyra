@@ -56,7 +56,6 @@ public class FormFactory {
             LyraGridScrollBack scrollBack = new LyraGridScrollBack(srv, parameters.getDgridId());
             scrollBack.setBasicGridForm(form);
             form.setChangeNotifier(scrollBack);
-            forms.put(parameters.getDgridId(), form);
             return setParameters(form, parameters);
         } catch (Exception e) {
             throw new CelestaException(e);

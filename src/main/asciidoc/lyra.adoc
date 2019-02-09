@@ -1,105 +1,6 @@
-= Lyra Grid
+= Lyra User Guide
 :toc: left
-
-== Tasks
-
-=== Introduction
-
-The aim is to develop a back end for the lyra grid. This should be a .jar file
-available on Maven Central, so one can easily integrate it in their project using any modern build tool. This .jar should provide all the needed RESTful services for Lyra Grid UI (client side written in Javascript).
-
-We are going to use:
-
-* Spring Boot
-
-* https://github.com/CourseOrchestra/spring-boot-starter-celesta[Celesta Spring Boot Starter]
-
-As a prototype, and for your reference as a working example example of RESTful Celesta services, you can use the following project: https://github.com/inponomarev/celesta-demo
-
-
-For `GridDriver` usage, please refer this project: https://github.com/inponomarev/lyragrid-demo
-
-=== What's Already Done
-
-
-=== Main Components
-
-The rough architectural picture can be presented as following:
-
-[plantuml, classes, png]
-----
-@startuml
-package ru.curs.lyra {
-
-class LyraService <<@Component>> {
-
- + LyraService(@Autowired celesta: Celesta)
-
- + @CelestaTransaction getRows(...)
-
-}
-
-class LyraController {
-
- + LyraController(@Autowired lyra: LyraService)
-
- + @GetMapping("...") getColumns(FormName: String)
- + @GetMapping("...") getRows(FormName: String, rowNum: int)
- + ...()
-
-}
-
-
-abstract class BasicGridForm {
-
-
-}
-
-LyraService --* LyraController
-LyraService "1"--"*" BasicGridForm
-
-annotation FormField
-
-}
-
-
-package ru.curs.melbet {
-
-class BetsGrid <<@Component>> extends BasicGridForm {
-
-  + BetsGrid(@Autowired lyra: LyraService)
-
-  + @FormField getSmth()
-
-}
-
-}
-
-package ru.curs.iasbp {
-
-class AccidentsGrid <<@Component>> extends BasicGridForm {
-
-  + AccidentsGrid(@Autowired lyra: LyraService)
-
-}
-
-@enduml
-----
-
-`LyraController` and `LyraService` follow layered architecture paradigm.
-
-`LyraController` provides HTTP request handlers.
-
-=== To Do
-
-1. Parameterize `BasicForm` class with `C extends BasicCursor`.
-2. Implement `@Form` and `@FormField` annotations to support setting of Form and Field attributes.
-3. Implement `getFormProperties`, `createUnboundField`, `createAllUnboundFields` in `BasicLyraForm`, using annotations.
-4. Implement `LyraService`. Implement mechanics of auto-registration of forms in `LyraService`'s internal `Map<String,BasicForm>`, where keys are class names and values are form instances.
-5. Implement `LyraController` according to front-end's needs.
-6. Build the lyra-demo project 
-
-== Lyra User Guide
+:apidocs: https://courseorchestra.github.io/lyra/apidocs/index.html?
 
 Lyra provides a quick way to develop user interface forms linked to https://courseorchestra.github.io/celesta/#data_accessors_section[Celesta cursors]. Cursors can be filtered and sorted.
 
@@ -114,18 +15,18 @@ In order to use lyra, one should add the following dependency to their project:
 </dependency>
 ----
 
-=== Lyra form
+== Lyra Form
 
-Lyra forms can be of two types: Card and Grid. Each form is defined by a class inherited from the appropriate base class (`lyra.cardForm.CardForm` or `lyra.gridForm.GridForm`). The form itself is set declaratively and is characterized by:
+Lyra forms can be of two types: Card and Grid. Each form is defined by a class inherited from the appropriate base class ({apidocs}ru/curs/lyra/kernel/BasicCardForm.html[`BasicCardForm`] or {apidocs}ru/curs/lyra/kernel/BasicGridForm.html[`BasicGridForm`]). The form itself is set declaratively and is characterized by:
 
 * *https://courseorchestra.github.io/celesta/#data_accessors_section[Cursor]*, to which the form is linked. Each of the Lyra forms must override the `getCursor (CallContext context)` method, which  returns the corresponding Celesta cursor. If necessary, in the same method, filters and sorting can be applied to the cursor.
-* *set of bound and ubound fields* displayed on the form.
+* *set of bound and unbound fields* displayed on the form.
 
 Lyra takes on the task of transferring information between the form and the server, as well as navigating through the table records.
 The grid form also by itself solves the problem of fast display, scrolling and positioning of the grid with a large number of records.
 For the developer it is sufficient only to declare the fields they would like to have on the form, with order and properties.
 
-==== Field Types
+=== Field Types
 Fields, as already mentioned, can be of two types:
 
 * *bound* with the cursor field (i.e. column of the table), the values of the bound fields are stored in the database automatically,
@@ -135,10 +36,10 @@ Fields, as already mentioned, can be of two types:
 When the user edits the bound fields, their new values are written into the fields of the cursor and stored in the database automatically.
 The values of the unbound fields are passed as parameters to the appropriate methods, and Java code executed on the server can use these values.
 
-==== Designing a Form from Scratch in Five Steps
+=== Designing a Form from Scratch in Five Steps
 To create a Lyra form from scratch, you must follow the following steps:
 
-*Step 1.* Create a class inherited from `BasicCardForm` or `BasicGridForm`, optionally annotated with `@LyraForm`:
+*Step 1.* Create a class inherited from {apidocs}ru/curs/lyra/kernel/BasicCardForm.html[`BasicCardForm`] or {apidocs}ru/curs/lyra/kernel/BasicGridForm.html[`BasicGridForm`], optionally annotated with {apidocs}ru/curs/lyra/kernel/annotations/LyraForm.html[`@LyraForm`]:
 
 [source,java]
 ----
@@ -157,9 +58,9 @@ class TestForm extends BasicGridForm{
 }a
 ----
 
-If you add `FormInstantiationParameters` argument to the form's constructor,
+If you add {apidocs}ru/curs/lyra/service/FormInstantiationParameters.html[`FormInstantiationParameters`] argument to the form's constructor,
 the respective object will be passed to the constructor automatically. You may also define
-`FormInstantiationParameters` field annotated with `@FormParams` annotation, and its value will be automatically injected.
+`FormInstantiationParameters` field annotated with {apidocs}ru/curs/lyra/kernel/annotations/FormParams.html[`@FormParams`] annotation, and its value will be automatically injected.
 
 
 *Step 2*. Override `getCursor(CallContext context)` method so it returns sorted and filtered cursor. You may use
@@ -177,7 +78,7 @@ This cursor is going to be the source of the record set for the form:
 ----
 
 
-*Step 3 (optional).* If you need unbounded fields on the form, you should declare them as getters and, optionally, setters, annotated with `@FormField`.
+*Step 3 (optional).* If you need unbounded fields on the form, you should declare them as getters and, optionally, setters, annotated with {apidocs}ru/curs/lyra/kernel/annotations/FormField.html[`@FormField`].
 Getters / setters should follow the Java getter/setter names convention:
 [source,java]
 ----
@@ -218,9 +119,9 @@ attrInt int default 3
 
 ** either one of the column names of the form cursor (this creates a bound field),
 
-** or with the name of the property of the form class declared with `@FormField` annotation, this creates and unbound field.
+** or with the name of the property of the form class declared with {apidocs}ru/curs/lyra/kernel/annotations/FormField.html[`@FormField`] annotation, this creates and unbound field.
 
-The `LyraFormField` object returned by the `createField` method afterwards can be modified via its properties.
+The {apidocs}ru/curs/lyra/kernel/LyraFormField.html[`LyraFormField`] object returned by the `createField` method afterwards can be modified via its properties.
 
 * `createAllBoundFields()`, which is equivalent to calling the `createField` method for each of the table fields.
 
@@ -256,7 +157,7 @@ When writing a form constructor, the developer can choose one of the strategies 
 
 WARNING: Note that field names within a form must be unique, just as field names in a table. Therefore, calling the  `createAllBoundFields()` method twice, as well as  calling the `createField(name)` method twice for the same name, will lead to an error. An error will also result in creating an unbound field with a name coinciding with a table field added to the form.
 
-==== afterReceiving(...) and beforeSending(...) Methods
+=== afterReceiving(...) and beforeSending(...) Methods
 
 A form class may and should also contain business logic that performs certain actions when values are entered by a user into a form. Two main entry points available in each of form classes are 
 
@@ -274,17 +175,17 @@ The `beforeSending (BasicCursor c)` method is called before serialization of dat
 Business logic can also be contained in getters and setters of unbound fields.
 
 
-==== _beforeShow(...) Method
+=== beforeShow(...) Method
 The method is invoked before the form is displayed to the user. In this method, some preparatory actions can be performed: for example, the cursor can be positioned on the desired record.
 
-=== Form Attributes
+== Form Attributes
 
 Each form has a set of attributes that can be defined using optional named parameters of `@LyraForm` annotation:
 
 * `gridwidth` — ширина грида (в пискелах)
 * `gridheight` — высота грида (в пикселах)
 
-=== Field Attributes
+== Field Attributes
 Each form field (`LyraFormField` class instance) has a set of following attributes: 
 
 
@@ -295,7 +196,7 @@ Each form field (`LyraFormField` class instance) has a set of following attribut
 * `scale` — maximum decimal point numbers  (for `REAL`-typed fields).
 * `width` — visible width of the field (in pixels).
 
-==== Methods of Setting Field Attributes
+=== Methods of Setting Field Attributes
 So, the properties of form fields in Lyra can be set:
 
 * In *design time*:
@@ -322,7 +223,7 @@ CREATE TABLE table1
 
 WARNING: Setting the field attributes in CelestaDoc is convenient because the attribute specified in one place (i. e. in the CelestaSQL script) will be used by default in all forms that use the corresponding table as a data source. If needed, in each specific form, you can always redefine attributes at run time. If the form using the table is only one, then the correct approach is to set the corresponding field attributes directly in CelestaDoc. Note that the system automatically selects from the CelestaDoc *text the first occurring JSON object*, ignoring the rest of the text content that may also be present there for other purposes.
 
-The `@FormField` decorator is added to functions that return the values of unbound fields, and also has parameters `caption`, `editable`,` visible`, etc. These are optional parameters that correspond to the field attributes of the same name.
+The `@FormField` annotation is added to functions that return the values of unbound fields, and also has parameters `caption`, `editable`,` visible`, etc. These are optional parameters that correspond to the field attributes of the same name.
 
 If multiple values of the same property are defined in different places, they get overwritten in a certain order.
 
@@ -365,7 +266,7 @@ If multiple values of the same property are defined in different places, they ge
 |====
 
 
-=== Lyra Forms Implementation
+== Lyra Forms Implementation
 Below is a UML diagram of Lyra’s Java classes:
 
 
@@ -374,7 +275,7 @@ image::Lyra.png[]
 TODO: redraw this diagram in PlantUML
 
 
-==== Implementation Example with Comments
+=== Implementation Example with Comments
 
 [source,java]
 ----
