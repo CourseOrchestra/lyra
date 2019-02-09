@@ -141,11 +141,11 @@ final class UnboundFieldAccessor implements FieldAccessor {
     private LyraFieldType lyraFieldType;
     BasicLyraForm basicLyraForm;
 
-    public void setLyraFieldType(LyraFieldType lyraFieldType) {
+    void setLyraFieldType(LyraFieldType lyraFieldType) {
         this.lyraFieldType = lyraFieldType;
     }
 
-    public UnboundFieldAccessor(Method getter, Method setter, BasicLyraForm basicLyraForm) {
+    UnboundFieldAccessor(Method getter, Method setter, BasicLyraForm basicLyraForm) {
         this.getter = getter;
         this.setter = setter;
         this.basicLyraForm = basicLyraForm;
