@@ -15,7 +15,6 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -27,8 +26,7 @@ import static ru.curs.lyra.kernel.LyraFormField.*;
 /**
  * A serializable cursor data represention.
  */
-public final class LyraFormData implements Serializable {
-    private static final long serialVersionUID = 1L;
+public final class LyraFormData {
     private final LyraNamedElementHolder<LyraFieldValue> fields = new LyraNamedElementHolder<LyraFieldValue>() {
         private static final long serialVersionUID = 1L;
 
@@ -168,8 +166,7 @@ public final class LyraFormData implements Serializable {
 
 
         @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes)
-                throws SAXException {
+        public void startElement(String uri, String localName, String qName, Attributes attributes) {
             switch (status) {
                 case 0:
                     recversion = Integer.parseInt(attributes.getValue("recversion"));
