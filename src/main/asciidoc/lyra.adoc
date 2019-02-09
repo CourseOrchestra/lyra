@@ -21,11 +21,6 @@ For `GridDriver` usage, please refer this project: https://github.com/inponomare
 
 === What's Already Done
 
-* All the needed dependencies are already included into the POM file.
-
-* Also, I copied all the `ru.curs.lyra` classes into this project from Celesta project. These classes should be removed
-from Celesta 7.x.
-
 
 === Main Components
 
@@ -126,7 +121,6 @@ Lyra forms can be of two types: Card and Grid. Each form is defined by a class i
 * *https://courseorchestra.github.io/celesta/#data_accessors_section[Cursor]*, to which the form is linked. Each of the Lyra forms must override the `getCursor (CallContext context)` method, which  returns the corresponding Celesta cursor. If necessary, in the same method, filters and sorting can be applied to the cursor.
 * *set of bound and ubound fields* displayed on the form.
 
-
 Lyra takes on the task of transferring information between the form and the server, as well as navigating through the table records.
 The grid form also by itself solves the problem of fast display, scrolling and positioning of the grid with a large number of records.
 For the developer it is sufficient only to declare the fields they would like to have on the form, with order and properties.
@@ -160,10 +154,17 @@ or
       gridheight="200px")
 class TestForm extends BasicGridForm{
 ....
-}
+}a
 ----
 
-*Step 2*. Override `getCursor(CallContext context)` method so it returns sorted and filtered cursor.
+If you add `FormInstantiationParameters` argument to the form's constructor,
+the respective object will be passed to the constructor automatically. You may also define
+`FormInstantiationParameters` field annotated with `@FormParams` annotation, and its value will be automatically injected.
+
+
+*Step 2*. Override `getCursor(CallContext context)` method so it returns sorted and filtered cursor. You may use
+`FormInstantiationParameters` object defined in the previous step to define sorting and filtering.
+
 This cursor is going to be the source of the record set for the form:
 
 [source,java]

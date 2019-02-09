@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Parameters for form instantiation.
+ * Parameters for form instantiation that come from client code.
  */
 public class FormInstantiationParameters {
     private final String formClass;
@@ -26,18 +26,30 @@ public class FormInstantiationParameters {
         this.dGridId = formClass + "." + instanceId;
     }
 
+    /**
+     * Form class name.
+     */
     public String getFormClass() {
         return formClass;
     }
 
+    /**
+     * Form instance id.
+     */
     public String getInstanceId() {
         return instanceId;
     }
 
+    /**
+     * Application-specific parameters in the form of String-String map.
+     */
     public Map<String, String> getClientParams() {
         return clientParams;
     }
 
+    /**
+     * Grid identifier.
+     */
     public String getDgridId() {
         return dGridId;
     }
