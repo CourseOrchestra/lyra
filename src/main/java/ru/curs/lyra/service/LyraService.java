@@ -21,7 +21,9 @@ import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.*;
 
-
+/**
+ * Implements service layer for Lyra forms backend.
+ */
 @Service
 public class LyraService {
 
@@ -412,6 +414,5 @@ public class LyraService {
     void sendScrollBackPosition(ScrollBackParams params) {
         messagingTemplate.convertAndSend("/position", params);
     }
-
 
 }
