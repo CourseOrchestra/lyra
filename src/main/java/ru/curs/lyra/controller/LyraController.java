@@ -18,9 +18,11 @@ import ru.curs.lyra.service.LyraService;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Implements controller layer for Lyra forms backend.
+ */
 @RestController
 @RequestMapping("/lyra")
-@SuppressWarnings("unused")
 public class LyraController {
     private final LyraService srv;
 

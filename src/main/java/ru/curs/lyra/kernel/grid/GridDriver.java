@@ -2,7 +2,6 @@ package ru.curs.lyra.kernel.grid;
 
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.CelestaException;
-import ru.curs.celesta.ICelesta;
 import ru.curs.celesta.SystemCallContext;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.dbutils.adaptors.DBAdaptor;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
  */
 public final class GridDriver {
 
-    private static final int DEFAULT_SMALL_SCROLL = 11;
+    public static final int DEFAULT_SMALL_SCROLL = 120;
 
     /**
      * The default assumption for a records count in a table.
@@ -69,7 +68,6 @@ public final class GridDriver {
         public void run() {
 
             CallContext closedCopyCallContext = closedCopy.callContext();
-            ICelesta celesta = closedCopyCallContext.getCelesta();
 
             try (CallContext sysContext =
                          new SystemCallContext(

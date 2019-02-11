@@ -16,18 +16,18 @@ node {
         buildInfo = Artifactory.newBuildInfo()
         buildInfo.env.capture = true
 
-   //     def downloadSpec = """
-   //              {"files": [
-   //                 {
-   //                   "pattern": "warn/lyra/*/warnings.yml",
-   //                   "build": "lyra :: master/LATEST",
-   //                   "target": "previous.yml",
-   //                   "flat": "true"
-   //                 }
-   //                 ]
-   //             }"""
-   //     server.download spec: downloadSpec
-   //     oldWarnings = readYaml file: 'previous.yml'
+        def downloadSpec = """
+                 {"files": [
+                    {
+                      "pattern": "warn/lyra/*/warnings.yml",
+                      "build": "lyra :: master/LATEST",
+                      "target": "previous.yml",
+                      "flat": "true"
+                    }
+                    ]
+                }"""
+        server.download spec: downloadSpec
+        oldWarnings = readYaml file: 'previous.yml'
     }
     
     stage ('Spellcheck'){
@@ -37,7 +37,7 @@ node {
         if (result) {
            echo "The following words are probaly misspelled:"
            echo result
-        //   error "Please correct the spelling or add the words above to the local dictionary."
+           error "Please correct the spelling or add the words above to the local dictionary."
         }
     }
 
@@ -61,7 +61,7 @@ fi'''
     stage ('Ratcheting') {
         def warningsMap = countWarnings()
         writeYaml file: 'target/warnings.yml', data: warningsMap
-    //    compareWarningMaps oldWarnings, warningsMap
+        compareWarningMaps oldWarnings, warningsMap
     }
 
     if (env.BRANCH_NAME == 'master') {
