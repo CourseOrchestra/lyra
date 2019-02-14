@@ -155,11 +155,11 @@ public class LyraService {
 
     private Object[] getKeyValuesById(final String refreshId) {
         JSONArray jsonArray = new JSONArray(refreshId);
-        List<Object> list = new ArrayList<>();
+        Object[] obj = new Object[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); i++) {
-            list.add(jsonArray.get(i));
+            obj[i] = jsonArray.get(i);
         }
-        return list.toArray(new Object[0]);
+        return obj;
     }
 
     private String getIdByKeyValues(final Object[] keyValues) {
