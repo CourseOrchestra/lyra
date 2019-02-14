@@ -26,16 +26,38 @@ import java.util.*;
  */
 @Service
 public class LyraService {
-
-    //TODO: What is THIS?
-    private static final String STRING_SELECTED_RECORD_IDS_SEPARATOR = "D13&82#9g7";
-    private static final String KEYVALUES_SEPARATOR = "_D13k82F9g7_";
-    private static final String ADDDATA_COLUMN = "addData" + KEYVALUES_SEPARATOR;
-
+    private static final String LIMIT = "limit";
     private static final String GRID_WIDTH_DEF_VALUE = "95%";
     private static final String GRID_HEIGHT_DEF_VALUE = "400px";
-    public static final String GRID_WIDTH = "gridWidth";
-    public static final String COMMON = "common";
+    static final String GRID_WIDTH = "gridWidth";
+    private static final String GRID_HEIGHT = "gridHeight";
+    static final String COMMON = "common";
+    private static final String TOTAL_COUNT = "totalCount";
+    private static final String SELECTION_MODEL = "selectionModel";
+    private static final String RECORDS = "RECORDS";
+    private static final String IS_VISIBLE_COLUMNS_HEADER = "isVisibleColumnsHeader";
+    private static final String IS_ALLOW_TEXT_SELECTION = "isAllowTextSelection";
+    private static final String PRIMARY_KEY = "primaryKey";
+    private static final String SUMMARY_ROW = "summaryRow";
+    private static final String ID = "id";
+    private static final String CAPTION = "caption";
+    private static final String VISIBLE = "visible";
+    private static final String CSS_CLASS_NAME = "cssClassName";
+    private static final String CSS_STYLE = "cssStyle";
+    private static final String SORTING_AVAILABLE = "sortingAvailable";
+    private static final String COLUMNS = "columns";
+    private static final String CONTEXT = "context";
+    private static final String REFRESH_PARAMS = "refreshParams";
+    private static final String SELECT_KEY = "selectKey";
+    private static final String RECVERSION = "recversion";
+    private static final String NEED_RECREATE_WEBSOCKET = "needRecreateWebsocket";
+    private static final String DGRID_NEW_POSITION = "dgridNewPosition";
+    private static final String DGRID_NEW_POSITION_ID = "dgridNewPositionId";
+    private static final String HEADER = "header";
+    private static final String FOOTER = "footer";
+    private static final String INTERNAL_COLUMN_ADDDATA = "internalAddData";
+    private static final String INTERNAL_COLUMN_ID = "internalId";
+
 
     private final FormFactory formFactory = new FormFactory();
 
@@ -60,18 +82,14 @@ public class LyraService {
 
         JSONObject common = new JSONObject();
         common.put(GRID_WIDTH, Optional.ofNullable(basicGridForm.getFormProperties().getGridwidth()).filter(s -> !s.isEmpty()).orElse(GRID_WIDTH_DEF_VALUE));
-        common.put("gridHeight", Optional.ofNullable(basicGridForm.getFormProperties().getGridheight()).filter(s -> !s.isEmpty()).orElse(GRID_HEIGHT_DEF_VALUE));
-        common.put("limit", String.valueOf(basicGridForm.getGridHeight()));
-        common.put("totalCount", basicGridForm.getApproxTotalCount());
-        common.put("selectionModel", "RECORDS");
-        common.put("isVisibleColumnsHeader", basicGridForm.getFormProperties().getVisibleColumnsHeader());
-        common.put("isAllowTextSelection", basicGridForm.getFormProperties().getAllowTextSelection());
-        common.put("stringSelectedRecordIdsSeparator", STRING_SELECTED_RECORD_IDS_SEPARATOR);
-/*
-        if (gridMetadata.isNeedCreateWebSocket()) {
-            common.put("isNeedCreateWebSocket", "true");
-        }
-*/
+        common.put(GRID_HEIGHT, Optional.ofNullable(basicGridForm.getFormProperties().getGridheight()).filter(s -> !s.isEmpty()).orElse(GRID_HEIGHT_DEF_VALUE));
+        common.put(LIMIT, String.valueOf(basicGridForm.getGridHeight()));
+        common.put(TOTAL_COUNT, basicGridForm.getApproxTotalCount());
+        common.put(SELECTION_MODEL, RECORDS);
+
+        common.put(IS_VISIBLE_COLUMNS_HEADER, basicGridForm.getFormProperties().getVisibleColumnsHeader());
+        common.put(IS_ALLOW_TEXT_SELECTION, basicGridForm.getFormProperties().getAllowTextSelection());
+
         if (basicGridForm.meta() instanceof Table) {
             Object[] arr = ((Table) basicGridForm.meta()).getPrimaryKey().keySet().toArray();
 
@@ -83,12 +101,12 @@ public class LyraService {
                 sb.append(arr[i]);
             }
 
-            common.put("primaryKey", sb);
+            common.put(PRIMARY_KEY, sb);
         }
 
         String summaryRow = basicGridForm.getSummaryRow();
         if (summaryRow != null) {
-            common.put("summaryRow", summaryRow);
+            common.put(SUMMARY_ROW, summaryRow);
         }
 
         metadata.put(COMMON, common);
@@ -112,23 +130,23 @@ public class LyraService {
         for (LyraFormField field : lyraFields.values()) {
 
             JSONObject column = new JSONObject();
-            column.put("id", field.getName());
-            column.put("caption", field.getCaption());
+            column.put(ID, field.getName());
+            column.put(CAPTION, field.getCaption());
 
-            column.put("visible", field.isVisible());
+            column.put(VISIBLE, field.isVisible());
 
-            column.put("cssClassName", field.getCssClassName());
-            column.put("cssStyle", field.getCssStyle());
+            column.put(CSS_CLASS_NAME, field.getCssClassName());
+            column.put(CSS_STYLE, field.getCssStyle());
 
             if (lyraGridAvailableSorting.contains(field.getName())) {
-                column.put("sortingAvailable", "true");
+                column.put(SORTING_AVAILABLE, true);
             }
 
             columns.put(String.valueOf(++count), column);
 
         }
 
-        metadata.put("columns", columns);
+        metadata.put(COLUMNS, columns);
 
         return metadata;
 
@@ -136,18 +154,16 @@ public class LyraService {
 
 
     private Object[] getKeyValuesById(final String refreshId) {
-        return refreshId.split(KEYVALUES_SEPARATOR);
+        JSONArray jsonArray = new JSONArray(refreshId);
+        Object[] obj = new Object[jsonArray.length()];
+        for (int i = 0; i < jsonArray.length(); i++) {
+            obj[i] = jsonArray.get(i);
+        }
+        return obj;
     }
 
     private String getIdByKeyValues(final Object[] keyValues) {
-        StringBuilder refreshId = new StringBuilder();
-        for (int i = 0; i < keyValues.length; i++) {
-            if (i > 0) {
-                refreshId.append(KEYVALUES_SEPARATOR);
-            }
-            refreshId.append(keyValues[i].toString());
-        }
-        return refreshId.toString();
+        return new JSONArray(keyValues).toString();
     }
 
 
@@ -159,22 +175,10 @@ public class LyraService {
                 formInstantiationParameters,
                 this);
 
-/*
-        if (basicGridForm.getChangeNotifier() == null) {
-            throw new ValidateException(new UserMessage(
-                    "Внимание! Произошло обновление скриптов решения. Для корректной работы необходимо перегрузить грид.",
-                    MessageType.INFO, "Сообщение"));
-        }
-*/
-
-
         if (dataRetrievalParams.isSortingOrFilteringChanged()) {
             ((LyraGridScrollBack) basicGridForm.getChangeNotifier())
                     .setLyraGridAddInfo(new LyraGridAddInfo());
         }
-
-
-        // ---------------------------------------------------
 
 
         LyraGridAddInfo lyraGridAddInfo =
@@ -184,15 +188,12 @@ public class LyraService {
         int lyraApproxTotalCount = basicGridForm.getApproxTotalCount();
         int dgridDelta = dataRetrievalParams.getOffset() - dataRetrievalParams.getDgridOldPosition();
 
-
         List<LyraFormData> records;
-
-
         if (dataRetrievalParams.isFirstLoading()) {
 
             JSONObject json = new JSONObject(
-                    formInstantiationParameters.getClientParams().get("context"));
-            String selectKey = (String) ((JSONObject) json.get("refreshParams")).get("selectKey");
+                    formInstantiationParameters.getClientParams().get(CONTEXT));
+            String selectKey = ((JSONObject) json.get(REFRESH_PARAMS)).get(SELECT_KEY).toString();
 
             if ((selectKey == null) || selectKey.trim().isEmpty()) {
                 records = basicGridForm.getRows(0);
@@ -320,8 +321,8 @@ public class LyraService {
 
             }
 
-            obj.put("id" + KEYVALUES_SEPARATOR, getIdByKeyValues(rec.getKeyValues()));
-            obj.put("recversion", String.valueOf(rec.getRecversion()));
+            obj.put(INTERNAL_COLUMN_ID, getIdByKeyValues(rec.getKeyValues()));
+            obj.put(RECVERSION, String.valueOf(rec.getRecversion()));
 
             data.put(obj);
 
@@ -329,7 +330,7 @@ public class LyraService {
 
 
         if ((data.length() > 0) && lyraGridAddInfo.isNeedRecreateWebsocket()) {
-            ((JSONObject) data.get(0)).put("needRecreateWebsocket", true);
+            ((JSONObject) data.get(0)).put(NEED_RECREATE_WEBSOCKET, true);
             lyraGridAddInfo.setNeedRecreateWebsocket(false);
         }
 
@@ -341,12 +342,12 @@ public class LyraService {
             d = (d / basicGridForm.getApproxTotalCount())
                     * lyraGridAddInfo.getDgridOldTotalCount();
             int dgridNewPosition = (int) d;
-            ((JSONObject) data.get(0)).put("dgridNewPosition", dgridNewPosition);
+            ((JSONObject) data.get(0)).put(DGRID_NEW_POSITION, dgridNewPosition);
 
             basicGridForm.externalAction(c -> {
                 Object[] keyValues = ((Cursor) c).getCurrentKeyValues();
                 String recId = getIdByKeyValues(keyValues);
-                ((JSONObject) data.get(0)).put("dgridNewPositionId", recId);
+                ((JSONObject) data.get(0)).put(DGRID_NEW_POSITION_ID, recId);
                 return null;
             }, null);
 
@@ -355,13 +356,13 @@ public class LyraService {
 
         JSONObject objAddData = null;
         JSONObject labels = new JSONObject();
-        labels.put("header", basicGridForm.getFormProperties().getHeader());
-        labels.put("footer", basicGridForm.getFormProperties().getFooter());
+        labels.put(HEADER, basicGridForm.getFormProperties().getHeader());
+        labels.put(FOOTER, basicGridForm.getFormProperties().getFooter());
         if (data.length() > 0) {
-            ((JSONObject) data.get(0)).put(ADDDATA_COLUMN, labels);
+            ((JSONObject) data.get(0)).put(INTERNAL_COLUMN_ADDDATA, labels);
         } else {
             objAddData = new JSONObject();
-            objAddData.put(ADDDATA_COLUMN, labels);
+            objAddData.put(INTERNAL_COLUMN_ADDDATA, labels);
         }
 
         if ((data.length() == 0) && (objAddData != null)) {
