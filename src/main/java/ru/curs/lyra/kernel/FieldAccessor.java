@@ -154,9 +154,14 @@ final class UnboundFieldAccessor implements FieldAccessor {
     @Override
     public Object getValue(Object[] c) {
 
-        Object value = null;
+        Object value;
         try {
-            value = getter.invoke(basicLyraForm, basicLyraForm.getContext());
+            getter.setAccessible(true);
+            if (getter.getParameterCount() == 0){
+                value = getter.invoke(basicLyraForm);
+            } else {
+                value = getter.invoke(basicLyraForm, basicLyraForm.getContext());
+            }
         } catch (Throwable e) {
             throw new CelestaException(
                     "Error %s while getting unbound field value: %s. See logs for details.",

@@ -2,6 +2,7 @@ package ru.curs.lyra.kernel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.util.ReflectionUtils;
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
@@ -11,8 +12,15 @@ import ru.curs.lyra.kernel.annotations.FormField;
 import ru.curs.lyra.kernel.annotations.LyraForm;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static ru.curs.lyra.kernel.LyraFormField.*;
 
@@ -24,6 +32,7 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
 
     public static final String PROPERTIES = "recordProperties";
 
+    private final Pattern FIELD_NAME_PATTERN = Pattern.compile("^(is|get)([A-Z])([^$]*$)");
     private final DataGrainElement meta;
     private final LyraNamedElementHolder<LyraFormField> fieldsMeta = new LyraNamedElementHolder<LyraFormField>() {
         private static final long serialVersionUID = 1L;
@@ -255,6 +264,27 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
     }
 
 
+    private static boolean isGetter(Method method) {
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        if (parameterTypes.length == 0 || (
+                parameterTypes.length == 1 &&
+                        parameterTypes[0].equals(CallContext.class))) {
+            if (method.getName().matches("^get[A-Z].*") &&
+                    !method.getReturnType().equals(void.class))
+                return true;
+            if (method.getName().matches("^is[A-Z].*") &&
+                    method.getReturnType().equals(boolean.class))
+                return true;
+        }
+        return false;
+    }
+
+    private String extractFieldName(Method m){
+        Matcher matcher = FIELD_NAME_PATTERN.matcher(m.getName());
+        matcher.matches();
+        return matcher.group(2).toLowerCase() + matcher.group(3);
+    }
+
     /**
      * Should append unbound field's meta information.
      *
@@ -262,47 +292,56 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
      * @param name Name of the field to be appended to form.
      */
     protected LyraFormField createUnboundField(LyraNamedElementHolder<LyraFormField> meta, String name) {
-
-        LyraFormField f = null;
-
-        try {
-            //TODO: use standard way to invoke getter dynamically
-            //(either standard Java Reflection API or Spring Reflection utils)
-            //WRONG!!!
-            String getterName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
-            Method getter = getClass().getMethod(getterName, CallContext.class);
-            UnboundFieldAccessor ufa = new UnboundFieldAccessor(getter, null, this);
-            f = new LyraFormField(name, ufa);
-            meta.addElement(f);
-
-            FormField formField = getter.getAnnotation(FormField.class);
-            if (formField != null) {
-                f.setCaption(formField.caption())
-                .setVisible(formField.visible())
-                .setEditable(formField.editable())
-                .setRequired(formField.required())
-                .setScale(formField.scale())
-                .setType(formField.type())
-                .setLookup(formField.lookup())
-                // adding_field's_property
-                .setCssClassName(formField.cssClassName())
-                .setCssStyle(formField.cssStyle())
-                .setDateFormat(formField.dateFormat())
-                .setDecimalSeparator(formField.decimalSeparator())
-                .setGroupingSeparator(formField.groupingSeparator());
-            }
-
-            ufa.setLyraFieldType(f.getType());
-
-        } catch (NoSuchMethodException e) {
-            if (!PROPERTIES.equals(name)) {
-                throw new CelestaException(
-                        "Error %s while getting unbound field: %s. See logs for details.",
-                        e.getClass().getName(), e.getMessage());
-            }
+        final List<LyraFormField> newFields = getUnboundFields(method ->
+                name.equals(extractFieldName(method))
+        );
+        if (newFields.size() == 0) {
+            if (PROPERTIES.equals(name))
+                return null;
+            else
+                throw new CelestaException("Field '%s' has no annotated getters", name);
+        } else if (newFields.size() > 1) {
+            String getterNames = newFields.stream().map(LyraNamedElement::getName).collect(Collectors.joining(","));
+            throw new CelestaException("Field '%s' has too many annotated getters: %s", name, getterNames);
+        } else {
+            LyraFormField newField = newFields.get(0);
+            meta.addElement(newField);
+            return newField;
         }
+    }
 
-        return f;
+    private List<LyraFormField> getUnboundFields(Predicate<Method> filter) {
+        final List<LyraFormField> newFields = new ArrayList<>();
+        ReflectionUtils.doWithLocalMethods(getClass(),
+                getter -> {
+                    if (isGetter(getter)
+                            && getter.isAnnotationPresent(FormField.class)
+                            && filter.test(getter)
+                    ) {
+                        UnboundFieldAccessor ufa = new UnboundFieldAccessor(getter, null, this);
+                        LyraFormField f = new LyraFormField(extractFieldName(getter), ufa);
+                        newFields.add(f);
+                        FormField formField = getter.getAnnotation(FormField.class);
+                        LyraFieldType lyraFieldType = LyraFieldType.lookupFieldType(getter.getReturnType());
+                        if (formField != null) {
+                            f.setCaption(formField.caption())
+                                    .setVisible(formField.visible())
+                                    .setEditable(formField.editable())
+                                    .setRequired(formField.required())
+                                    .setScale(formField.scale())
+                                    .setType(lyraFieldType)
+                                    .setLookup(formField.lookup())
+                                    // adding_field's_property
+                                    .setCssClassName(formField.cssClassName())
+                                    .setCssStyle(formField.cssStyle())
+                                    .setDateFormat(formField.dateFormat())
+                                    .setDecimalSeparator(formField.decimalSeparator())
+                                    .setGroupingSeparator(formField.groupingSeparator());
+                        }
+                        ufa.setLyraFieldType(f.getType());
+                    }
+                });
+        return newFields;
     }
 
 
@@ -312,18 +351,10 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
      * @param fieldsMeta Editable meta (NB: getFieldsMeta() returns read-only meta).
      */
     protected void createAllUnboundFields(LyraNamedElementHolder<LyraFormField> fieldsMeta) {
-
-        Method[] getters = getClass().getMethods();
-
-        for (Method getter : getters) {
-            if (getter.isAnnotationPresent(FormField.class)) {
-                String fieldName = getter.getName().substring(3);
-                fieldName = fieldName.substring(0, 1).toLowerCase() + fieldName.substring(1);
-
-                createUnboundField(fieldsMeta, fieldName);
-            }
+        List<LyraFormField> unboundFields = getUnboundFields(m -> true);
+        for (LyraFormField field: unboundFields){
+            fieldsMeta.addElement(field);
         }
-
     }
 
 

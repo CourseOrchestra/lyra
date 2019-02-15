@@ -21,8 +21,6 @@ public @interface FormField {
 
     int scale() default LyraFormField.DEFAULT_SCALE;
 
-    LyraFieldType type() default LyraFieldType.VARCHAR;
-
     String lookup() default "";
 
     // adding_field's_property
