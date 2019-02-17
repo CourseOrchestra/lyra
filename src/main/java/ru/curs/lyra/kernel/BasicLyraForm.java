@@ -12,7 +12,6 @@ import ru.curs.lyra.kernel.annotations.FormField;
 import ru.curs.lyra.kernel.annotations.LyraForm;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +30,8 @@ import static ru.curs.lyra.kernel.LyraFormField.*;
 public abstract class BasicLyraForm<T extends BasicCursor> {
 
     public static final String PROPERTIES = "recordProperties";
+    private static final Pattern FIELD_NAME_PATTERN = Pattern.compile("^(is|get)([A-Z])([^$]*$)");
 
-    private final Pattern FIELD_NAME_PATTERN = Pattern.compile("^(is|get)([A-Z])([^$]*$)");
     private final DataGrainElement meta;
     private final LyraNamedElementHolder<LyraFormField> fieldsMeta = new LyraNamedElementHolder<LyraFormField>() {
         private static final long serialVersionUID = 1L;
@@ -133,9 +132,12 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
             // adding_field's_property
             f.setCssClassName(metadata.has(CSS_CLASS_NAME) ? metadata.getString(CSS_CLASS_NAME) : null);
             f.setCssStyle(metadata.has(CSS_STYLE) ? metadata.getString(CSS_STYLE) : null);
-            f.setDateFormat(metadata.has(DATE_FORMAT) ? metadata.getInt(DATE_FORMAT) : DEFAULT_DATE_FORMAT);
-            f.setDecimalSeparator(metadata.has(DECIMAL_SEPARATOR) ? metadata.getString(DECIMAL_SEPARATOR) : DEFAULT_DECIMAL_SEPARATOR);
-            f.setGroupingSeparator(metadata.has(GROUPING_SEPARATOR) ? metadata.getString(GROUPING_SEPARATOR) : DEFAULT_GROUPING_SEPARATOR);
+            f.setDateFormat(metadata.has(DATE_FORMAT)
+                    ? metadata.getInt(DATE_FORMAT) : DEFAULT_DATE_FORMAT);
+            f.setDecimalSeparator(metadata.has(DECIMAL_SEPARATOR)
+                    ? metadata.getString(DECIMAL_SEPARATOR) : DEFAULT_DECIMAL_SEPARATOR);
+            f.setGroupingSeparator(metadata.has(GROUPING_SEPARATOR)
+                    ? metadata.getString(GROUPING_SEPARATOR) : DEFAULT_GROUPING_SEPARATOR);
 
         } catch (JSONException e1) {
             throw new CelestaException("JSON Error: %s", e1.getMessage());
@@ -267,14 +269,16 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
     private static boolean isGetter(Method method) {
         Class<?>[] parameterTypes = method.getParameterTypes();
         if (parameterTypes.length == 0 || (
-                parameterTypes.length == 1 &&
-                        parameterTypes[0].equals(CallContext.class))) {
-            if (method.getName().matches("^get[A-Z].*") &&
-                    !method.getReturnType().equals(void.class))
+                parameterTypes.length == 1
+                        && parameterTypes[0].equals(CallContext.class))) {
+            if (method.getName().matches("^get[A-Z].*")
+                    && !method.getReturnType().equals(void.class)) {
                 return true;
-            if (method.getName().matches("^is[A-Z].*") &&
-                    method.getReturnType().equals(boolean.class))
+            }
+            if (method.getName().matches("^is[A-Z].*")
+                    && method.getReturnType().equals(boolean.class)) {
                 return true;
+            }
         }
         return false;
     }
@@ -296,10 +300,11 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
                 name.equals(extractFieldName(method))
         );
         if (newFields.size() == 0) {
-            if (PROPERTIES.equals(name))
+            if (PROPERTIES.equals(name)) {
                 return null;
-            else
+            } else {
                 throw new CelestaException("Field '%s' has no annotated getters", name);
+            }
         } else if (newFields.size() > 1) {
             String getterNames = newFields.stream().map(LyraNamedElement::getName).collect(Collectors.joining(","));
             throw new CelestaException("Field '%s' has too many annotated getters: %s", name, getterNames);
@@ -338,7 +343,6 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
                                     .setDecimalSeparator(formField.decimalSeparator())
                                     .setGroupingSeparator(formField.groupingSeparator());
                         }
-                        ufa.setLyraFieldType(f.getType());
                     }
                 });
         return newFields;

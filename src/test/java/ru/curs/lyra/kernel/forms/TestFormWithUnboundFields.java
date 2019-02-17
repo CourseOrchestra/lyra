@@ -5,6 +5,8 @@ import ru.curs.celesta.CallContext;
 import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.annotations.FormField;
 
+import java.util.Date;
+
 public class TestFormWithUnboundFields extends BasicGridForm<FooCursor> {
 
     public static final int RETURN_VALUE = 100;
@@ -31,8 +33,16 @@ public class TestFormWithUnboundFields extends BasicGridForm<FooCursor> {
     }
 
     @FormField
-    int getException(){
+    Date getException(){
         throw new IllegalStateException("test message");
     }
 
+    @FormField
+    boolean isBoolean(){
+        return true;
+    }
+
+    int notAGetter(CallContext ctx){
+        return 0;
+    }
 }

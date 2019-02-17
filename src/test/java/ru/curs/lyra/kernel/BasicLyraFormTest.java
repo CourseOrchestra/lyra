@@ -56,13 +56,19 @@ class BasicLyraFormTest {
         TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
         testForm.createAllUnboundFields();
 
-        assertEquals(3, testForm.getFieldsMeta().size());
+        assertEquals(4, testForm.getFieldsMeta().size());
         LyraFormField newField = testForm.getFieldsMeta().get("something");
         assertEquals(LyraFieldType.INT, newField.getType());
 
         newField = testForm.getFieldsMeta().get("noContext");
         assertEquals(LyraFieldType.VARCHAR, newField.getType());
         assertEquals("test caption", newField.getCaption());
+
+        newField = testForm.getFieldsMeta().get("exception");
+        assertEquals(LyraFieldType.DATETIME, newField.getType());
+
+        newField = testForm.getFieldsMeta().get("boolean");
+        assertEquals(LyraFieldType.BIT, newField.getType());
     }
 
     @Test
