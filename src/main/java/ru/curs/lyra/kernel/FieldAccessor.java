@@ -3,6 +3,7 @@ package ru.curs.lyra.kernel;
 import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -157,32 +158,22 @@ final class UnboundFieldAccessor implements FieldAccessor {
         Object value;
         try {
             getter.setAccessible(true);
-            if (getter.getParameterCount() == 0){
+            if (getter.getParameterCount() == 0) {
                 value = getter.invoke(basicLyraForm);
             } else {
                 value = getter.invoke(basicLyraForm, basicLyraForm.getContext());
             }
-        } catch (Throwable e) {
+        } catch (IllegalAccessException e) {
+            //this will never happen
+            throw new CelestaException(e);
+        } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            cause.printStackTrace();
             throw new CelestaException(
                     "Error %s while getting unbound field value: %s. See logs for details.",
-                    e.getClass().getName(), e.getMessage());
+                    cause.getClass().getName(), cause.getMessage());
         }
-
-        switch (lyraFieldType) {
-            case BIT:
-                return (Boolean) value;
-            case DATETIME:
-                return (Date) value;
-            case REAL:
-                return (Double) value;
-            case INT:
-                return (Integer) value;
-            case VARCHAR:
-                return (String) value;
-            default:
-                return null;
-        }
-
+        return value;
     }
 
     @Override

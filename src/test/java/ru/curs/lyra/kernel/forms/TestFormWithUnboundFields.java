@@ -30,5 +30,9 @@ public class TestFormWithUnboundFields extends BasicGridForm<FooCursor> {
         return RETURN_VALUE2;
     }
 
+    @FormField
+    int getException(){
+        throw new IllegalStateException("test message");
+    }
 
 }

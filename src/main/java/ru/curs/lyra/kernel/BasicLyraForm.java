@@ -124,7 +124,7 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
             }
 
             if (m instanceof Column) {
-                boolean dbRequired = !((Column) m).isNullable();
+                boolean dbRequired = !m.isNullable();
                 f.setRequired(metadata.has(REQUIRED) ? metadata.getBoolean(REQUIRED) | dbRequired : dbRequired);
             } else {
                 f.setRequired(getPropertyVal(metadata, REQUIRED, false));
@@ -279,7 +279,7 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
         return false;
     }
 
-    private String extractFieldName(Method m){
+    private String extractFieldName(Method m) {
         Matcher matcher = FIELD_NAME_PATTERN.matcher(m.getName());
         matcher.matches();
         return matcher.group(2).toLowerCase() + matcher.group(3);
@@ -352,7 +352,7 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
      */
     protected void createAllUnboundFields(LyraNamedElementHolder<LyraFormField> fieldsMeta) {
         List<LyraFormField> unboundFields = getUnboundFields(m -> true);
-        for (LyraFormField field: unboundFields){
+        for (LyraFormField field : unboundFields) {
             fieldsMeta.addElement(field);
         }
     }
