@@ -8,6 +8,8 @@ import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celestaunit.CelestaUnitExtension;
 import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.grid.GridDriver;
+import ru.curs.lyra.service.forms.TestForm;
+import ru.curs.lyra.service.forms.TestParameterizedForm;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,13 +30,13 @@ class FormFactoryTest {
     @Test
     void getFormInstanceReturnsSameInstanceIfCalledTwice(CallContext ctx) {
 
-        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.TestForm", "foo");
+        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
         BasicGridForm<? extends BasicCursor> fooForm = formFactory.getFormInstance(ctx, ip, srv);
         assertEquals(GridDriver.DEFAULT_SMALL_SCROLL, fooForm.getMaxExactScrollValue());
         assertTrue(fooForm instanceof TestForm);
         BasicGridForm<? extends BasicCursor> fooForm2 = formFactory.getFormInstance(ctx, ip, srv);
         assertSame(fooForm, fooForm2);
-        ip = new FormInstantiationParameters("ru.curs.lyra.service.TestForm", "baz");
+        ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "baz");
         BasicGridForm<? extends BasicCursor> fooForm3 = formFactory.getFormInstance(ctx, ip, srv);
         assertNotSame(fooForm, fooForm3);
     }
@@ -56,7 +58,7 @@ class FormFactoryTest {
         params.put("part1", "part1");
         params.put("filter", "filter conditions");
         FormInstantiationParameters parameters = new FormInstantiationParameters(
-                "ru.curs.lyra.service.TestParameterizedForm",
+                "ru.curs.lyra.service.forms.TestParameterizedForm",
                 "foo", params);
         TestParameterizedForm fooForm = (TestParameterizedForm) formFactory.getFormInstance(ctx, parameters, srv);
 

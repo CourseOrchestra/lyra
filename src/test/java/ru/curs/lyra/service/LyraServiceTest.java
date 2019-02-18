@@ -5,6 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import ru.curs.celesta.CallContext;
 import ru.curs.celestaunit.CelestaUnitExtension;
 
@@ -21,15 +22,15 @@ class LyraServiceTest {
 
     @Test
     void getMetadata(CallContext ctx) {
-        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.TestForm", "foo");
+        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
         JSONObject metadata = srv.getMetadata(ctx, ip);
         System.out.println(metadata.toString());
         assertEquals("95%", metadata.getJSONObject(LyraService.COMMON).get(LyraService.GRID_WIDTH));
     }
 
     @Test
-    void getData(CallContext ctx){
-        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.TestParameterizedForm", "foo");
+    void getTwoRecordsData(CallContext ctx){
+        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo");
         DataRetrievalParams drp = new DataRetrievalParams();
         drp.setLimit(50);
         FooCursor fooCursor = new FooCursor(ctx);
@@ -43,7 +44,12 @@ class LyraServiceTest {
         JSONArray data = (JSONArray) srv.getData(ctx, ip, drp);
 
         assertEquals(2, data.length());
+        JSONObject rec = data.getJSONObject(0);
+        assertEquals(1, rec.getInt("id"));
+        assertEquals("Name", rec.getString("name"));
+        rec = data.getJSONObject(1);
+        assertEquals(2, rec.getInt("id"));
+        assertEquals("Name 2", rec.getString("name"));
 
-        System.out.println(data.get(1));
     }
 }

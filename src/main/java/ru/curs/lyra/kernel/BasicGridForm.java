@@ -35,10 +35,6 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
         }
     }
 
-    public <T> T externalAction(ExternalAction<T> f) {
-        return externalAction(f, null);
-    }
-
     public <T> T externalAction(ExternalAction<T> f, T fallBack) {
         CallContext context = getContext();
         if (context == null) {

@@ -1,10 +1,11 @@
-package ru.curs.lyra.service;
+package ru.curs.lyra.service.forms;
 
 import foo.FooCursor;
 import ru.curs.celesta.CallContext;
 import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.annotations.FormParams;
 import ru.curs.lyra.kernel.annotations.LyraForm;
+import ru.curs.lyra.service.FormInstantiationParameters;
 
 @LyraForm
 public class TestParameterizedForm extends BasicGridForm<FooCursor> {
@@ -21,6 +22,7 @@ public class TestParameterizedForm extends BasicGridForm<FooCursor> {
     public TestParameterizedForm(CallContext context, FormInstantiationParameters constructorParams) {
         super(context);
         this.constructorParams = constructorParams;
+        createAllBoundFields();
     }
 
     public FormInstantiationParameters getParams() {

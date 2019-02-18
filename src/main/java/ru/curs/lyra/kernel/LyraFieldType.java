@@ -1,7 +1,9 @@
 package ru.curs.lyra.kernel;
 
+import ru.curs.celesta.dbutils.BLOB;
 import ru.curs.celesta.score.*;
 
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -40,6 +42,9 @@ public enum LyraFieldType {
 
     private static final HashMap<String, LyraFieldType> C2L = new HashMap<>();
 
+    private static final HashMap<Class<?>, LyraFieldType> J2L = new HashMap<>();
+
+
     static {
         C2L.put(IntegerColumn.CELESTA_TYPE, INT);
         C2L.put(StringColumn.VARCHAR, VARCHAR);
@@ -48,6 +53,13 @@ public enum LyraFieldType {
         C2L.put(DateTimeColumn.CELESTA_TYPE, DATETIME);
         C2L.put(BooleanColumn.CELESTA_TYPE, BIT);
         C2L.put(BinaryColumn.CELESTA_TYPE, BLOB);
+
+        J2L.put(boolean.class, BIT);
+        J2L.put(int.class, INT);
+        J2L.put(ru.curs.celesta.dbutils.BLOB.class, BLOB);
+        J2L.put(Date.class, DATETIME);
+        J2L.put(String.class, VARCHAR);
+        J2L.put(double.class, REAL);
     }
 
     /**
@@ -61,6 +73,13 @@ public enum LyraFieldType {
             throw new RuntimeException(String.format("Invalid table column type: %s", c.getClass().toString()));
         }
         return result;
+    }
+
+    /**
+     * Lookups respective LyraFieldType for Java class.
+     */
+    public static LyraFieldType lookupFieldType(Class<?> clazz){
+        return J2L.get(clazz);
     }
 
 }
