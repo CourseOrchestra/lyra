@@ -58,7 +58,6 @@ public class LyraService {
     private static final String INTERNAL_COLUMN_ADDDATA = "internalAddData";
     private static final String INTERNAL_COLUMN_ID = "internalId";
 
-
     private final FormFactory formFactory = new FormFactory();
 
     private SimpMessageSendingOperations messagingTemplate;
@@ -68,6 +67,12 @@ public class LyraService {
     }
 
 
+    /**
+     * Get metadata for the given form.
+     * @param callContext Celesta call context
+     * @param parameters Parameters of form instantiation (Form Factory will either create a new form,
+     *                   or will use the existing form in cache)
+     */
     //TODO: get rid of transaction here. Maybe this requires changing the API for BasicGridForm
     @CelestaTransaction
     public JSONObject getMetadata(CallContext callContext, FormInstantiationParameters parameters) {
@@ -373,7 +378,8 @@ public class LyraService {
     }
 
     private String getStringValueOfDate(LyraFieldValue lyraFieldValue) {
-        DateFormat df = DateFormat.getDateTimeInstance(lyraFieldValue.meta().getDateFormat(), lyraFieldValue.meta().getDateFormat());
+        DateFormat df = DateFormat.getDateTimeInstance(lyraFieldValue.meta().getDateFormat(),
+                lyraFieldValue.meta().getDateFormat());
         return df.format(lyraFieldValue.getValue());
     }
 

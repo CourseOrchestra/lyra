@@ -1,4 +1,4 @@
-package ru.curs.lyra.service;
+package ru.curs.lyra.service.forms;
 
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.syscursors.GrainsCursor;
