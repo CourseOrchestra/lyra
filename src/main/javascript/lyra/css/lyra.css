@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+
+/*Общие стили*/
+body, table td, select {
+    font-family: sans-serif;
+    font-size: small;
+}
