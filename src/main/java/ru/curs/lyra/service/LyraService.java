@@ -69,9 +69,10 @@ public class LyraService {
 
     /**
      * Get metadata for the given form.
+     *
      * @param callContext Celesta call context
-     * @param parameters Parameters of form instantiation (Form Factory will either create a new form,
-     *                   or will use the existing form in cache)
+     * @param parameters  Parameters of form instantiation (Form Factory will either create a new form,
+     *                    or will use the existing form in cache)
      */
     //TODO: get rid of transaction here. Maybe this requires changing the API for BasicGridForm
     @CelestaTransaction
@@ -133,6 +134,10 @@ public class LyraService {
         JSONObject columns = new JSONObject();
 
         for (LyraFormField field : lyraFields.values()) {
+
+            if (BasicGridForm.PROPERTIES.equals(field.getName())) {
+                continue;
+            }
 
             JSONObject column = new JSONObject();
             column.put(ID, field.getName());
