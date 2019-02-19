@@ -4,20 +4,13 @@ import foo.FooCursor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.boot.jackson.JsonObjectDeserializer;
 import ru.curs.celesta.CallContext;
-import ru.curs.celestaunit.CelestaUnitExtension;
+import ru.curs.celestaunit.CelestaTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
+@CelestaTest
 class LyraServiceTest {
-    public static final String SCORE_PATH = "src/test/resources/score";
-    @RegisterExtension
-    static CelestaUnitExtension ext =
-            CelestaUnitExtension.builder()
-                    .withScorePath(SCORE_PATH).build();
     private LyraService srv = new LyraService(null);
 
     @Test

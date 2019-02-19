@@ -119,13 +119,29 @@ attrInt int default 3
 
 ** either one of the column names of the form cursor (this creates a bound field),
 
-** or with the name of the property of the form class declared with {apidocs}ru/curs/lyra/kernel/annotations/FormField.html[`@FormField`] annotation, this creates and unbound field.
+** or with the name of the property of the form class declared with {apidocs}ru/curs/lyra/kernel/annotations/FormField.html[`@FormField`] annotation, this creates and unbound field. The respective methods must be named according to common convention, e. g. `int getSomething(..)` for integer property named `something`, or `boolean isSomething(..)` if the type of the property is `boolean`.
+
+The type of unbound field is determined from the return type of `@FormField`-annotated method in the following way:
+
+[cols="1, 1, options="header"]
+|====
+|Java Type |Lyra Form Type
+|boolean | BIT
+|int     | INT
+|ru.curs.celesta.dbutils.BLOB | BLOB
+|java.util.Date |DATETIME
+|String | VARCHAR
+|double | REAL
+|====
+
+
+`@FormField`-annotated method can either have or don't have the `CallContext` parameter.
 
 The {apidocs}ru/curs/lyra/kernel/LyraFormField.html[`LyraFormField`] object returned by the `createField` method afterwards can be modified via its properties.
 
 * `createAllBoundFields()`, which is equivalent to calling the `createField` method for each of the table fields.
 
-* `createAllUnboundFields()`, which is equivalent to calling the `createField` method for each of the properties of a class declared with `@FormField` annotation.
+* `createAllUnboundFields()`, which is equivalent to calling the `createField` method for each of the properties of a class declared with `@FormField` annotation. 
 
 For example, if we want all unbound fields in the form to go first, and then all bound fields, and we are satisfied with the default (`CelestaDoc` or annotation-set) field property values, then we can write this:
 

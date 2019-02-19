@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class VarcharFieldEnumerator extends KeyEnumerator {
 
-    public final static List<String> CHARS = Arrays.asList(
+    final static List<String> CHARS = Arrays.asList(
             "'", "-", "–", "—", " ", "!", "\"", "#", "$", "%", "&", "(", ")",
             "*", ",", ".", "/", ":", ";",
             "?", "@", "[", "\\", "]", "^", "_", "`", "{", "|", "}",

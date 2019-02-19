@@ -2,11 +2,10 @@ package ru.curs.lyra.kernel;
 
 import foo.FooCursor;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.score.Table;
-import ru.curs.celestaunit.CelestaUnitExtension;
+import ru.curs.celestaunit.CelestaTest;
 import ru.curs.lyra.kernel.forms.TestFormWithDuplicatedFields;
 import ru.curs.lyra.kernel.forms.TestFormWithUnboundFields;
 
@@ -14,13 +13,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@CelestaTest
 class BasicLyraFormTest {
-    public static final String SCORE_PATH = "src/test/resources/score";
-    @RegisterExtension
-    static CelestaUnitExtension ext =
-            CelestaUnitExtension.builder()
-                    .withScorePath(SCORE_PATH).build();
-
     @Test
     void createUnboundField(CallContext ctx) {
         TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);

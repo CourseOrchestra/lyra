@@ -1,11 +1,10 @@
 package ru.curs.lyra.service;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
-import ru.curs.celestaunit.CelestaUnitExtension;
+import ru.curs.celestaunit.CelestaTest;
 import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.grid.GridDriver;
 import ru.curs.lyra.service.forms.TestForm;
@@ -15,15 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.curs.lyra.service.LyraServiceTest.SCORE_PATH;
 
-
+@CelestaTest
 class FormFactoryTest {
-    @RegisterExtension
-    static CelestaUnitExtension ext =
-            CelestaUnitExtension.builder()
-                    .withScorePath(SCORE_PATH).build();
-
     FormFactory formFactory = new FormFactory();
     LyraService srv = new LyraService(null);
 
@@ -48,8 +41,6 @@ class FormFactoryTest {
         assertThrows(CelestaException.class,
                 () ->
                         formFactory.getFormInstance(ctx, ip, srv));
-
-        //System.out.println(foo.getMessage());
     }
 
     @Test
