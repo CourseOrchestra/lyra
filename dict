@@ -76,3 +76,8 @@ apidocs
 html
 metadata
 ru
+boolean
+DATETIME
+getSomething
+isSomething
+VARCHAR

@@ -54,6 +54,7 @@ fi'''
         }
     } finally {
         junit 'target/surefire-reports/**/*.xml'
+        step( [ $class: 'JacocoPublisher', execPattern: '**/target/jacoco.exec' ] )
         checkstyle pattern: '**/target/checkstyle-result.xml'
         findbugs pattern: '**/target/spotbugsXml.xml'
     }

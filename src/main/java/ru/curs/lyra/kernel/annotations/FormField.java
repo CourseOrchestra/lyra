@@ -1,6 +1,5 @@
 package ru.curs.lyra.kernel.annotations;
 
-import ru.curs.lyra.kernel.LyraFieldType;
 import ru.curs.lyra.kernel.LyraFormField;
 
 import java.lang.annotation.ElementType;
