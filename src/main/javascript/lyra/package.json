@@ -1,0 +1,23 @@
+{
+  "name": "lyra-client",
+  "author": "CourseIT",
+  "version": "1.0.0",
+  "description": "Lyra-client is a client counterpart of Lyra Grid",
+  "license": "BSD-3-Clause",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CourseOrchestra/lyra"
+  },
+  "dependencies": {
+    "dgrid": "^1.2.1",
+    "dojo-dstore": "^1.1.2",
+    "dojo": "^1.15.0",
+    "vue": "^2.5.2",
+    "sockjs-client": "^1.3.0",
+    "stompjs": "^2.3.3"
+  },
+  "directories": {
+    "lib": "."
+  },
+  "main": "./lyra-vue"
+}
