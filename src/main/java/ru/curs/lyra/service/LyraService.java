@@ -44,8 +44,9 @@ public class LyraService {
     private static final String VISIBLE = "visible";
     private static final String CSS_CLASS_NAME = "cssClassName";
     private static final String CSS_STYLE = "cssStyle";
+    private static final String CSS_LYRA_TYPE = "lyra-type-";
     private static final String SORTING_AVAILABLE = "sortingAvailable";
-    private static final String COLUMNS = "columns";
+    static final String COLUMNS = "columns";
     private static final String CONTEXT = "context";
     private static final String REFRESH_PARAMS = "refreshParams";
     private static final String SELECT_KEY = "selectKey";
@@ -57,6 +58,7 @@ public class LyraService {
     private static final String FOOTER = "footer";
     private static final String INTERNAL_COLUMN_ADDDATA = "internalAddData";
     private static final String INTERNAL_COLUMN_ID = "internalId";
+
 
     private final FormFactory formFactory = new FormFactory();
 
@@ -145,7 +147,7 @@ public class LyraService {
 
             column.put(VISIBLE, field.isVisible());
 
-            column.put(CSS_CLASS_NAME, field.getCssClassName());
+            column.put(CSS_CLASS_NAME, CSS_LYRA_TYPE + field.getType().toString().toLowerCase() + (Optional.ofNullable(field.getCssClassName()).filter(s -> !s.isEmpty()).orElse("").isEmpty() ? "" : " " + field.getCssClassName()));
             column.put(CSS_STYLE, field.getCssStyle());
 
             if (lyraGridAvailableSorting.contains(field.getName())) {

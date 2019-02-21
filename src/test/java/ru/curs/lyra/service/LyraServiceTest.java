@@ -22,7 +22,18 @@ class LyraServiceTest {
     }
 
     @Test
-    void getTwoRecordsData(CallContext ctx){
+    void getMetadataCssClassNameByFieldType(CallContext ctx) {
+        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
+        JSONObject metadata = srv.getMetadata(ctx, ip);
+        System.out.println(metadata.toString());
+        JSONObject columns = metadata.getJSONObject(LyraService.COLUMNS);
+        assertEquals("lyra-type-varchar", columns.getJSONObject("1").getString("cssClassName"));
+        assertEquals("lyra-type-int", columns.getJSONObject("3").getString("cssClassName"));
+        assertEquals("lyra-type-datetime", columns.getJSONObject("6").getString("cssClassName"));
+    }
+
+    @Test
+    void getTwoRecordsData(CallContext ctx) {
         FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo");
         DataRetrievalParams drp = new DataRetrievalParams();
         drp.setLimit(50);

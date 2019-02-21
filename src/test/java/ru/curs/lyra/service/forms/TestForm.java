@@ -11,6 +11,7 @@ import ru.curs.lyra.kernel.annotations.LyraForm;
 public class TestForm extends BasicGridForm<GrainsCursor> {
     public TestForm(CallContext context) {
         super(context);
+        createAllBoundFields();
     }
 
     @Override
