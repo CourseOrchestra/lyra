@@ -26,12 +26,13 @@ import java.util.*;
  */
 @Service
 public class LyraService {
+    static final String COMMON = "common";
+    static final String COLUMNS = "columns";
     private static final String LIMIT = "limit";
     private static final String GRID_WIDTH_DEF_VALUE = "95%";
     private static final String GRID_HEIGHT_DEF_VALUE = "400px";
     static final String GRID_WIDTH = "gridWidth";
     private static final String GRID_HEIGHT = "gridHeight";
-    static final String COMMON = "common";
     private static final String TOTAL_COUNT = "totalCount";
     private static final String SELECTION_MODEL = "selectionModel";
     private static final String RECORDS = "RECORDS";
@@ -46,7 +47,6 @@ public class LyraService {
     private static final String CSS_STYLE = "cssStyle";
     private static final String CSS_LYRA_TYPE = "lyra-type-";
     private static final String SORTING_AVAILABLE = "sortingAvailable";
-    static final String COLUMNS = "columns";
     private static final String CONTEXT = "context";
     private static final String REFRESH_PARAMS = "refreshParams";
     private static final String SELECT_KEY = "selectKey";
@@ -58,7 +58,6 @@ public class LyraService {
     private static final String FOOTER = "footer";
     private static final String INTERNAL_COLUMN_ADDDATA = "internalAddData";
     private static final String INTERNAL_COLUMN_ID = "internalId";
-
 
     private final FormFactory formFactory = new FormFactory();
 
@@ -147,7 +146,8 @@ public class LyraService {
 
             column.put(VISIBLE, field.isVisible());
 
-            column.put(CSS_CLASS_NAME, CSS_LYRA_TYPE + field.getType().toString().toLowerCase() + (Optional.ofNullable(field.getCssClassName()).filter(s -> !s.isEmpty()).orElse("").isEmpty() ? "" : " " + field.getCssClassName()));
+            column.put(CSS_CLASS_NAME, CSS_LYRA_TYPE + field.getType().toString().toLowerCase()
+                    + Optional.ofNullable(field.getCssClassName()).map(s -> s.isEmpty() ? "" : " " + s).orElse(""));
             column.put(CSS_STYLE, field.getCssStyle());
 
             if (lyraGridAvailableSorting.contains(field.getName())) {

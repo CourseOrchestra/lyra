@@ -28,7 +28,6 @@ class LyraServiceTest {
         System.out.println(metadata.toString());
         JSONObject columns = metadata.getJSONObject(LyraService.COLUMNS);
         assertEquals("lyra-type-varchar", columns.getJSONObject("1").getString("cssClassName"));
-        assertEquals("lyra-type-varchar", columns.getJSONObject("2").getString("cssClassName"));
         assertEquals("lyra-type-int", columns.getJSONObject("3").getString("cssClassName"));
         assertEquals("lyra-type-datetime", columns.getJSONObject("6").getString("cssClassName"));
     }
