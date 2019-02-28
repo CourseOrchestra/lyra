@@ -1,13 +1,26 @@
 {
-  "name": "lyra-client",
+  "name": "lyra-grid",
   "author": "CourseIT",
-  "version": "1.0.0",
+  "version": "1.0.",
   "description": "Lyra-client is a client counterpart of Lyra Grid",
-  "license": "BSD-3-Clause",
+  "license": "LGPL-3.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/CourseOrchestra/lyra"
   },
+  "keywords": [
+    "lyra",
+    "grid",
+    "celesta",
+    "fast",
+    "data",
+    "scroll",
+    "form",
+    "table",
+    "vue",
+    "course",
+    "curs"
+  ],
   "dependencies": {
     "dgrid": "^1.2.1",
     "dojo-dstore": "^1.1.2",
