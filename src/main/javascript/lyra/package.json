@@ -1,7 +1,7 @@
 {
   "name": "lyra-grid",
   "author": "CourseIT",
-  "version": "1.0.1",
+  "version": "1.0.",
   "description": "Lyra-client is a client counterpart of Lyra Grid",
   "license": "LGPL-3.0",
   "repository": {
@@ -22,7 +22,7 @@
     "curs"
   ],
   "dependencies": {
-    "dgrid": "^1.1.0",
+    "dgrid": "^1.2.1",
     "dojo-dstore": "^1.1.2",
     "dojo": "^1.15.0",
     "vue": "^2.5.2",
