@@ -107,6 +107,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
         require({async: true},
             [
+                "dojo/request",
                 "dojo/_base/lang",
                 "dgrid/List",
                 "dgrid/OnDemandGrid",
@@ -124,7 +125,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
                 "dojo/dom-construct",
                 "dojo/domReady!"
             ], function (
-                lang, List, Grid, ColumnResizer, ColumnHider, ColumnReorder, Selection, CellSelection, Keyboard, declare, QueryResults, Rest, Cache, when, domConstruct, domReady
+                request, lang, List, Grid, ColumnResizer, ColumnHider, ColumnReorder, Selection, CellSelection, Keyboard, declare, QueryResults, Rest, Cache, when, domConstruct, domReady
             ) {
 
 
@@ -374,6 +375,47 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
                     grid: grid,
 
 
+                    _fetchRange: function (scparams) {
+                        var headers = lang.delegate(this.headers, {Accept: this.accepts});
+
+                        var response = request(this.target, {
+                            method: 'POST',
+                            data: scparams,
+                            headers: headers
+                        });
+
+                        var collection = this;
+                        var parsedResponse = response.then(function (response) {
+                            return collection.parse(response);
+                        });
+                        var results = {
+                            data: parsedResponse.then(function (data) {
+                                var results = data.items || data;
+                                for (var i = 0, l = results.length; i < l; i++) {
+                                    results[i] = collection._restore(results[i], true);
+                                }
+                                return results;
+                            }),
+                            total: parsedResponse.then(function (data) {
+                                var total = data.total;
+                                if (total > -1) {
+                                    return total;
+                                }
+                                return response.response.then(function (response) {
+                                    var range = response.getHeader('Content-Range');
+                                    return range && (range = range.match(/\/(.*)/)) && +range[1];
+                                });
+                            }),
+                            response: response.response
+                        };
+
+                        return new QueryResults(results.data, {
+                            totalLength: results.total,
+                            response: results.response
+                        });
+                    },
+
+
                     _fetch: function (kwArgs) {
 
 
@@ -435,13 +477,9 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
                             scparams["refreshId"] = refreshId;
                             scparams["formClass"] = formClass;
                             scparams["instanceId"] = instanceId;
-                            kwArgs["scparams"] = scparams;
-
-                            kwArgs.start = kwArgs[0].start;
-                            kwArgs.end = kwArgs[0].end;
 
 
-                            results = Rest.prototype.fetchRange.call(this, kwArgs);
+                            results = this._fetchRange(scparams);
                             results.then(function (results) {
                                 var addData = null;
 
