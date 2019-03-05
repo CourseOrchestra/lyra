@@ -1,7 +1,18 @@
 @CHARSET "UTF-8";
 
-/*Общие стили*/
+
 body, table td, select {
     font-family: sans-serif;
     font-size: small;
+}
+
+.dgrid-header .dgrid-cell {
+    text-align: center;
+    font-size: 1em;
+}
+
+.dgrid-header .dgrid-cell .dgrid-resize-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
