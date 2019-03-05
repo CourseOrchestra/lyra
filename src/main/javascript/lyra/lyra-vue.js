@@ -47,7 +47,8 @@ require({async: true},
 
             data: function () {
                 return {
-                    gridDivId: ('lyra_grid_vue_' + Math.random() * 10).replace(/\./g, ""),
+                    gridDivId: getParentId(this.formclass, this.instanceid),
+
                     header: "",
                     footer: ""
                 }
