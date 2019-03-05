@@ -108,6 +108,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
         require({async: true},
             [
                 "dojo/request",
+                "dojo/query",
                 "dojo/_base/lang",
                 "dgrid/List",
                 "dgrid/OnDemandGrid",
@@ -125,7 +126,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
                 "dojo/dom-construct",
                 "dojo/domReady!"
             ], function (
-                request, lang, List, Grid, ColumnResizer, ColumnHider, ColumnReorder, Selection, CellSelection, Keyboard, declare, QueryResults, Rest, Cache, when, domConstruct, domReady
+                request, query, lang, List, Grid, ColumnResizer, ColumnHider, ColumnReorder, Selection, CellSelection, Keyboard, declare, QueryResults, Rest, Cache, when, domConstruct, domReady
             ) {
 
 
@@ -360,6 +361,25 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
                         if (this._started) {
                             this.resize();
                         }
+                    },
+
+                    _adjustFooterCellsWidths: function () {
+                        if (!this._resizedColumns) {
+                            var colNodes = query('.dgrid-cell', this.headerNode);
+
+                            var colWidths = colNodes.map(function (colNode) {
+                                return colNode.offsetWidth;
+                            });
+
+                            colNodes.forEach(function (colNode, i) {
+                                this.resizeColumnWidth(colNode.columnId, colWidths[i]);
+                            }, this);
+                        }
+
+                        var obj = this._getResizedColumnWidths(),
+                            lastCol = obj.lastColId;
+
+                        this.resizeColumnWidth(lastCol, 'auto');
                     }
 
 
@@ -629,6 +649,9 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
 
                 grid.on("dgrid-refresh-complete", function (event) {
+
+                    event.grid.refreshId = null;
+
                     if (event.grid.firstLoading) {
 
                         if (event.grid.dgridNewPosition) {
@@ -747,12 +770,8 @@ function getParamFromContext(context, param) {
 
 function refreshLyraVueDGrid(parentId, context) {
     if (getParamFromContext(context, "selectKey") == "current") {
-        var row;
-        if (arrGrids[parentId].oldFocusedNode && arrGrids[parentId].row(arrGrids[parentId].oldFocusedNode)) {
-            row = arrGrids[parentId].row(arrGrids[parentId].oldFocusedNode);
-        } else {
-            row = arrGrids[parentId].row(arrGrids[parentId]._focusedNode);
-        }
+        var focusedNode = arrGrids[parentId]._focusedNode || arrGrids[parentId].contentNode;
+        var row = arrGrids[parentId].row(focusedNode);
 
         var sort = getParamFromContext(context, "sort");
         var filter = getParamFromContext(context, "filter");
