@@ -47,7 +47,7 @@ require({async: true},
 
             data: function () {
                 return {
-                    gridDivId: getParentId(this.formclass, this.instanceid),
+                    gridDivId: getParentId(this.formclass, this.instanceid).replace(/\./g, "-"),
 
                     header: "",
                     footer: ""
