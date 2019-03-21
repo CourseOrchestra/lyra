@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.score.*;
+import ru.curs.celesta.score.io.FileResource;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -87,7 +88,7 @@ public class TestLyraForm {
         ) {
             CelestaParser cp1 = new CelestaParser(is1, "utf-8");
             CelestaParser cp2 = new CelestaParser(is2, "utf-8");
-            GrainPart gp = cp1.extractGrainInfo(s, f);
+            GrainPart gp = cp1.extractGrainInfo(s, new FileResource(f));
             g = cp2.parseGrainPart(gp);
         }
 

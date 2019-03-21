@@ -60,7 +60,7 @@
         <spring.boot.version>2.0.6.RELEASE</spring.boot.version>
         <spring.boot.websocket.version>2.0.6.RELEASE</spring.boot.websocket.version>
         <spring.boot.starter.celesta.version>2.0.1</spring.boot.starter.celesta.version>
-        <celesta.version>7.0.18</celesta.version>
+        <celesta.version>7.1.00</celesta.version>
         <jacoco.version>0.8.1</jacoco.version>
     </properties>
 
@@ -196,7 +196,6 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>gen-cursors</goal>
                             <goal>gen-test-cursors</goal>
                         </goals>
                     </execution>
