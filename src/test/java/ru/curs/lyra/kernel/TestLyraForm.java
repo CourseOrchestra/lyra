@@ -5,7 +5,6 @@ import ru.curs.celesta.CallContext;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.score.*;
 import ru.curs.celesta.score.io.FileResource;
-import ru.curs.celesta.score.io.Resource;
 
 import java.io.File;
 import java.io.FileInputStream;
