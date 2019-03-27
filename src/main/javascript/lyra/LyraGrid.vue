@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="lyra-grid">
         <div v-html="header"></div>
         <div :id="gridDivId"></div>
         <div v-html="footer"></div>
@@ -17,6 +17,9 @@
 import SockJS from 'sockjs-client'
 import Stomp from 'stompjs'
 */
+    import SockJS from 'sockjs-client/dist/sockjs'
+    import 'stompjs/lib/stomp'
+
     import Vue from 'vue'
     import request from 'dojo/request'
     import query from 'dojo/query'
@@ -36,29 +39,27 @@ import Stomp from 'stompjs'
     import domConstruct from 'dojo/dom-construct'
 
 
-    var arrGrids = [];
+    let arrGrids = [];
 
 
-    /*
-        var socket = new SockJS('/lyra/scrollback');
-        var stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            stompClient.subscribe('/position', function (scrollBackParams) {
-                var params = JSON.parse(scrollBackParams.body);
-                var grid = arrGrids[params.dgridId];
-                if (grid.needBackScroll) {
-                    var pos = params.position;
-                    pos = pos * grid.rowHeight;
-                    pos = pos + grid.getScrollPosition().y - Math.floor(grid.getScrollPosition().y / grid.rowHeight) * grid.rowHeight;
-                    pos = Math.round(pos);
-                    if (!isNaN(pos) && (pos >= 0)) {
-                        grid.backScroll = true;
-                        grid.scrollTo({x: 0, y: pos});
-                    }
+    let socket = new SockJS('/lyra/scrollback');
+    let stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        stompClient.subscribe('/position', function (scrollBackParams) {
+            let params = JSON.parse(scrollBackParams.body);
+            let grid = arrGrids[params.dgridId];
+            if (grid.needBackScroll) {
+                let pos = params.position;
+                pos = pos * grid.rowHeight;
+                pos = pos + grid.getScrollPosition().y - Math.floor(grid.getScrollPosition().y / grid.rowHeight) * grid.rowHeight;
+                pos = Math.round(pos);
+                if (!isNaN(pos) && (pos >= 0)) {
+                    grid.backScroll = true;
+                    grid.scrollTo({x: 0, y: pos});
                 }
-            });
+            }
         });
-    */
+    });
 
 
     export const lyraGridEvents = new Vue();
@@ -95,10 +96,10 @@ import Stomp from 'stompjs'
 
         mounted: function () {
 
-            var gridDivId = this.gridDivId;
-            var parentId = getParentId(this.formclass, this.instanceid);
+            let gridDivId = this.gridDivId;
+            let parentId = getParentId(this.formclass, this.instanceid);
 
-            var vueComponent = this;
+            let vueComponent = this;
 
             dojo.xhrPost({
                 url: "lyra/metadata",
@@ -113,7 +114,7 @@ import Stomp from 'stompjs'
                 preventCache: true,
                 load: function (metadata) {
 
-                    var div = document.getElementById(gridDivId);
+                    let div = document.getElementById(gridDivId);
                     div.style = 'width:' + metadata["common"]["gridWidth"] + '; height:' + metadata["common"]["gridHeight"] + ';';
 
                     createLyraVueDGrid(vueComponent, parentId, div.id, metadata, this.postData.formClass, this.postData.instanceId, this.postData.context);
@@ -126,21 +127,14 @@ import Stomp from 'stompjs'
 
         },
 
-        methods: {
-            func: function () {
-                alert("fffff");
-            }
-
-        }
     }
 
 
     function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formClass, instanceId, context) {
         try {
-
-            var columns = [];
-            for (var k in metadata["columns"]) {
-                var column = {};
+            let columns = [];
+            for (let k in metadata["columns"]) {
+                let column = {};
 
                 column["id"] = metadata["columns"][k]["id"];
                 column["parentId"] = metadata["columns"][k]["parentId"];
@@ -152,7 +146,7 @@ import Stomp from 'stompjs'
                 column["className"] = metadata["columns"][k]["cssClassName"];
 
                 function getTitle(title) {
-                    var res = title;
+                    let res = title;
                     if (res) {
                         res = res.replace(/&lt;/g, "<");
                         res = res.replace(/&gt;/g, ">");
@@ -167,7 +161,7 @@ import Stomp from 'stompjs'
 
                     }
 
-                    var div = document.createElement("div");
+                    let div = document.createElement("div");
                     div.innerHTML = value;
                     div.title = value;
                     div.title = getTitle(div.title);
@@ -177,7 +171,7 @@ import Stomp from 'stompjs'
 
 
                 column["renderHeaderCell"] = function actionRenderCell(node) {
-                    var div = document.createElement("div");
+                    let div = document.createElement("div");
                     if (metadata["common"]["haColumnHeader"]) {
                         div.style["text-align"] = metadata["common"]["haColumnHeader"];
                     }
@@ -188,18 +182,6 @@ import Stomp from 'stompjs'
 
                     if (this.sortingPic || this.sortingAvailable) {
 
-                        return div;
-
-                        //var src = document.querySelector('script[src*="LyraGrid.vue"]').src;
-                        //var pathPic = src.substring(0, src.lastIndexOf("/")) + "/css/images/";
-
-
-                        var pathPic = "./css/images/";
-
-
-                        var extPic = ".png";
-                        var onePic = "one.png";
-
                         div.innerHTML =
                             "<tbody>" +
                             "<tr>";
@@ -209,25 +191,26 @@ import Stomp from 'stompjs'
 
                         if (this.sortingPic) {
                             div.innerHTML = div.innerHTML +
-                                "<td><span style='padding-left:10px;'> </span></td>" +
+                                "<td><span class='sort-gap before-sorted'> </span></td>" +
 
-                                "<td  align=\"right\" style=\"vertical-align: middle;\">" +
-                                "<a>" +
-                                "<img src=" + (pathPic + this.sortingPic + extPic) + " title=\"Порядок и направление сортировки\"  style=\"vertical-align: middle; align: right; width: 32px; height: 14px;  \"   >" +
+                                "<td align='right' style='vertical-align: middle;'>" +
+                                "<a title='Порядок и направление сортировки'>" +
+                                "<img src class='" + this.sortingPic + " sorted-image'>" +
                                 "</a>" +
                                 "</td>";
                         }
 
                         if (this.sortingAvailable) {
                             div.innerHTML = div.innerHTML +
-                                "<td><span style='padding-left:10px;'> </span></td>" +
+                                "<td><span class='sort-gap before-sortable'> </span></td>" +
 
-                                "<td  align=\"right\" style=\"vertical-align: middle;\">" +
-                                "<a>" +
-                                "<img src=" + (pathPic + onePic) + " title=\"По данному полю есть индекс одиночной сортировки\"  style=\"vertical-align: middle; align: right; width: 14px; height: 14px;  \"   >" +
+                                "<td align='right' style='vertical-align: middle;'>" +
+                                "<a title='По данному полю есть индекс одиночной сортировки'>" +
+                                "<img src class='one sortable-image'>" +
                                 "</a>" +
                                 "</td>";
                         }
+
 
                         div.innerHTML = div.innerHTML +
                             "</tr>" +
@@ -245,14 +228,14 @@ import Stomp from 'stompjs'
             vueComponent.$emit('columns-info', formClass, instanceId, columns);
 
 
-            var sort = getParamFromContext(context, "sort");
+            let sort = getParamFromContext(context, "sort");
             setExternalSorting(columns, sort);
 
 
-            var declareGrid = [Grid, ColumnResizer, ColumnHider, ColumnReorder, Keyboard];
+            let declareGrid = [Grid, ColumnResizer, ColumnHider, ColumnReorder, Keyboard];
 
-            var selectionMode;
-            if (metadata["common"]["selectionModel"] == "RECORDS") {
+            let selectionMode;
+            if (metadata["common"]["selectionModel"] === "RECORDS") {
                 selectionMode = "extended";
                 declareGrid.push(Selection);
             } else {
@@ -260,24 +243,24 @@ import Stomp from 'stompjs'
                 declareGrid.push(CellSelection);
             }
 
-            var isVisibleColumnsHeader = false;
+            let isVisibleColumnsHeader = false;
             if (metadata["common"]["isVisibleColumnsHeader"]) {
                 isVisibleColumnsHeader = true;
             }
 
-            var isAllowTextSelection = false;
+            let isAllowTextSelection = false;
             if (metadata["common"]["isAllowTextSelection"]) {
                 isAllowTextSelection = true;
             }
 
 
-            var localizedParams = {
+            let localizedParams = {
                 loadingMessage: "Загрузка...",
                 noDataMessage: "Нет записей"
             };
 
 
-            var grid = new declare(declareGrid)({
+            let grid = new declare(declareGrid)({
                 columns: columns,
 
                 minRowsPerPage: parseInt(metadata["common"]["limit"]),
@@ -297,8 +280,8 @@ import Stomp from 'stompjs'
                 keepScrollPosition: false,
 
                 renderRow: function (object) {
-                    var rowElement = Grid.prototype.renderRow.call(this, object);
-                    if (object.rowstyle && (object.rowstyle != "")) {
+                    let rowElement = Grid.prototype.renderRow.call(this, object);
+                    if (object.rowstyle && (object.rowstyle !== "")) {
                         rowElement.className = rowElement.className + " " + object.rowstyle + " ";
                     }
                     return rowElement;
@@ -329,7 +312,7 @@ import Stomp from 'stompjs'
 
                 buildRendering: function () {
                     ColumnResizer.prototype.buildRendering.call(this);
-                    var areaNode = this.summaryAreaNode =
+                    let areaNode = this.summaryAreaNode =
                         domConstruct.create('div', {
                             className: 'summary-row',
                             role: 'row',
@@ -349,12 +332,12 @@ import Stomp from 'stompjs'
                 },
 
                 _renderSummaryCell: function (item, cell, column) {
-                    var value = item[column.field] || '';
+                    let value = item[column.field] || '';
                     cell.appendChild(document.createTextNode(value));
                 },
 
                 _setSummary: function (data) {
-                    var tableNode = this.summaryTableNode;
+                    let tableNode = this.summaryTableNode;
 
                     this.summary = data;
 
@@ -374,9 +357,9 @@ import Stomp from 'stompjs'
 
                 _adjustFooterCellsWidths: function () {
                     if (!this._resizedColumns) {
-                        var colNodes = query('.dgrid-cell', this.headerNode);
+                        let colNodes = query('.dgrid-cell', this.headerNode);
 
-                        var colWidths = colNodes.map(function (colNode) {
+                        let colWidths = colNodes.map(function (colNode) {
                             return colNode.offsetWidth;
                         });
 
@@ -385,7 +368,7 @@ import Stomp from 'stompjs'
                         }, this);
                     }
 
-                    var obj = this._getResizedColumnWidths(),
+                    let obj = this._getResizedColumnWidths(),
                         lastCol = obj.lastColId;
 
                     this.resizeColumnWidth(lastCol, 'auto');
@@ -396,7 +379,7 @@ import Stomp from 'stompjs'
             arrGrids[parentId] = grid;
 
 
-            var store = new declare([Rest, Cache])(lang.mixin({
+            let store = new declare([Rest, Cache])(lang.mixin({
 
                 target: "lyra/data",
                 idProperty: "internalId",
@@ -405,33 +388,33 @@ import Stomp from 'stompjs'
 
 
                 _fetchRange: function (scparams) {
-                    var headers = lang.delegate(this.headers, {Accept: this.accepts});
+                    let headers = lang.delegate(this.headers, {Accept: this.accepts});
 
-                    var response = request(this.target, {
+                    let response = request(this.target, {
                         method: 'POST',
                         data: scparams,
                         headers: headers
                     });
 
-                    var collection = this;
-                    var parsedResponse = response.then(function (response) {
+                    let collection = this;
+                    let parsedResponse = response.then(function (response) {
                         return collection.parse(response);
                     });
-                    var results = {
+                    let results = {
                         data: parsedResponse.then(function (data) {
-                            var results = data.items || data;
-                            for (var i = 0, l = results.length; i < l; i++) {
+                            let results = data.items || data;
+                            for (let i = 0, l = results.length; i < l; i++) {
                                 results[i] = collection._restore(results[i], true);
                             }
                             return results;
                         }),
                         total: parsedResponse.then(function (data) {
-                            var total = data.total;
+                            let total = data.total;
                             if (total > -1) {
                                 return total;
                             }
                             return response.response.then(function (response) {
-                                var range = response.getHeader('Content-Range');
+                                let range = response.getHeader('Content-Range');
                                 return range && (range = range.match(/\/(.*)/)) && +range[1];
                             });
                         }),
@@ -446,6 +429,8 @@ import Stomp from 'stompjs'
 
 
                 _fetch: function (kwArgs) {
+
+                    let results = null;
 
                     if (this.grid.backScroll) {
 
@@ -463,9 +448,7 @@ import Stomp from 'stompjs'
 
                         this.grid.needBackScroll = true;
 
-                        var results = null;
-
-                        var refreshId = null;
+                        let refreshId = null;
                         if (this.grid.refreshId) {
                             refreshId = this.grid.refreshId;
 
@@ -481,7 +464,7 @@ import Stomp from 'stompjs'
 
                         this.grid.oldStart = kwArgs[0].start;
 
-                        var scparams = {};
+                        let scparams = {};
                         scparams["context"] = this.grid.context;
                         scparams["offset"] = kwArgs[0].start;
                         scparams["limit"] = kwArgs[0].end - kwArgs[0].start;
@@ -489,9 +472,9 @@ import Stomp from 'stompjs'
                         this.grid.dgridOldPosition = scparams["offset"];
                         this.grid.limit = scparams["limit"];
 
-                        var sort = getParamFromContext(this.grid.context, "sort");
-                        var filter = getParamFromContext(this.grid.context, "filter");
-                        if ((sort != this.grid.oldSort) || (filter != this.grid.oldFilter)) {
+                        let sort = getParamFromContext(this.grid.context, "sort");
+                        let filter = getParamFromContext(this.grid.context, "filter");
+                        if ((sort !== this.grid.oldSort) || (filter !== this.grid.oldFilter)) {
                             scparams["sortingOrFilteringChanged"] = true;
                             scparams["dgridOldPosition"] = 0;
                             this.grid.dgridOldPosition = 0;
@@ -507,14 +490,14 @@ import Stomp from 'stompjs'
 
                         results = this._fetchRange(scparams);
                         results.then(function (results) {
-                            var addData = null;
+                            let addData = null;
 
                             if (results && (!results[0]) && results["internalAddData"]) {
                                 addData = results["internalAddData"];
                             }
 
                             if (results[0]) {
-                                var grid = arrGrids[parentId];
+                                let grid = arrGrids[parentId];
                                 grid.resScroll = results;
 
                                 if (results[0]["internalAddData"]) {
@@ -545,7 +528,7 @@ import Stomp from 'stompjs'
             grid.set("collection", store);
 
 
-            for (var k in metadata["columns"]) {
+            for (let k in metadata["columns"]) {
                 grid.styleColumn(metadata["columns"][k]["id"], metadata["columns"][k]["cssStyle"]);
             }
 
@@ -577,7 +560,7 @@ import Stomp from 'stompjs'
             });
 
             function emitSelect(row) {
-                var obj = {};
+                let obj = {};
                 obj.currentRowId = row.id;
                 obj.currentRowData = row.data;
                 obj.selection = getSelection(grid);
@@ -600,14 +583,14 @@ import Stomp from 'stompjs'
 
 
             grid.on("dgrid-sort", function (event) {
-                var sort = event.sort[0].property;
+                let sort = event.sort[0].property;
                 if (event.sort[0].descending) {
                     sort = sort + " desc";
                 }
 
-                var primaryKey = metadata["common"]["primaryKey"].split(",");
-                for (var n = 0; n < primaryKey.length; n++) {
-                    if ((n == 0) && (event.sort[0].property == primaryKey[n])) {
+                let primaryKey = metadata["common"]["primaryKey"].split(",");
+                for (let n = 0; n < primaryKey.length; n++) {
+                    if ((n === 0) && (event.sort[0].property === primaryKey[n])) {
                         continue;
                     }
                     sort = sort + "," + primaryKey[n];
@@ -617,16 +600,16 @@ import Stomp from 'stompjs'
                 }
 
 
-                var context = event.grid.context;
+                let context = event.grid.context;
 
-                var refreshParams = {
+                let refreshParams = {
                     selectKey: "",
                     sort: sort,
                     filter: ""
                 };
 
-                var objContext;
-                if (!context || context.trim() == '') {
+                let objContext;
+                if (!context || context.trim() === '') {
                     objContext = {refreshParams: refreshParams};
                 } else {
                     objContext = JSON.parse(context);
@@ -655,7 +638,7 @@ import Stomp from 'stompjs'
                 if (event.grid.firstLoading) {
 
                     if (event.grid.dgridNewPosition) {
-                        var pos = parseInt(event.grid.dgridNewPosition);
+                        let pos = parseInt(event.grid.dgridNewPosition);
                         pos = pos * event.grid.rowHeight;
                         event.grid.backScroll = true;
                         event.grid.needBackScroll = false;
@@ -670,14 +653,14 @@ import Stomp from 'stompjs'
                     }
 
 
-                    if (metadata["common"]["selectionModel"] == "RECORDS") {
+                    if (metadata["common"]["selectionModel"] === "RECORDS") {
                         if (metadata["common"]["selRecId"]) {
                             event.grid.select(event.grid.row(metadata["common"]["selRecId"]));
                         }
                     } else {
                         if (metadata["common"]["selRecId"] && metadata["common"]["selColId"]) {
-                            for (var col in event.grid.columns) {
-                                if (event.grid.columns[col].label == metadata["common"]["selColId"]) {
+                            for (let col in event.grid.columns) {
+                                if (event.grid.columns[col].label === metadata["common"]["selColId"]) {
                                     event.grid.select(event.grid.cell(metadata["common"]["selRecId"], col));
                                     break;
                                 }
@@ -706,8 +689,8 @@ import Stomp from 'stompjs'
     }
 
     function getSelection(grid) {
-        var selection = [];
-        for (var id in grid.selection) {
+        let selection = [];
+        for (let id in grid.selection) {
             if (grid.selection[id]) {
                 selection.push(id);
             }
@@ -720,25 +703,25 @@ import Stomp from 'stompjs'
             return;
         }
 
-        for (var n = 0; n < columns.length; n++) {
+        for (let n = 0; n < columns.length; n++) {
             columns[n].sortingPic = null;
         }
 
-        var desc = false;
-        var arr = sort.split(",");
-        for (var m = 0; m < arr.length; m++) {
+        let desc = false;
+        let arr = sort.split(",");
+        for (let m = 0; m < arr.length; m++) {
 
-            if ((m == 0) && (arr[m].toLowerCase().indexOf(" desc") > -1)) {
+            if ((m === 0) && (arr[m].toLowerCase().indexOf(" desc") > -1)) {
                 desc = true;
             }
 
-            var sortName = arr[m].substring(0, arr[m].indexOf(" "));
-            if (sortName == "") {
+            let sortName = arr[m].substring(0, arr[m].indexOf(" "));
+            if (sortName === "") {
                 sortName = arr[m];
             }
 
-            for (var n = 0; n < columns.length; n++) {
-                if (columns[n].id == sortName) {
+            for (let n = 0; n < columns.length; n++) {
+                if (columns[n].id === sortName) {
                     if (desc) {
                         columns[n].sortingPic = "d";
                     } else {
@@ -756,9 +739,9 @@ import Stomp from 'stompjs'
 
 
     function getParamFromContext(context, param) {
-        var ret = "";
-        if (context && context.trim() != '') {
-            var objContext = JSON.parse(context);
+        let ret = "";
+        if (context && context.trim() !== '') {
+            let objContext = JSON.parse(context);
             if (objContext && objContext.refreshParams && objContext.refreshParams[param]) {
                 ret = objContext.refreshParams[param];
             }
@@ -767,15 +750,15 @@ import Stomp from 'stompjs'
     }
 
     function refreshLyraVueDGrid(parentId, context) {
-        var grid = arrGrids[parentId];
-        if (getParamFromContext(context, "selectKey") == "current") {
-            var focusedNode = grid._focusedNode || grid.contentNode;
-            var row = grid.row(focusedNode);
+        let grid = arrGrids[parentId];
+        if (getParamFromContext(context, "selectKey") === "current") {
+            let focusedNode = grid._focusedNode || grid.contentNode;
+            let row = grid.row(focusedNode);
 
-            var sort = getParamFromContext(context, "sort");
-            var filter = getParamFromContext(context, "filter");
-            if ((sort == grid.oldSort) && (filter == grid.oldFilter)) {
-                if (context && context.trim() != '') {
+            let sort = getParamFromContext(context, "sort");
+            let filter = getParamFromContext(context, "filter");
+            if ((sort === grid.oldSort) && (filter === grid.oldFilter)) {
+                if (context && context.trim() !== '') {
                     grid.context = context;
                 }
 
@@ -785,21 +768,21 @@ import Stomp from 'stompjs'
                 grid.refresh({keepScrollPosition: true});
             } else {
 
-                var selectKey = getSelection(grid)[0];
+                let selectKey = getSelection(grid)[0];
 
                 if (!selectKey) {
                     showErrorTextMessage("Отсутствует выделенная запись. Выполнение операции невозможно.");
                     return;
                 }
 
-                var refreshParams = {
+                let refreshParams = {
                     selectKey: selectKey,
                     sort: "",
                     filter: ""
                 };
 
-                var objContext;
-                if (!context || context.trim() == '') {
+                let objContext;
+                if (!context || context.trim() === '') {
                     objContext = {refreshParams: refreshParams};
                 } else {
                     objContext = JSON.parse(context);
@@ -819,12 +802,12 @@ import Stomp from 'stompjs'
                 grid.refresh({keepScrollPosition: false});
             }
         } else {
-            if (context && context.trim() != '') {
+            if (context && context.trim() !== '') {
                 grid.context = context;
             }
 
-            var sort = getParamFromContext(grid.context, "sort");
-            if (sort && sort.trim() != '') {
+            let sort = getParamFromContext(grid.context, "sort");
+            if (sort && sort.trim() !== '') {
                 setExternalSorting(grid._columns, sort);
                 grid.renderHeader();
             }
@@ -835,19 +818,19 @@ import Stomp from 'stompjs'
     }
 
     function exportToClipboardLyraVueDGrid(parentId) {
-        var str = "";
+        let str = "";
 
-        var grid = grid;
+        let grid = grid;
 
-        for (var col in grid.columns) {
+        for (let col in grid.columns) {
             str = str + grid.columns[col].label + "\t";
         }
 
         str = str + "\n";
 
-        for (var id in grid.selection) {
+        for (let id in grid.selection) {
             if (grid.selection[id]) {
-                for (var col in grid.columns) {
+                for (let col in grid.columns) {
                     str = str + grid.row(id).data[col] + "\t";
                 }
                 str = str + "\n";
@@ -858,10 +841,10 @@ import Stomp from 'stompjs'
     }
 
     function exportToExcelLyraVueDGrid(parentId, exportType, fileName) {
-        var grid = arrGrids[parentId];
-        var focusedNode = grid._focusedNode || grid.contentNode;
-        var row = grid.row(focusedNode);
-        var refreshId = grid.row(row).id;
+        let grid = arrGrids[parentId];
+        let focusedNode = grid._focusedNode || grid.contentNode;
+        let row = grid.row(focusedNode);
+        let refreshId = grid.row(row).id;
 
         /*
                 gwtLyraVueGridExportToExcel(
@@ -878,8 +861,8 @@ import Stomp from 'stompjs'
     }
 
     function fileDownloadLyraVueDGrid(parentId, procName) {
-        var grid = arrGrids[parentId];
-        var recId = getSelection(grid)[0];
+        let grid = arrGrids[parentId];
+        let recId = getSelection(grid)[0];
 
         /*
                 gwtProcessFileDownloadLyraVue(
@@ -894,8 +877,8 @@ import Stomp from 'stompjs'
     }
 
     function setColumnsVisibility(parentId, columns) {
-        var grid = arrGrids[parentId];
-        for (var n = 0; n < columns.length; n++) {
+        let grid = arrGrids[parentId];
+        for (let n = 0; n < columns.length; n++) {
             grid.toggleColumnHiddenState(columns[n].id, !columns[n].visible);
         }
     }

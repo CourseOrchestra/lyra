@@ -1,18 +1,256 @@
 @CHARSET "UTF-8";
 
-
-body, table td, select {
+.lyra-grid {
     font-family: sans-serif;
-    font-size: small;
-}
-
-.dgrid-header .dgrid-cell {
-    text-align: center;
     font-size: 1em;
+    margin-left: 10px;
 }
 
-.dgrid-header .dgrid-cell .dgrid-resize-header-container {
+.lyra-grid .dgrid {
+    border-top: 1px solid #DDD;
+    border-bottom: 1px solid #DDD;
+    border-left: none;
+    border-right: 1px solid #FAFAFA;
+}
+
+.lyra-grid .dgrid-header {
+    background: none;
+}
+
+.lyra-grid .dgrid-header th.dgrid-cell:hover {
+    background-image: none;
+    background-color: #FAFAFA;
+}
+
+.lyra-grid .dgrid-header.dgrid-header-scroll {
+    background-color: #FAFAFA;
+    border-bottom: 2px solid #DDD;
+}
+
+.lyra-grid .dgrid .ui-icon {
+    margin-top: 4px;
+}
+
+.lyra-grid .dgrid-header .dgrid-cell {
+    text-align: center;
+    font-size: 0.9em;
+    border-right-style: dotted;
+    border-left-style: dotted;
+    border-width: 1px 1px 2px 1px;
+    border-color: #DDD;
+}
+
+.lyra-grid .sort-gap {
+    width: 8px;
+    display: inline-block;
+}
+
+.lyra-grid .dgrid-header .dgrid-cell .dgrid-resize-header-container {
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
+.lyra-grid .dgrid-hider-menu {
+    width: 400px;
+}
+
+.lyra-grid .dgrid-hider-menu-check {
+    margin-top: 5px;
+}
+
+.lyra-grid .dgrid-content .dgrid-cell {
+    border-right-style: dotted;
+    border-left-style: dotted;
+    border-width: 1px 1px 1px 1px;
+    border-color: #DDD;
+    vertical-align: middle;
+}
+
+.lyra-grid .dgrid-content .dgrid-cell > div {
+    white-space: normal;
+    max-height: 55px;
+}
+
+.lyra-grid .dgrid-footer {
+    background: none;
+}
+
+.lyra-grid .dgrid-footer .summary-row {
+    background: none;
+    border-top: 2px solid #DDD;
+    color: initial;
+}
+
+.lyra-grid .dgrid-footer th.dgrid-cell:hover {
+    background-image: none;
+    background-color: #FAFAFA;
+}
+
+.lyra-grid .dgrid-footer .dgrid-cell {
+    text-align: center;
+    font-size: 0.9em;
+    border-right-style: dotted;
+    border-left-style: dotted;
+    border-width: 0px 1px 0px 1px;
+    border-color: #DDD;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+
+/*-------------------------------------------------------------------*/
+
+.lyra-grid .a1 {
+    background-image: url('./images/a1.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .a2 {
+    background-image: url('./images/a2.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .a3 {
+    background-image: url('./images/a3.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .a4 {
+    background-image: url('./images/a4.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .a5 {
+    background-image: url('./images/a5.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .a6 {
+    background-image: url('./images/a6.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .a7 {
+    background-image: url('./images/a7.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .a8 {
+    background-image: url('./images/a8.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .a9 {
+    background-image: url('./images/a9.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .d1 {
+    background-image: url('./images/d1.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .d2 {
+    background-image: url('./images/d2.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .d3 {
+    background-image: url('./images/d3.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .d4 {
+    background-image: url('./images/d4.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .d5 {
+    background-image: url('./images/d5.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .d6 {
+    background-image: url('./images/d6.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .d7 {
+    background-image: url('./images/d7.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .d8 {
+    background-image: url('./images/d8.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .d9 {
+    background-image: url('./images/d9.png');
+    background-repeat: no-repeat;
+    width: 14px;
+    height: 14px;
+    text-align: center;
+}
+
+.lyra-grid .one {
+    background-image: url('./images/one.png');
+    background-repeat: no-repeat;
+    width: 9px;
+    height: 13px;
+    text-align: center;
+}
+
+/*-------------------------------------------------------------------*/
