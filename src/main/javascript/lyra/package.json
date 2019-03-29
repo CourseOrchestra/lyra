@@ -21,6 +21,9 @@
     "course",
     "curs"
   ],
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore ."
+  },
   "dependencies": {
     "dgrid": "1.1.0",
     "dojo-dstore": "^1.1.2",
