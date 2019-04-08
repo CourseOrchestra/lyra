@@ -60,7 +60,7 @@ fi'''
         publishIssues issues: [checkstyle]
         def spotbugs = scanForIssues tool: spotBugs(pattern: '**/target/spotbugsXml.xml')
         publishIssues issues: [spotbugs]
-        def eslint = scanForIssues tool: checkStyle(pattern: '**/target/eslint.xml')
+        def eslint = scanForIssues tool: eslint(pattern: '**/target/eslint.txt')
         publishIssues issues: [eslint]
     }
 
