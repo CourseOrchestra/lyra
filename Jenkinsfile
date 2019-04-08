@@ -15,12 +15,12 @@ node {
         rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
         buildInfo = Artifactory.newBuildInfo()
         buildInfo.env.capture = true
-
+        //"build": "lyra :: master/LATEST",
         def downloadSpec = """
                  {"files": [
                     {
                       "pattern": "warn/lyra/30/warnings.yml",
-                      //"build": "lyra :: master/LATEST",
+
                       "target": "previous.yml",
                       "flat": "true"
                     }
