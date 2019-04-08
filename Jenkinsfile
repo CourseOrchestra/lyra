@@ -55,14 +55,19 @@ fi'''
     } finally {
         junit 'target/surefire-reports/**/*.xml'
         step( [ $class: 'JacocoPublisher', execPattern: '**/target/jacoco.exec' ] )
-        checkstyle pattern: '**/target/checkstyle-result.xml'
-        findbugs pattern: '**/target/spotbugsXml.xml'
+
+        def checkstyle = scanForIssues tool: checkStyle(pattern: '**/target/checkstyle-result.xml')
+        publishIssues issues: [checkstyle]
+        def spotbugs = scanForIssues tool: spotBugs(pattern: '**/target/spotbugsXml.xml')
+        publishIssues issues: [spotbugs]
+        def eslint = scanForIssues tool: esLint(pattern: '**/target/eslint.xml')
+        publishIssues issues: [eslint]
     }
 
     stage ('Ratcheting') {
         def warningsMap = countWarnings()
         writeYaml file: 'target/warnings.yml', data: warningsMap
-        compareWarningMaps oldWarnings, warningsMap
+        // compareWarningMaps oldWarnings, warningsMap
     }
 
     if (env.BRANCH_NAME == 'master') {
