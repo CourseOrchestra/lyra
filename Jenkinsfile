@@ -61,7 +61,7 @@ fi'''
         def spotbugs = scanForIssues tool: spotBugs(pattern: '**/target/spotbugsXml.xml')
         publishIssues issues: [spotbugs]
         def eslint = scanForIssues tool: checkStyle(pattern: '**/target/eslint.xml')
-        publishIssues issues: [checkstyle]
+        publishIssues issues: [eslint]
     }
 
     stage ('Ratcheting') {
