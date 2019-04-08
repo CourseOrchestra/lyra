@@ -19,8 +19,8 @@ node {
         def downloadSpec = """
                  {"files": [
                     {
-                      "pattern": "warn/lyra/*/warnings.yml",
-                      "build": "lyra :: master/LATEST",
+                      "pattern": "warn/lyra/30/warnings.yml",
+                      //"build": "lyra :: master/LATEST",
                       "target": "previous.yml",
                       "flat": "true"
                     }
