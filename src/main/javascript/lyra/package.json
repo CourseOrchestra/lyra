@@ -22,7 +22,7 @@
     "curs"
   ],
   "scripts": {
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --output-file ../../../../target/eslint.xml . || exit 0"
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --output-file ../../../../target/eslint.txt . || exit 0"
   },
   "dependencies": {
     "dgrid": "1.1.0",
