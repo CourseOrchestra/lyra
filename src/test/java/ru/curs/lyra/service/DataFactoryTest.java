@@ -77,6 +77,19 @@ class DataFactoryTest {
     @Test
     void lyraApproxTotalCount2(CallContext ctx) {
 
+        FooCursor fooCursor = new FooCursor(ctx);
+        fooCursor.setId(1);
+        fooCursor.setName("Name");
+        fooCursor.insert();
+
+        fooCursor.setId(2);
+        fooCursor.setName("Name2");
+        fooCursor.insert();
+
+        fooCursor.setId(3);
+        fooCursor.setName("Name3");
+        fooCursor.insert();
+
         FormInstantiationParameters formInstantiationParameters
                 = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo");
 
