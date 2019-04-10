@@ -70,7 +70,7 @@ class DataFactoryTest {
         initTotalCountTests(ctx, dataRetrievalParams);
 
         assertEquals(1, dataFactory.getBasicGridForm().getApproxTotalCount());
-        // must be 3
+        // expected 3
     }
 
 
@@ -100,7 +100,7 @@ class DataFactoryTest {
         basicGridForm.getRows(0);
 
         assertEquals(1, basicGridForm.getApproxTotalCount());
-        // must be 3
+        // expected 3
 
     }
 
