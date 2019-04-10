@@ -15,13 +15,17 @@ public class FormFactory {
 
     private final Map<String, BasicGridForm<? extends BasicCursor>> forms = new HashMap<>();
 
-    public BasicGridForm<? extends BasicCursor> getFormInstance(CallContext callContext,
-                                                                FormInstantiationParameters parameters,
-                                                                LyraService srv) {
+    BasicGridForm<? extends BasicCursor> getFormInstance(CallContext callContext,
+                                                         FormInstantiationParameters parameters,
+                                                         LyraService srv) {
         BasicGridForm<?> form = forms.computeIfAbsent(parameters.getDgridId(),
                 key -> getBasicGridFormInstance(callContext, parameters, srv));
         form.setCallContext(callContext);
         return setParameters(form, parameters);
+    }
+
+    void clearForms() {
+        forms.clear();
     }
 
     private BasicGridForm<? extends BasicCursor> setParameters(

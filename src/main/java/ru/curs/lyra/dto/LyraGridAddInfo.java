@@ -6,8 +6,6 @@ public class LyraGridAddInfo {
     private int lyraOldPosition = 0;
     private int dgridOldTotalCount = 0;
 
-    private boolean needRecreateWebsocket = false;
-
     public int getLyraOldPosition() {
         return lyraOldPosition;
     }
@@ -22,14 +20,6 @@ public class LyraGridAddInfo {
 
     public void setDgridOldTotalCount(final int aDgridOldTotalCount) {
         dgridOldTotalCount = aDgridOldTotalCount;
-    }
-
-    public boolean isNeedRecreateWebsocket() {
-        return needRecreateWebsocket;
-    }
-
-    public void setNeedRecreateWebsocket(final boolean needRecreateWebsocket) {
-        this.needRecreateWebsocket = needRecreateWebsocket;
     }
 
 }
