@@ -22,7 +22,7 @@ node {
 
     stage ('Clone') {
         checkout scm
-        sh '''git checkout dev'''
+        sh '''git checkout master'''
 
         result = sh (script: "git log -1 | grep '\\[ci skip\\]'", returnStatus: true)
         if (result == 0) {
@@ -95,7 +95,7 @@ node {
         sh commitSnapshotScript
 
         sshagent(['cf816ae4-a98e-4eaa-98fd-18c588739711']) {
-            sh '''git push origin dev'''
+            sh '''git push origin master'''
             sh '''git push --tags'''
         }
     }
