@@ -8,3 +8,4 @@
 /build
 /target
 /src/main/asciidoc/*.png
+/src/main/javascript/lyra/lyra*.tgz

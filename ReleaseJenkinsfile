@@ -70,6 +70,10 @@ node {
             'overrideExistingFiles' : true // Default: false. If true, Artifactory overwrites builds already existing in the target path in Bintray.
         ]
         server.distribute distributionConfig
+        
+        withCredentials([string(credentialsId: 'nodejs-token', variable: 'NPM_TOKEN')]) {
+          sh "npm publish src/main/javascript/lyra"
+        }
     }
 
     stage ('Update repository') {
@@ -101,7 +105,7 @@ node {
     }
 
     stage ('Sync with maven central') {
-        def modules = ['xylophone']
+        def modules = ['lyra']
 
         withCredentials([usernamePassword(credentialsId: 'curs-bintray', passwordVariable: 'bintrayPassword', usernameVariable: 'bintrayUserName')]) {
             for (module in modules) {
