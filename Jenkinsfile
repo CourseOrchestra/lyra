@@ -76,9 +76,8 @@ fi'''
         compareWarningMaps oldWarnings, warningsMap
     }
 
-   // if (env.BRANCH_NAME == 'master') {
+    if (env.BRANCH_NAME == 'master') {
         stage ('NPM publish'){
-            rtNpm.install buildInfo: buildInfo, path: 'src/main/javascript/lyra'
             rtNpm.publish buildInfo: buildInfo, path: 'src/main/javascript/lyra'        
         }
    
@@ -97,5 +96,5 @@ fi'''
             buildInfo.append(buildInfo2)
             server.publishBuildInfo buildInfo
         }
-    //}
+    }
 }
