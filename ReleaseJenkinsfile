@@ -64,6 +64,10 @@ node {
         
         server.publishBuildInfo buildInfo
 
+        withCredentials([string(credentialsId: 'nodejs-token', variable: 'NPM_TOKEN')]) {
+          sh "npm publish src/main/javascript/lyra"
+        }
+        
         def distributionConfig = [
             // Mandatory parameters
             'buildName'             : buildInfo.name,
@@ -74,9 +78,6 @@ node {
         ]
         server.distribute distributionConfig
         
-        withCredentials([string(credentialsId: 'nodejs-token', variable: 'NPM_TOKEN')]) {
-          sh "npm publish src/main/javascript/lyra"
-        }
     }
 
     stage ('Update repository') {
