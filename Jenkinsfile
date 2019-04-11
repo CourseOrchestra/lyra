@@ -78,9 +78,7 @@ fi'''
 
    // if (env.BRANCH_NAME == 'master') {
         stage ('NPM publish'){
-           // sh 'cd 
-            rtNpm.publish buildInfo: buildInfo, path: 'lyra'
-        
+            rtNpm.publish buildInfo: buildInfo, path: 'src/main/javascript/lyra'        
         }
    
         stage ('Publish build info') {
