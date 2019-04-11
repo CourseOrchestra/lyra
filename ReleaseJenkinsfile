@@ -65,7 +65,9 @@ node {
         server.publishBuildInfo buildInfo
 
         withCredentials([string(credentialsId: 'nodejs-token', variable: 'NPM_TOKEN')]) {
+          sh "echo //registry.npmjs.org/:_authToken=${env.NPM_TOKEN} > src/main/javascript/lyra/.npmrc"
           sh "npm publish src/main/javascript/lyra"
+          sh 'rm src/main/javascript/lyra/.npmrc'
         }
         
         def distributionConfig = [
