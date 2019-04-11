@@ -2,6 +2,7 @@
 node {
     def server = Artifactory.server 'ART'
     def rtMaven = Artifactory.newMavenBuild()
+    def rtNpm = Artifactory.newNpmBuild()
     def buildInfo
     def oldWarnings
 
@@ -13,6 +14,11 @@ node {
         rtMaven.tool = 'M3' 
         rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
         rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
+        
+        rtNpm.tool = 'NODE11'
+        rtNpm.deployer repo: 'npm-local', server: server
+        rtNpm.resolver repo: 'npm-remote', server: server
+        
         buildInfo = Artifactory.newBuildInfo()
         buildInfo.env.capture = true
 
@@ -63,14 +69,20 @@ fi'''
         def eslint = scanForIssues tool: esLint(pattern: '**/target/eslint.xml')
         publishIssues issues: [eslint]
     }
-
+    
     stage ('Ratcheting') {
         def warningsMap = countWarnings()
         writeYaml file: 'target/warnings.yml', data: warningsMap
         compareWarningMaps oldWarnings, warningsMap
     }
 
-    if (env.BRANCH_NAME == 'master') {
+   // if (env.BRANCH_NAME == 'master') {
+        stage ('NPM publish'){
+           // sh 'cd 
+            rtNpm.publish buildInfo: buildInfo, path: 'lyra'
+        
+        }
+   
         stage ('Publish build info') {
             def uploadSpec = """
             {
@@ -86,5 +98,5 @@ fi'''
             buildInfo.append(buildInfo2)
             server.publishBuildInfo buildInfo
         }
-    }
+    //}
 }
