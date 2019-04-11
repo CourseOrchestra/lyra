@@ -55,7 +55,7 @@ node {
         
         packagejson = readJSON file: 'src/main/javascript/lyra/package.json'
         packagejson['version'] = releaseVersion
-        writeJSON file: 'src/main/javascript/lyra/package.json', json: packagejson
+        writeJSON file: 'src/main/javascript/lyra/package.json', json: packagejson, pretty: 4
     }
 
     stage ('Make release') {
@@ -65,9 +65,9 @@ node {
         server.publishBuildInfo buildInfo
 
         withCredentials([string(credentialsId: 'nodejs-token', variable: 'NPM_TOKEN')]) {
-          sh "echo //registry.npmjs.org/:_authToken=${env.NPM_TOKEN} > src/main/javascript/lyra/.npmrc"
+          sh "echo //registry.npmjs.org/:_authToken=${env.NPM_TOKEN} > .npmrc"
           sh "npm publish src/main/javascript/lyra"
-          sh 'rm src/main/javascript/lyra/.npmrc'
+          sh 'rm .npmrc'
         }
         
         def distributionConfig = [
