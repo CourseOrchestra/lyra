@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import ru.curs.celesta.CallContext;
 import ru.curs.celestaunit.CelestaTest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @CelestaTest
@@ -18,7 +21,7 @@ class LyraServiceTest {
         FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
         JSONObject metadata = srv.getMetadata(ctx, ip);
         System.out.println(metadata.toString());
-        assertEquals("95%", metadata.getJSONObject(LyraService.COMMON).get(LyraService.GRID_WIDTH));
+        assertEquals("95%", metadata.getJSONObject(MetadataFactory.COMMON).get(MetadataFactory.GRID_WIDTH));
     }
 
     @Test
@@ -26,7 +29,7 @@ class LyraServiceTest {
         FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
         JSONObject metadata = srv.getMetadata(ctx, ip);
         System.out.println(metadata.toString());
-        JSONObject columns = metadata.getJSONObject(LyraService.COLUMNS);
+        JSONObject columns = metadata.getJSONObject(MetadataFactory.COLUMNS);
         assertEquals("lyra-type-varchar", columns.getJSONObject("1").getString("cssClassName"));
         assertEquals("lyra-type-int", columns.getJSONObject("3").getString("cssClassName"));
         assertEquals("lyra-type-datetime", columns.getJSONObject("6").getString("cssClassName"));
@@ -34,7 +37,9 @@ class LyraServiceTest {
 
     @Test
     void getTwoRecordsData(CallContext ctx) {
-        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo");
+        Map<String, String> clientParams = new HashMap<>();
+        clientParams.put(DataFactory.CONTEXT, "{\"refreshParams\": {\"selectKey\": \"\",\"sort\": \"name,id\"}}");
+        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo", clientParams);
         DataRetrievalParams drp = new DataRetrievalParams();
         drp.setLimit(50);
         FooCursor fooCursor = new FooCursor(ctx);
