@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * Класс для обработки обратного движения ползунка.
  */
-public class LyraGridScrollBack implements Runnable {
+public final class LyraGridScrollBack implements Runnable {
 
     static final int DGRID_MAX_TOTALCOUNT = 50000;
     static final int DGRID_SMALLSTEP = 100;
