@@ -21,6 +21,8 @@ public final class Column {
 
     /**
      * setId
+     *
+     * @param id id
      */
     public void setId(String id) {
         this.id = id;
@@ -35,6 +37,8 @@ public final class Column {
 
     /**
      * setCaption
+     *
+     * @param caption caption
      */
     public void setCaption(String caption) {
         this.caption = caption;
@@ -50,6 +54,8 @@ public final class Column {
 
     /**
      * setVisible
+     *
+     * @param visible visible
      */
     public void setVisible(boolean visible) {
         this.visible = visible;
@@ -64,6 +70,8 @@ public final class Column {
 
     /**
      * setCssClassName
+     *
+     * @param cssClassName cssClassName
      */
     public void setCssClassName(String cssClassName) {
         this.cssClassName = cssClassName;
@@ -78,6 +86,8 @@ public final class Column {
 
     /**
      * setCssStyle
+     *
+     * @param cssStyle cssStyle
      */
     public void setCssStyle(String cssStyle) {
         this.cssStyle = cssStyle;
@@ -92,6 +102,8 @@ public final class Column {
 
     /**
      * setSortingAvailable
+     *
+     * @param sortingAvailable sortingAvailable
      */
     public void setSortingAvailable(boolean sortingAvailable) {
         this.sortingAvailable = sortingAvailable;

@@ -25,6 +25,8 @@ public final class Common {
 
     /**
      * setGridWidth
+     *
+     * @param gridWidth gridWidth
      */
     public void setGridWidth(String gridWidth) {
         this.gridWidth = gridWidth;
@@ -39,6 +41,8 @@ public final class Common {
 
     /**
      * setGridHeight
+     *
+     * @param gridHeight gridHeight
      */
     public void setGridHeight(String gridHeight) {
         this.gridHeight = gridHeight;
@@ -53,6 +57,8 @@ public final class Common {
 
     /**
      * setLimit
+     *
+     * @param limit limit
      */
     public void setLimit(int limit) {
         this.limit = limit;
@@ -67,6 +73,8 @@ public final class Common {
 
     /**
      * setTotalCount
+     *
+     * @param totalCount totalCount
      */
     public void setTotalCount(int totalCount) {
         this.totalCount = totalCount;
@@ -81,6 +89,8 @@ public final class Common {
 
     /**
      * setSelectionModel
+     *
+     * @param selectionModel selectionModel
      */
     public void setSelectionModel(String selectionModel) {
         this.selectionModel = selectionModel;
@@ -95,6 +105,8 @@ public final class Common {
 
     /**
      * setVisibleColumnsHeader
+     *
+     * @param visibleColumnsHeader visibleColumnsHeader
      */
     public void setVisibleColumnsHeader(boolean visibleColumnsHeader) {
         this.visibleColumnsHeader = visibleColumnsHeader;
@@ -109,6 +121,8 @@ public final class Common {
 
     /**
      * setAllowTextSelection
+     *
+     * @param allowTextSelection allowTextSelection
      */
     public void setAllowTextSelection(boolean allowTextSelection) {
         this.allowTextSelection = allowTextSelection;
@@ -123,6 +137,8 @@ public final class Common {
 
     /**
      * setPrimaryKey
+     *
+     * @param primaryKey primaryKey
      */
     public void setPrimaryKey(String primaryKey) {
         this.primaryKey = primaryKey;
@@ -137,6 +153,8 @@ public final class Common {
 
     /**
      * setSummaryRow
+     *
+     * @param summaryRow summaryRow
      */
     public void setSummaryRow(Map<String, String> summaryRow) {
         this.summaryRow = summaryRow;
