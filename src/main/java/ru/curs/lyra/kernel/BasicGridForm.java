@@ -201,7 +201,7 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
      * If the grid is scrolled less than for given amount of records, the exact
      * positioning in cycle will be used instead of interpolation.
      */
-    public int getMaxExactScrollValue(){
+    public int getMaxExactScrollValue() {
         return gd.getMaxExactScrollValue();
     }
 
@@ -251,7 +251,7 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
     /**
      * Should return a summary row.
      */
-    public String getSummaryRow() {
+    public Map<String, String> getSummaryRow() {
         return null;
     }
 

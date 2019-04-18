@@ -1,11 +1,11 @@
 package ru.curs.lyra.service;
 
 import foo.FooCursor;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import ru.curs.celesta.CallContext;
 import ru.curs.celestaunit.CelestaTest;
+import ru.curs.lyra.dto.DataResult;
+import ru.curs.lyra.dto.MetaDataResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,31 +14,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @CelestaTest
 class LyraServiceTest {
+    static final String CONTEXT = "context";
+
     private LyraService srv = new LyraService(null);
 
     @Test
     void getMetadata(CallContext ctx) {
         FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
-        JSONObject metadata = srv.getMetadata(ctx, ip);
-        System.out.println(metadata.toString());
-        assertEquals("95%", metadata.getJSONObject(MetadataFactory.COMMON).get(MetadataFactory.GRID_WIDTH));
+        MetaDataResult metadata = srv.getMetadata(ctx, ip);
+        assertEquals("95%", metadata.getCommon().getGridWidth());
     }
 
     @Test
     void getMetadataCssClassNameByFieldType(CallContext ctx) {
         FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
-        JSONObject metadata = srv.getMetadata(ctx, ip);
-        System.out.println(metadata.toString());
-        JSONObject columns = metadata.getJSONObject(MetadataFactory.COLUMNS);
-        assertEquals("lyra-type-varchar", columns.getJSONObject("1").getString("cssClassName"));
-        assertEquals("lyra-type-int", columns.getJSONObject("3").getString("cssClassName"));
-        assertEquals("lyra-type-datetime", columns.getJSONObject("6").getString("cssClassName"));
+        MetaDataResult metadata = srv.getMetadata(ctx, ip);
+        assertEquals("lyra-type-varchar", metadata.getColumns().get("1").getCssClassName());
+        assertEquals("lyra-type-int", metadata.getColumns().get("3").getCssClassName());
+        assertEquals("lyra-type-datetime", metadata.getColumns().get("6").getCssClassName());
     }
+
 
     @Test
     void getTwoRecordsData(CallContext ctx) {
         Map<String, String> clientParams = new HashMap<>();
-        clientParams.put(DataFactory.CONTEXT, "{\"refreshParams\": {\"selectKey\": \"\",\"sort\": \"name,id\"}}");
+        clientParams.put(CONTEXT, "{\"refreshParams\": {\"selectKey\": \"\",\"sort\": \"name,id\"}}");
         FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo", clientParams);
         DataRetrievalParams drp = new DataRetrievalParams();
         drp.setLimit(50);
@@ -50,15 +50,17 @@ class LyraServiceTest {
         fooCursor.setId(2);
         fooCursor.setName("Name 2");
         fooCursor.insert();
-        JSONArray data = (JSONArray) srv.getData(ctx, ip, drp);
 
-        assertEquals(2, data.length());
-        JSONObject rec = data.getJSONObject(0);
-        assertEquals(1, rec.getInt("id"));
-        assertEquals("Name", rec.getString("name"));
-        rec = data.getJSONObject(1);
-        assertEquals(2, rec.getInt("id"));
-        assertEquals("Name 2", rec.getString("name"));
+        DataResult dataResult = srv.getData(ctx, ip, drp);
+
+        assertEquals(2, dataResult.getData().size());
+        Map<String, Object> rec = dataResult.getData().get(0);
+        assertEquals("1", rec.get("id"));
+        assertEquals("Name", rec.get("name"));
+        rec = dataResult.getData().get(1);
+        assertEquals("2", rec.get("id"));
+        assertEquals("Name 2", rec.get("name"));
 
     }
+
 }

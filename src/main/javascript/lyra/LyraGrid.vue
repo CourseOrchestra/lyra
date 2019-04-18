@@ -55,7 +55,10 @@ stompClient.connect({}, (frame) => {
       pos = Math.round(pos);
       if (!isNaN(pos) && (pos >= 0)) {
         grid.backScroll = true;
-        grid.scrollTo({ x: 0, y: pos });
+        grid.scrollTo({
+          x: 0,
+          y: pos,
+        });
       }
     }
   });
@@ -87,7 +90,8 @@ export default {
 
   data() {
     return {
-      gridDivId: getParentId(this.formclass, this.instanceid).replace(/\./g, '-'),
+      gridDivId: getParentId(this.formclass, this.instanceid)
+        .replace(/\./g, '-'),
 
       header: '',
       footer: '',
@@ -177,7 +181,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
         if (this.sortingPic || this.sortingAvailable) {
           div.innerHTML = '<tbody>'
-                            + '<tr>';
+                        + '<tr>';
 
           div.innerHTML = `${div.innerHTML
           }<td>${this.label}</td>`;
@@ -186,28 +190,28 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sorted'> </span></td>`
 
-                                + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-                                + '<a title=\'Порядок и направление сортировки\'>'
-                                + `<img src class='${this.sortingPic} sorted-image'>`
-                                + '</a>'
-                                + '</td>';
+                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+                            + '<a title=\'Порядок и направление сортировки\'>'
+                            + `<img src class='${this.sortingPic} sorted-image'>`
+                            + '</a>'
+                            + '</td>';
           }
 
           if (this.sortingAvailable) {
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sortable'> </span></td>`
 
-                                + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-                                + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
-                                + '<img src class=\'one sortable-image\'>'
-                                + '</a>'
-                                + '</td>';
+                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+                            + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
+                            + '<img src class=\'one sortable-image\'>'
+                            + '</a>'
+                            + '</td>';
           }
 
 
           div.innerHTML = `${div.innerHTML
           }</tr>`
-                            + '</tbody>';
+                        + '</tbody>';
         }
 
         return div;
@@ -235,14 +239,14 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
       declareGrid.push(CellSelection);
     }
 
-    let isVisibleColumnsHeader = false;
-    if (metadata.common.isVisibleColumnsHeader) {
-      isVisibleColumnsHeader = true;
+    let visibleColumnsHeader = false;
+    if (metadata.common.visibleColumnsHeader) {
+      visibleColumnsHeader = true;
     }
 
-    let isAllowTextSelection = false;
-    if (metadata.common.isAllowTextSelection) {
-      isAllowTextSelection = true;
+    let allowTextSelection = false;
+    if (metadata.common.allowTextSelection) {
+      allowTextSelection = true;
     }
 
 
@@ -255,15 +259,15 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
     const grid = new declare(declareGrid)({
       columns,
 
-      minRowsPerPage: parseInt(metadata.common.limit),
-      maxRowsPerPage: parseInt(metadata.common.limit),
+      minRowsPerPage: metadata.common.limit,
+      maxRowsPerPage: metadata.common.limit,
       bufferRows: 0,
       farOffRemoval: 0,
       pagingDelay: 50,
 
       selectionMode,
-      allowTextSelection: isAllowTextSelection,
-      showHeader: isVisibleColumnsHeader,
+      allowTextSelection,
+      showHeader: visibleColumnsHeader,
       loadingMessage: localizedParams.loadingMessage,
       noDataMessage: localizedParams.noDataMessage,
 
@@ -273,8 +277,8 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
       renderRow(object) {
         const rowElement = Grid.prototype.renderRow.call(this, object);
-        if (object.rowstyle && (object.rowstyle !== '')) {
-          rowElement.className = `${rowElement.className} ${object.rowstyle} `;
+        if (object.recordProperties && object.recordProperties.rowstyle) {
+          rowElement.className = `${rowElement.className} ${object.recordProperties.rowstyle} `;
         }
         return rowElement;
       },
@@ -286,7 +290,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
 
       dgridOldPosition: 0,
-      limit: parseInt(metadata.common.limit),
+      limit: metadata.common.limit,
 
       context,
 
@@ -300,7 +304,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
 
       showFooter: metadata.common.summaryRow,
-      summary: metadata.common.summaryRow ? JSON.parse(metadata.common.summaryRow) : null,
+      summary: metadata.common.summaryRow,
 
       buildRendering() {
         ColumnResizer.prototype.buildRendering.call(this);
@@ -466,7 +470,9 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
         }
 
         scparams.firstLoading = this.grid.firstLoading;
-        scparams.refreshId = refreshId;
+        if (refreshId) {
+          scparams.refreshId = JSON.stringify(refreshId);
+        }
         scparams.formClass = formClass;
         scparams.instanceId = instanceId;
 
@@ -489,7 +495,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
             if (results[0].dgridNewPosition) {
               grid.dgridNewPosition = results[0].dgridNewPosition;
-              grid.dgridNewPositionId = results[0].dgridNewPositionId;
+              grid.dgridNewPositionId = results[0].dgridNewPositionId.toString();
 
               grid.dgridOldPosition = grid.dgridNewPosition;
             }
@@ -620,12 +626,18 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
           pos *= event.grid.rowHeight;
           event.grid.backScroll = true;
           event.grid.needBackScroll = false;
-          event.grid.scrollTo({ x: 0, y: pos });
-          event.grid.select(event.grid.row(event.grid.dgridNewPositionId));
-          event.grid.row(event.grid.dgridNewPositionId).element.scrollIntoView({
-            block: 'start',
-            behavior: 'smooth',
+          event.grid.scrollTo({
+            x: 0,
+            y: pos,
           });
+          event.grid.clearSelection();
+          event.grid.select(event.grid.row(event.grid.dgridNewPositionId));
+          event.grid.row(event.grid.dgridNewPositionId)
+            .element
+            .scrollIntoView({
+              block: 'start',
+              behavior: 'smooth',
+            });
           event.grid.dgridNewPosition = null;
           event.grid.dgridNewPositionId = null;
         }
@@ -683,7 +695,8 @@ function setExternalSorting(columns, sort) {
   let desc = false;
   const arr = sort.split(',');
   for (let m = 0; m < arr.length; m++) {
-    if ((m === 0) && (arr[m].toLowerCase().indexOf(' desc') > -1)) {
+    if ((m === 0) && (arr[m].toLowerCase()
+      .indexOf(' desc') > -1)) {
       desc = true;
     }
 
@@ -722,9 +735,8 @@ function getParamFromContext(context, param) {
 
 function refreshLyraVueDGrid(parentId, context) {
   const grid = arrGrids[parentId];
-  if (getParamFromContext(context, 'selectKey') === 'current') {
+  if (getParamFromContext(context, 'selectKey')[0] && (getParamFromContext(context, 'selectKey')[0] === 'current')) {
     const focusedNode = grid._focusedNode || grid.contentNode;
-    const row = grid.row(focusedNode);
 
     const sort = getParamFromContext(context, 'sort');
     const filter = getParamFromContext(context, 'filter');
@@ -733,7 +745,7 @@ function refreshLyraVueDGrid(parentId, context) {
         grid.context = context;
       }
 
-      grid.refreshId = grid.row(row).id;
+      grid.refreshId = grid.row(focusedNode).id;
 
       grid.firstLoading = false;
       grid.refresh({ keepScrollPosition: true });
@@ -813,20 +825,19 @@ function exportToClipboardLyraVueDGrid(parentId) {
 function exportToExcelLyraVueDGrid(parentId, exportType, fileName) {
   const grid = arrGrids[parentId];
   const focusedNode = grid._focusedNode || grid.contentNode;
-  const row = grid.row(focusedNode);
-  const refreshId = grid.row(row).id;
+  const refreshId = grid.row(focusedNode).id;
 
   /*
-                gwtLyraVueGridExportToExcel(
-                    grid.formClass,
-                    grid.instanceId,
-                    grid.context,
-                    refreshId,
-                    grid.dgridOldPosition,
-                    grid.limit,
-                    exportType,
-                    fileName);
-        */
+                    gwtLyraVueGridExportToExcel(
+                        grid.formClass,
+                        grid.instanceId,
+                        grid.context,
+                        refreshId,
+                        grid.dgridOldPosition,
+                        grid.limit,
+                        exportType,
+                        fileName);
+            */
 }
 
 function fileDownloadLyraVueDGrid(parentId, procName) {
@@ -834,14 +845,14 @@ function fileDownloadLyraVueDGrid(parentId, procName) {
   const recId = getSelection(grid)[0];
 
   /*
-                gwtProcessFileDownloadLyraVue(
-                    grid.formClass,
-                    grid.instanceId,
-                    encodeURIComponent(grid.context),
-                    recId,
-                    procName,
-                    "false");
-        */
+                    gwtProcessFileDownloadLyraVue(
+                        grid.formClass,
+                        grid.instanceId,
+                        encodeURIComponent(grid.context),
+                        recId,
+                        procName,
+                        "false");
+            */
 }
 
 function setColumnsVisibility(parentId, columns) {

@@ -5,13 +5,11 @@ import org.junit.jupiter.api.Test;
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celestaunit.CelestaTest;
+import ru.curs.lyra.dto.DataResult;
+import ru.curs.lyra.dto.Labels;
 import ru.curs.lyra.kernel.BasicGridForm;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @CelestaTest
 class DataFactoryTest {
@@ -33,11 +31,8 @@ class DataFactoryTest {
         fooCursor.setName("Name3");
         fooCursor.insert();
 
-
-        Map<String, String> clientParams = new HashMap<>();
-        clientParams.put(DataFactory.CONTEXT, "{\"refreshParams\": {\"selectKey\": \"\",\"sort\": \"name,id\"}}");
         FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo", clientParams);
+                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo", null);
 
         dataRetrievalParams.setLimit(50);
         dataRetrievalParams.setOffset(0);
@@ -50,9 +45,8 @@ class DataFactoryTest {
         BasicGridForm<? extends BasicCursor> basicGridForm =
                 formFactory.getFormInstance(ctx, formInstantiationParameters, null);
 
-        dataFactory.setParameters(basicGridForm, formInstantiationParameters, dataRetrievalParams);
-        dataFactory.buildData();
-        dataFactory.buildData();
+        dataFactory.buildData(basicGridForm, dataRetrievalParams);
+        dataFactory.buildData(basicGridForm, dataRetrievalParams);
     }
 
     @Test
@@ -93,6 +87,7 @@ class DataFactoryTest {
         FormInstantiationParameters formInstantiationParameters
                 = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo");
 
+        formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
                 formFactory.getFormInstance(ctx, formInstantiationParameters, null);
 
@@ -101,6 +96,81 @@ class DataFactoryTest {
 
         assertEquals(1, basicGridForm.getApproxTotalCount());
         // expected 3
+
+    }
+
+
+    @Test
+    void buildDataLabelsWithData(CallContext ctx) {
+
+        FooCursor fooCursor = new FooCursor(ctx);
+        fooCursor.setId(1);
+        fooCursor.setName("Name");
+        fooCursor.insert();
+
+        fooCursor.setId(2);
+        fooCursor.setName("Name2");
+        fooCursor.insert();
+
+        fooCursor.setId(3);
+        fooCursor.setName("Name3");
+        fooCursor.insert();
+
+        FormInstantiationParameters formInstantiationParameters
+                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestDataForm", "foo");
+
+        formFactory.clearForms();
+        BasicGridForm<? extends BasicCursor> basicGridForm =
+                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+
+        DataRetrievalParams dataRetrievalParams = new DataRetrievalParams();
+        dataRetrievalParams.setLimit(50);
+        dataRetrievalParams.setOffset(0);
+        dataRetrievalParams.setDgridOldPosition(0);
+        dataRetrievalParams.setSortingOrFilteringChanged(true);
+        dataRetrievalParams.setFirstLoading(true);
+        dataRetrievalParams.setRefreshId(null);
+
+        DataResult dataResult = dataFactory.buildData(basicGridForm, dataRetrievalParams);
+
+        assertNotNull(dataResult.getData());
+        assertNull(dataResult.getObjAddData());
+
+        assertTrue(dataResult.getData().get(0).get(DataFactory.INTERNAL_COLUMN_ADDDATA) instanceof Labels);
+
+        Labels labels = (Labels) dataResult.getData().get(0).get(DataFactory.INTERNAL_COLUMN_ADDDATA);
+        assertEquals("<h2>Header2</h2>", labels.getHeader());
+        assertEquals("<h2>Footer2</h2>", labels.getFooter());
+
+    }
+
+
+    @Test
+    void buildDataLabelsNoData(CallContext ctx) {
+
+        FormInstantiationParameters formInstantiationParameters
+                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestDataForm", "foo");
+
+        formFactory.clearForms();
+        BasicGridForm<? extends BasicCursor> basicGridForm =
+                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+
+        DataRetrievalParams dataRetrievalParams = new DataRetrievalParams();
+        dataRetrievalParams.setLimit(50);
+        dataRetrievalParams.setOffset(0);
+        dataRetrievalParams.setDgridOldPosition(0);
+        dataRetrievalParams.setSortingOrFilteringChanged(true);
+        dataRetrievalParams.setFirstLoading(true);
+        dataRetrievalParams.setRefreshId(null);
+
+        DataResult dataResult = dataFactory.buildData(basicGridForm, dataRetrievalParams);
+
+        assertNotNull(dataResult.getObjAddData());
+        assertNull(dataResult.getData());
+
+        Labels labels = dataResult.getObjAddData().get(DataFactory.INTERNAL_COLUMN_ADDDATA);
+        assertEquals("<h2>Header2</h2>", labels.getHeader());
+        assertEquals("<h2>Footer2</h2>", labels.getFooter());
 
     }
 

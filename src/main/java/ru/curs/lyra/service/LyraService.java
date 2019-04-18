@@ -1,11 +1,12 @@
 package ru.curs.lyra.service;
 
-import org.json.JSONObject;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.transaction.CelestaTransaction;
+import ru.curs.lyra.dto.DataResult;
+import ru.curs.lyra.dto.MetaDataResult;
 import ru.curs.lyra.dto.ScrollBackParams;
 import ru.curs.lyra.kernel.BasicGridForm;
 
@@ -39,7 +40,7 @@ public class LyraService {
      */
     //TODO: get rid of transaction here. Maybe this requires changing the API for BasicGridForm
     @CelestaTransaction
-    public JSONObject getMetadata(CallContext callContext, FormInstantiationParameters formInstantiationParameters) {
+    public MetaDataResult getMetadata(CallContext callContext, FormInstantiationParameters formInstantiationParameters) {
 
         BasicGridForm<? extends BasicCursor> basicGridForm =
                 formFactory.getFormInstance(callContext, formInstantiationParameters, this);
@@ -57,16 +58,14 @@ public class LyraService {
      * @param dataRetrievalParams         DataRetrievalParams
      */
     @CelestaTransaction
-    public Object getData(CallContext callContext,
-                          FormInstantiationParameters formInstantiationParameters,
-                          DataRetrievalParams dataRetrievalParams) {
+    public DataResult getData(CallContext callContext,
+                              FormInstantiationParameters formInstantiationParameters,
+                              DataRetrievalParams dataRetrievalParams) {
 
         BasicGridForm<? extends BasicCursor> basicGridForm =
                 formFactory.getFormInstance(callContext, formInstantiationParameters, this);
 
-        dataFactory.setParameters(basicGridForm, formInstantiationParameters, dataRetrievalParams);
-        return dataFactory.buildData();
-
+        return dataFactory.buildData(basicGridForm, dataRetrievalParams);
     }
 
 
