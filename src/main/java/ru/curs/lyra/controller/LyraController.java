@@ -37,6 +37,9 @@ public final class LyraController {
         this.srv = srv;
     }
 
+    /**
+     * Get metadata
+     */
     @PostMapping("/metadata")
     public MetaDataResult getMetadata(@RequestParam Map<String, String> body) {
         //TODO: MetaDataParams should be deserialized automatically
@@ -60,6 +63,9 @@ public final class LyraController {
     }
 
 
+    /**
+     * Get data
+     */
     @PostMapping("/data")
     public ResponseEntity getData(@RequestParam Map<String, String> body) {
 

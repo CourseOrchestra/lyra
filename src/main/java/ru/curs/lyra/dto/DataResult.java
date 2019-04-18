@@ -5,7 +5,7 @@ import java.util.Map;
 
 public final class DataResult {
 
-    Map<String, Labels> objAddData;
+    private Map<String, Labels> objAddData;
     private List<Map<String, Object>> data;
 
     public Map<String, Labels> getObjAddData() {
