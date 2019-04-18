@@ -1,7 +1,7 @@
 package ru.curs.lyra.dto;
 
 /**
- * Column
+ * Column.
  */
 public final class Column {
 
@@ -13,14 +13,14 @@ public final class Column {
     private boolean sortingAvailable;
 
     /**
-     * getId
+     * getId.
      */
     public String getId() {
         return id;
     }
 
     /**
-     * setId
+     * setId.
      *
      * @param id id
      */
@@ -29,14 +29,14 @@ public final class Column {
     }
 
     /**
-     * getCaption
+     * getCaption.
      */
     public String getCaption() {
         return caption;
     }
 
     /**
-     * setCaption
+     * setCaption.
      *
      * @param caption caption
      */
@@ -46,14 +46,14 @@ public final class Column {
 
 
     /**
-     * isVisible
+     * isVisible.
      */
     public boolean isVisible() {
         return visible;
     }
 
     /**
-     * setVisible
+     * setVisible.
      *
      * @param visible visible
      */
@@ -62,14 +62,14 @@ public final class Column {
     }
 
     /**
-     * getCssClassName
+     * getCssClassName.
      */
     public String getCssClassName() {
         return cssClassName;
     }
 
     /**
-     * setCssClassName
+     * setCssClassName.
      *
      * @param cssClassName cssClassName
      */
@@ -78,14 +78,14 @@ public final class Column {
     }
 
     /**
-     * getCssStyle
+     * getCssStyle.
      */
     public String getCssStyle() {
         return cssStyle;
     }
 
     /**
-     * setCssStyle
+     * setCssStyle.
      *
      * @param cssStyle cssStyle
      */
@@ -94,14 +94,14 @@ public final class Column {
     }
 
     /**
-     * isSortingAvailable
+     * isSortingAvailable.
      */
     public boolean isSortingAvailable() {
         return sortingAvailable;
     }
 
     /**
-     * setSortingAvailable
+     * setSortingAvailable.
      *
      * @param sortingAvailable sortingAvailable
      */

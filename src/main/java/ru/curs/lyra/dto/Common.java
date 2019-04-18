@@ -17,14 +17,14 @@ public final class Common {
     private Map<String, String> summaryRow;
 
     /**
-     * getGridWidth
+     * getGridWidth.
      */
     public String getGridWidth() {
         return gridWidth;
     }
 
     /**
-     * setGridWidth
+     * setGridWidth.
      *
      * @param gridWidth gridWidth
      */
@@ -33,14 +33,14 @@ public final class Common {
     }
 
     /**
-     * getGridHeight
+     * getGridHeight.
      */
     public String getGridHeight() {
         return gridHeight;
     }
 
     /**
-     * setGridHeight
+     * setGridHeight.
      *
      * @param gridHeight gridHeight
      */
@@ -49,14 +49,14 @@ public final class Common {
     }
 
     /**
-     * getLimit
+     * getLimit.
      */
     public int getLimit() {
         return limit;
     }
 
     /**
-     * setLimit
+     * setLimit.
      *
      * @param limit limit
      */
@@ -65,14 +65,14 @@ public final class Common {
     }
 
     /**
-     * getTotalCount
+     * getTotalCount.
      */
     public int getTotalCount() {
         return totalCount;
     }
 
     /**
-     * setTotalCount
+     * setTotalCount.
      *
      * @param totalCount totalCount
      */
@@ -81,14 +81,14 @@ public final class Common {
     }
 
     /**
-     * getSelectionModel
+     * getSelectionModel.
      */
     public String getSelectionModel() {
         return selectionModel;
     }
 
     /**
-     * setSelectionModel
+     * setSelectionModel.
      *
      * @param selectionModel selectionModel
      */
@@ -97,14 +97,14 @@ public final class Common {
     }
 
     /**
-     * isVisibleColumnsHeader
+     * isVisibleColumnsHeader.
      */
     public boolean isVisibleColumnsHeader() {
         return visibleColumnsHeader;
     }
 
     /**
-     * setVisibleColumnsHeader
+     * setVisibleColumnsHeader.
      *
      * @param visibleColumnsHeader visibleColumnsHeader
      */
@@ -113,14 +113,14 @@ public final class Common {
     }
 
     /**
-     * isAllowTextSelection
+     * isAllowTextSelection.
      */
     public boolean isAllowTextSelection() {
         return allowTextSelection;
     }
 
     /**
-     * setAllowTextSelection
+     * setAllowTextSelection.
      *
      * @param allowTextSelection allowTextSelection
      */
@@ -129,14 +129,14 @@ public final class Common {
     }
 
     /**
-     * getPrimaryKey
+     * getPrimaryKey.
      */
     public String getPrimaryKey() {
         return primaryKey;
     }
 
     /**
-     * setPrimaryKey
+     * setPrimaryKey.
      *
      * @param primaryKey primaryKey
      */
@@ -145,14 +145,14 @@ public final class Common {
     }
 
     /**
-     * getSummaryRow
+     * getSummaryRow.
      */
     public Map<String, String> getSummaryRow() {
         return summaryRow;
     }
 
     /**
-     * setSummaryRow
+     * setSummaryRow.
      *
      * @param summaryRow summaryRow
      */

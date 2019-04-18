@@ -38,7 +38,9 @@ public final class LyraController {
     }
 
     /**
-     * Get metadata
+     * Get metadata.
+     *
+     * @param body body
      */
     @PostMapping("/metadata")
     public MetaDataResult getMetadata(@RequestParam Map<String, String> body) {
@@ -64,7 +66,9 @@ public final class LyraController {
 
 
     /**
-     * Get data
+     * Get data.
+     *
+     * @param body body
      */
     @PostMapping("/data")
     public ResponseEntity getData(@RequestParam Map<String, String> body) {
