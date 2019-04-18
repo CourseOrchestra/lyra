@@ -3,7 +3,7 @@ package ru.curs.lyra.dto;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MetaDataResult {
+public final class MetaDataResult {
 
     private Common common;
     private Map<String, Column> columns = new HashMap<>();

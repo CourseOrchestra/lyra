@@ -1,7 +1,7 @@
 package ru.curs.lyra.dto;
 
 
-public class Labels {
+public final class Labels {
     private String header;
     private String footer;
 

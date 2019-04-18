@@ -3,7 +3,7 @@ package ru.curs.lyra.dto;
 import java.util.List;
 import java.util.Map;
 
-public class DataResult {
+public final class DataResult {
 
     Map<String, Labels> objAddData;
     private List<Map<String, Object>> data;

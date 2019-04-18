@@ -1,7 +1,7 @@
 package ru.curs.lyra.dto;
 
 
-public class Column {
+public final class Column {
 
     private String id;
     private String caption;

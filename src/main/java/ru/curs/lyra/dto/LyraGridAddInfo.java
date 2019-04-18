@@ -1,7 +1,7 @@
 package ru.curs.lyra.dto;
 
 
-public class LyraGridAddInfo {
+public final class LyraGridAddInfo {
 
     private int lyraOldPosition = 0;
     private int dgridOldTotalCount = 0;

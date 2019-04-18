@@ -1,6 +1,6 @@
 package ru.curs.lyra.dto;
 
-public class ScrollBackParams {
+public final class ScrollBackParams {
 
     private String dgridId;
     private int position;

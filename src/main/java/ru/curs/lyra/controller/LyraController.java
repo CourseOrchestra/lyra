@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/lyra")
-public class LyraController {
+public final class LyraController {
     private static final String REFRESH_PARAMS = "refreshParams";
     private static final String SELECT_KEY = "selectKey";
 

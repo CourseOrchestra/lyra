@@ -3,7 +3,7 @@ package ru.curs.lyra.service;
 import java.util.Arrays;
 
 //TODO: make immutable with builder
-public class DataRetrievalParams {
+public final class DataRetrievalParams {
     private int offset;
     private int limit;
     private int dgridOldPosition;

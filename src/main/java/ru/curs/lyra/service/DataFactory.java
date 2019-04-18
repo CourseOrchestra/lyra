@@ -44,13 +44,13 @@ class DataFactory {
 
 
     /**
-     * @param basicGridForm       Lyra BasicGridForm
-     * @param dataRetrievalParams DataRetrievalParams
+     * @param aBasicGridForm       Lyra BasicGridForm
+     * @param aDataRetrievalParams DataRetrievalParams
      */
-    DataResult buildData(BasicGridForm<? extends BasicCursor> basicGridForm,
-                         DataRetrievalParams dataRetrievalParams) {
+    DataResult buildData(BasicGridForm<? extends BasicCursor> aBasicGridForm,
+                         DataRetrievalParams aDataRetrievalParams) {
 
-        init(basicGridForm, dataRetrievalParams);
+        init(aBasicGridForm, aDataRetrievalParams);
 
         setLyraExactTotalCount();
 
@@ -67,10 +67,10 @@ class DataFactory {
     }
 
 
-    private void init(BasicGridForm<? extends BasicCursor> basicGridForm,
-                      DataRetrievalParams dataRetrievalParams) {
-        this.basicGridForm = basicGridForm;
-        this.dataRetrievalParams = dataRetrievalParams;
+    private void init(BasicGridForm<? extends BasicCursor> aBasicGridForm,
+                      DataRetrievalParams aDataRetrievalParams) {
+        this.basicGridForm = aBasicGridForm;
+        this.dataRetrievalParams = aDataRetrievalParams;
 
         if (dataRetrievalParams.isSortingOrFilteringChanged()) {
             ((LyraGridScrollBack) basicGridForm.getChangeNotifier())

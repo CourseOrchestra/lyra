@@ -1,6 +1,6 @@
 package ru.curs.lyra.dto;
 
-public class MetaDataParams {
+public final class MetaDataParams {
 
 
     private String context;
