@@ -1,9 +1,9 @@
 package ru.curs.lyra.service;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.dbutils.Cursor;
+import ru.curs.lyra.dto.DataResult;
+import ru.curs.lyra.dto.Labels;
 import ru.curs.lyra.dto.LyraGridAddInfo;
 import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.LyraFieldType;
@@ -15,58 +15,42 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Build data.
  */
 class DataFactory {
-    static final String CONTEXT = "context";
-    private static final String REFRESH_PARAMS = "refreshParams";
-    private static final String SELECT_KEY = "selectKey";
+    static final String INTERNAL_COLUMN_ADDDATA = "internalAddData";
     private static final String RECVERSION = "recversion";
     private static final String DGRID_NEW_POSITION = "dgridNewPosition";
     private static final String DGRID_NEW_POSITION_ID = "dgridNewPositionId";
-    private static final String HEADER = "header";
-    private static final String FOOTER = "footer";
-    private static final String INTERNAL_COLUMN_ADDDATA = "internalAddData";
     private static final String INTERNAL_COLUMN_ID = "internalId";
     private static final int LYRA_EXACT_TOTALCOUNT_DELTA = 20;
 
-
     private BasicGridForm<? extends BasicCursor> basicGridForm;
-    private FormInstantiationParameters formInstantiationParameters;
     private DataRetrievalParams dataRetrievalParams;
 
     private LyraGridAddInfo lyraGridAddInfo;
     private int position;
     private int lyraApproxTotalCountBeforeGetRows;
     private int lyraApproxTotalCountAfterGetRows;
+    private boolean lyraExactTotalCount;
     private int dgridDelta;
-
     private List<LyraFormData> records;
 
 
-    private boolean lyraExactTotalCount;
-
-
     /**
-     * @param basicGridForm               Lyra BasicGridForm
-     * @param formInstantiationParameters Parameters of form instantiation
-     * @param dataRetrievalParams         DataRetrievalParams
+     * @param aBasicGridForm       Lyra BasicGridForm
+     * @param aDataRetrievalParams DataRetrievalParams
      */
-    void setParameters(BasicGridForm<? extends BasicCursor> basicGridForm,
-                       FormInstantiationParameters formInstantiationParameters,
-                       DataRetrievalParams dataRetrievalParams) {
-        this.basicGridForm = basicGridForm;
-        this.formInstantiationParameters = formInstantiationParameters;
-        this.dataRetrievalParams = dataRetrievalParams;
-    }
+    DataResult buildData(BasicGridForm<? extends BasicCursor> aBasicGridForm,
+                         DataRetrievalParams aDataRetrievalParams) {
 
-    Object buildData() {
-
-        init();
+        init(aBasicGridForm, aDataRetrievalParams);
 
         setLyraExactTotalCount();
 
@@ -78,12 +62,16 @@ class DataFactory {
 
         setLyraGridAddInfo();
 
-        return fillData();
+        return setDataResult();
 
     }
 
 
-    private void init() {
+    private void init(BasicGridForm<? extends BasicCursor> aBasicGridForm,
+                      DataRetrievalParams aDataRetrievalParams) {
+        this.basicGridForm = aBasicGridForm;
+        this.dataRetrievalParams = aDataRetrievalParams;
+
         if (dataRetrievalParams.isSortingOrFilteringChanged()) {
             ((LyraGridScrollBack) basicGridForm.getChangeNotifier())
                     .setLyraGridAddInfo(new LyraGridAddInfo());
@@ -121,17 +109,13 @@ class DataFactory {
 
         if (dataRetrievalParams.isFirstLoading()) {
 
-            JSONObject json = new JSONObject(
-                    formInstantiationParameters.getClientParams().get(CONTEXT));
-            String selectKey = ((JSONObject) json.get(REFRESH_PARAMS)).get(SELECT_KEY).toString();
-
-            if ((selectKey == null) || selectKey.trim().isEmpty()) {
+            if (dataRetrievalParams.getSelectKey() == null) {
                 records = basicGridForm.getRows(0);
             } else {
                 if (dataRetrievalParams.isSortingOrFilteringChanged()) {
                     basicGridForm.getRows(0);
                 }
-                records = basicGridForm.setPosition(getKeyValuesById(selectKey));
+                records = basicGridForm.setPosition(dataRetrievalParams.getSelectKey());
             }
 
         } else {
@@ -178,7 +162,7 @@ class DataFactory {
 
                 records = basicGridForm.getRows(position);
             } else {
-                records = basicGridForm.setPosition(getKeyValuesById(dataRetrievalParams.getRefreshId()));
+                records = basicGridForm.setPosition(dataRetrievalParams.getRefreshId());
             }
 
         }
@@ -229,8 +213,8 @@ class DataFactory {
     }
 
 
-    private Object fillData() {
-        JSONArray data = new JSONArray();
+    private DataResult setDataResult() {
+        List<Map<String, Object>> data = new ArrayList<>();
 
         int from;
         int length;
@@ -246,16 +230,11 @@ class DataFactory {
         for (int i = from; i < length; i++) {
             LyraFormData rec = records.get(i);
 
-            JSONObject obj = new JSONObject();
+            Map<String, Object> obj = new HashMap<>();
             for (LyraFieldValue lyraFieldValue : rec.getFields()) {
 
                 if (BasicGridForm.PROPERTIES.equalsIgnoreCase(lyraFieldValue.getName())) {
-                    JSONObject properties = new JSONObject(lyraFieldValue.getValue().toString());
-                    Iterator<String> keys = properties.keys();
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        obj.put(key, properties.getString(key));
-                    }
+                    obj.put(BasicGridForm.PROPERTIES, lyraFieldValue.getValue());
                 } else {
                     Object objValue;
                     switch (lyraFieldValue.meta().getType()) {
@@ -275,64 +254,48 @@ class DataFactory {
 
             }
 
-            obj.put(INTERNAL_COLUMN_ID, getIdByKeyValues(rec.getKeyValues()));
+            obj.put(INTERNAL_COLUMN_ID, rec.getKeyValues());
             obj.put(RECVERSION, String.valueOf(rec.getRecversion()));
 
-            data.put(obj);
+            data.add(obj);
 
         }
 
 
         // Record Key Positioning
-        if (dataRetrievalParams.isFirstLoading() && (data.length() > 0)
+        if (dataRetrievalParams.isFirstLoading() && (data.size() > 0)
                 && (basicGridForm.getTopVisiblePosition() > 0)) {
 
             double d = basicGridForm.getTopVisiblePosition();
             d = (d / lyraApproxTotalCountAfterGetRows)
                     * lyraGridAddInfo.getDgridOldTotalCount();
             int dgridNewPosition = (int) d;
-            ((JSONObject) data.get(0)).put(DGRID_NEW_POSITION, dgridNewPosition);
+            data.get(0).put(DGRID_NEW_POSITION, dgridNewPosition);
 
             basicGridForm.externalAction(c -> {
                 Object[] keyValues = ((Cursor) c).getCurrentKeyValues();
-                String recId = getIdByKeyValues(keyValues);
-                ((JSONObject) data.get(0)).put(DGRID_NEW_POSITION_ID, recId);
+                data.get(0).put(DGRID_NEW_POSITION_ID, keyValues);
                 return null;
             }, null);
 
         }
 
 
-        JSONObject objAddData = null;
-        JSONObject labels = new JSONObject();
-        labels.put(HEADER, basicGridForm.getFormProperties().getHeader());
-        labels.put(FOOTER, basicGridForm.getFormProperties().getFooter());
-        if (data.length() > 0) {
-            ((JSONObject) data.get(0)).put(INTERNAL_COLUMN_ADDDATA, labels);
+        DataResult dataResult = new DataResult();
+
+        Labels labels = new Labels();
+        labels.setHeader(basicGridForm.getFormProperties().getHeader());
+        labels.setFooter(basicGridForm.getFormProperties().getFooter());
+        if (data.size() > 0) {
+            data.get(0).put(INTERNAL_COLUMN_ADDDATA, labels);
+            dataResult.setData(data);
         } else {
-            objAddData = new JSONObject();
+            Map<String, Labels> objAddData = new HashMap<>();
             objAddData.put(INTERNAL_COLUMN_ADDDATA, labels);
+            dataResult.setObjAddData(objAddData);
         }
 
-        if ((data.length() == 0) && (objAddData != null)) {
-            return objAddData;
-        } else {
-            return data;
-        }
-    }
-
-
-    private Object[] getKeyValuesById(final String refreshId) {
-        JSONArray jsonArray = new JSONArray(refreshId);
-        Object[] obj = new Object[jsonArray.length()];
-        for (int i = 0; i < jsonArray.length(); i++) {
-            obj[i] = jsonArray.get(i);
-        }
-        return obj;
-    }
-
-    private String getIdByKeyValues(final Object[] keyValues) {
-        return new JSONArray(keyValues).toString();
+        return dataResult;
     }
 
     private String getStringValueOfDate(LyraFieldValue lyraFieldValue) {

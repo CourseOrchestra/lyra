@@ -1,9 +1,11 @@
 package ru.curs.lyra.service;
 
-import org.json.JSONObject;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.score.Index;
 import ru.curs.celesta.score.Table;
+import ru.curs.lyra.dto.Column;
+import ru.curs.lyra.dto.Common;
+import ru.curs.lyra.dto.MetaDataResult;
 import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.LyraFormField;
 
@@ -16,27 +18,10 @@ import java.util.Optional;
  * Build metadata.
  */
 class MetadataFactory {
-    static final String COMMON = "common";
-    static final String COLUMNS = "columns";
-    private static final String LIMIT = "limit";
     private static final String GRID_WIDTH_DEF_VALUE = "95%";
     private static final String GRID_HEIGHT_DEF_VALUE = "400px";
-    static final String GRID_WIDTH = "gridWidth";
-    private static final String GRID_HEIGHT = "gridHeight";
-    private static final String TOTAL_COUNT = "totalCount";
-    private static final String SELECTION_MODEL = "selectionModel";
     private static final String RECORDS = "RECORDS";
-    private static final String IS_VISIBLE_COLUMNS_HEADER = "isVisibleColumnsHeader";
-    private static final String IS_ALLOW_TEXT_SELECTION = "isAllowTextSelection";
-    private static final String PRIMARY_KEY = "primaryKey";
-    private static final String SUMMARY_ROW = "summaryRow";
-    private static final String ID = "id";
-    private static final String CAPTION = "caption";
-    private static final String VISIBLE = "visible";
-    private static final String CSS_CLASS_NAME = "cssClassName";
-    private static final String CSS_STYLE = "cssStyle";
     private static final String CSS_LYRA_TYPE = "lyra-type-";
-    private static final String SORTING_AVAILABLE = "sortingAvailable";
 
 
     /**
@@ -44,19 +29,18 @@ class MetadataFactory {
      *
      * @param basicGridForm Lyra BasicGridForm
      */
-    JSONObject buildMetadata(BasicGridForm<? extends BasicCursor> basicGridForm) {
+    MetaDataResult buildMetadata(BasicGridForm<? extends BasicCursor> basicGridForm) {
 
-        JSONObject metadata = new JSONObject();
+        MetaDataResult metadata = new MetaDataResult();
 
-        JSONObject common = new JSONObject();
-        common.put(GRID_WIDTH, Optional.ofNullable(basicGridForm.getFormProperties().getGridwidth()).filter(s -> !s.isEmpty()).orElse(GRID_WIDTH_DEF_VALUE));
-        common.put(GRID_HEIGHT, Optional.ofNullable(basicGridForm.getFormProperties().getGridheight()).filter(s -> !s.isEmpty()).orElse(GRID_HEIGHT_DEF_VALUE));
-        common.put(LIMIT, String.valueOf(basicGridForm.getGridHeight()));
-        common.put(TOTAL_COUNT, basicGridForm.getApproxTotalCount());
-        common.put(SELECTION_MODEL, RECORDS);
-
-        common.put(IS_VISIBLE_COLUMNS_HEADER, basicGridForm.getFormProperties().getVisibleColumnsHeader());
-        common.put(IS_ALLOW_TEXT_SELECTION, basicGridForm.getFormProperties().getAllowTextSelection());
+        Common common = new Common();
+        common.setGridWidth(Optional.ofNullable(basicGridForm.getFormProperties().getGridwidth()).filter(s -> !s.isEmpty()).orElse(GRID_WIDTH_DEF_VALUE));
+        common.setGridHeight(Optional.ofNullable(basicGridForm.getFormProperties().getGridheight()).filter(s -> !s.isEmpty()).orElse(GRID_HEIGHT_DEF_VALUE));
+        common.setLimit(basicGridForm.getGridHeight());
+        common.setTotalCount(basicGridForm.getApproxTotalCount());
+        common.setSelectionModel(RECORDS);
+        common.setVisibleColumnsHeader(basicGridForm.getFormProperties().getVisibleColumnsHeader());
+        common.setAllowTextSelection(basicGridForm.getFormProperties().getAllowTextSelection());
 
         if (basicGridForm.meta() instanceof Table) {
             Object[] arr = ((Table) basicGridForm.meta()).getPrimaryKey().keySet().toArray();
@@ -69,15 +53,13 @@ class MetadataFactory {
                 sb.append(arr[i]);
             }
 
-            common.put(PRIMARY_KEY, sb);
+            common.setPrimaryKey(sb.toString());
         }
 
-        String summaryRow = basicGridForm.getSummaryRow();
-        if (summaryRow != null) {
-            common.put(SUMMARY_ROW, summaryRow);
-        }
+        common.setSummaryRow(basicGridForm.getSummaryRow());
 
-        metadata.put(COMMON, common);
+        metadata.setCommon(common);
+
 
         List<String> lyraGridAvailableSorting = new ArrayList<>();
         if (basicGridForm.meta() instanceof Table) {
@@ -90,36 +72,24 @@ class MetadataFactory {
         }
 
         Map<String, LyraFormField> lyraFields = basicGridForm.getFieldsMeta();
-
-
-        int count = 0;
-        JSONObject columns = new JSONObject();
-
         for (LyraFormField field : lyraFields.values()) {
 
             if (BasicGridForm.PROPERTIES.equals(field.getName())) {
                 continue;
             }
 
-            JSONObject column = new JSONObject();
-            column.put(ID, field.getName());
-            column.put(CAPTION, field.getCaption());
-
-            column.put(VISIBLE, field.isVisible());
-
-            column.put(CSS_CLASS_NAME, CSS_LYRA_TYPE + field.getType().toString().toLowerCase()
+            Column column = new Column();
+            column.setId(field.getName());
+            column.setCaption(field.getCaption());
+            column.setVisible(field.isVisible());
+            column.setCssClassName(CSS_LYRA_TYPE + field.getType().toString().toLowerCase()
                     + Optional.ofNullable(field.getCssClassName()).map(s -> s.isEmpty() ? "" : " " + s).orElse(""));
-            column.put(CSS_STYLE, field.getCssStyle());
-
-            if (lyraGridAvailableSorting.contains(field.getName())) {
-                column.put(SORTING_AVAILABLE, true);
-            }
-
-            columns.put(String.valueOf(++count), column);
+            column.setCssStyle(field.getCssStyle());
+            column.setSortingAvailable(lyraGridAvailableSorting.contains(field.getName()));
+            
+            metadata.getColumns().put(String.valueOf(metadata.getColumns().size() + 1), column);
 
         }
-
-        metadata.put(COLUMNS, columns);
 
         return metadata;
 
