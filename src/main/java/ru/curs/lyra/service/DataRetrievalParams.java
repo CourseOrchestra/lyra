@@ -1,5 +1,7 @@
 package ru.curs.lyra.service;
 
+import java.util.Arrays;
+
 //TODO: make immutable with builder
 public class DataRetrievalParams {
     private int offset;
@@ -61,19 +63,19 @@ public class DataRetrievalParams {
     }
 
     public Object[] getRefreshId() {
-        return refreshId;
+        return refreshId == null ? null : Arrays.copyOf(refreshId, refreshId.length);
     }
 
     public void setRefreshId(Object[] refreshId) {
-        this.refreshId = refreshId;
+        this.refreshId = refreshId == null ? null : Arrays.copyOf(refreshId, refreshId.length);
     }
 
     public Object[] getSelectKey() {
-        return selectKey;
+        return selectKey == null ? null : Arrays.copyOf(selectKey, selectKey.length);
     }
 
     public void setSelectKey(Object[] selectKey) {
-        this.selectKey = selectKey;
+        this.selectKey = selectKey == null ? null : Arrays.copyOf(selectKey, selectKey.length);
     }
 
 
