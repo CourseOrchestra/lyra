@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.curs</groupId>
@@ -56,8 +57,9 @@
         <maven.source.plugin.version>2.2.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>3.0.1</maven.javadoc.plugin.version>
 
-        <spring.boot.version>2.0.6.RELEASE</spring.boot.version>
-        <spring.boot.websocket.version>2.0.6.RELEASE</spring.boot.websocket.version>
+        <spring.test.version>5.1.6.RELEASE</spring.test.version>
+        <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
+        <spring.boot.websocket.version>2.1.4.RELEASE</spring.boot.websocket.version>
         <spring.boot.starter.celesta.version>2.0.1</spring.boot.starter.celesta.version>
         <celesta.version>7.1.00</celesta.version>
         <jacoco.version>0.8.1</jacoco.version>
@@ -99,6 +101,35 @@
 
 
         <!--For Test-->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.test.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test-autoconfigure</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
         <dependency>
             <groupId>ru.curs</groupId>
             <artifactId>celesta-unit</artifactId>

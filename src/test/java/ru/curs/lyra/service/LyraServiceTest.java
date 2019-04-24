@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import ru.curs.celesta.CallContext;
 import ru.curs.celestaunit.CelestaTest;
 import ru.curs.lyra.dto.DataResult;
+import ru.curs.lyra.dto.DataRetrievalParams;
+import ru.curs.lyra.dto.FormInstantiationParams;
 import ru.curs.lyra.dto.MetaDataResult;
 
 import java.util.HashMap;
@@ -14,20 +16,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @CelestaTest
 class LyraServiceTest {
-    static final String CONTEXT = "context";
-
     private LyraService srv = new LyraService(null);
 
     @Test
     void getMetadata(CallContext ctx) {
-        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
+        FormInstantiationParams ip = new FormInstantiationParams("ru.curs.lyra.service.forms.TestForm", "foo");
         MetaDataResult metadata = srv.getMetadata(ctx, ip);
         assertEquals("95%", metadata.getCommon().getGridWidth());
     }
 
     @Test
     void getMetadataCssClassNameByFieldType(CallContext ctx) {
-        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
+        FormInstantiationParams ip = new FormInstantiationParams("ru.curs.lyra.service.forms.TestForm", "foo");
         MetaDataResult metadata = srv.getMetadata(ctx, ip);
         assertEquals("lyra-type-varchar", metadata.getColumns().get("1").getCssClassName());
         assertEquals("lyra-type-int", metadata.getColumns().get("3").getCssClassName());
@@ -37,9 +37,14 @@ class LyraServiceTest {
 
     @Test
     void getTwoRecordsData(CallContext ctx) {
-        Map<String, String> clientParams = new HashMap<>();
-        clientParams.put(CONTEXT, "{\"refreshParams\": {\"selectKey\": \"\",\"sort\": \"name,id\"}}");
-        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo", clientParams);
+        Map<String, String> refreshParams = new HashMap<>();
+        refreshParams.put("selectKey", "");
+        refreshParams.put("sort", "name,id");
+        Map<String, Object> clientParams = new HashMap<>();
+        clientParams.put("refreshParams", refreshParams);
+        clientParams.put("part1", "part1");
+        clientParams.put("part2", 5);
+        FormInstantiationParams ip = new FormInstantiationParams("ru.curs.lyra.service.forms.TestParameterizedForm", "foo", clientParams);
         DataRetrievalParams drp = new DataRetrievalParams();
         drp.setLimit(50);
         FooCursor fooCursor = new FooCursor(ctx);

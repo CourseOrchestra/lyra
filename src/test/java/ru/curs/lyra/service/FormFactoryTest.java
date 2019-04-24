@@ -5,6 +5,7 @@ import ru.curs.celesta.CallContext;
 import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celestaunit.CelestaTest;
+import ru.curs.lyra.dto.FormInstantiationParams;
 import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.grid.GridDriver;
 import ru.curs.lyra.service.forms.TestForm;
@@ -17,26 +18,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @CelestaTest
 class FormFactoryTest {
+    
     FormFactory formFactory = new FormFactory();
     LyraService srv = new LyraService(null);
 
     @Test
     void getFormInstanceReturnsSameInstanceIfCalledTwice(CallContext ctx) {
 
-        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "foo");
+        FormInstantiationParams ip = new FormInstantiationParams("ru.curs.lyra.service.forms.TestForm", "foo");
         BasicGridForm<? extends BasicCursor> fooForm = formFactory.getFormInstance(ctx, ip, srv);
         assertEquals(GridDriver.DEFAULT_SMALL_SCROLL, fooForm.getMaxExactScrollValue());
         assertTrue(fooForm instanceof TestForm);
         BasicGridForm<? extends BasicCursor> fooForm2 = formFactory.getFormInstance(ctx, ip, srv);
         assertSame(fooForm, fooForm2);
-        ip = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestForm", "baz");
+        ip = new FormInstantiationParams("ru.curs.lyra.service.forms.TestForm", "baz");
         BasicGridForm<? extends BasicCursor> fooForm3 = formFactory.getFormInstance(ctx, ip, srv);
         assertNotSame(fooForm, fooForm3);
     }
 
     @Test
     void getFormInstanceThrowsCelestaExceptionOnUnknownFormClass(CallContext ctx) {
-        FormInstantiationParameters ip = new FormInstantiationParameters("ru.curs.lyra.service.TestForm1111",
+        FormInstantiationParams ip = new FormInstantiationParams("ru.curs.lyra.service.TestForm1111",
                 "foo");
         assertThrows(CelestaException.class,
                 () ->
@@ -44,11 +46,11 @@ class FormFactoryTest {
     }
 
     @Test
-    void parameterizedFormInstantiation(CallContext ctx){
-        Map<String, String> params = new HashMap<>();
+    void parameterizedFormInstantiation(CallContext ctx) {
+        Map<String, Object> params = new HashMap<>();
         params.put("part1", "part1");
         params.put("filter", "filter conditions");
-        FormInstantiationParameters parameters = new FormInstantiationParameters(
+        FormInstantiationParams parameters = new FormInstantiationParams(
                 "ru.curs.lyra.service.forms.TestParameterizedForm",
                 "foo", params);
         TestParameterizedForm fooForm = (TestParameterizedForm) formFactory.getFormInstance(ctx, parameters, srv);

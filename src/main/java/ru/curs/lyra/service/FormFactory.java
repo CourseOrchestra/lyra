@@ -4,6 +4,7 @@ import org.springframework.util.ReflectionUtils;
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
+import ru.curs.lyra.dto.FormInstantiationParams;
 import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.annotations.FormParams;
 
@@ -16,7 +17,7 @@ public class FormFactory {
     private final Map<String, BasicGridForm<? extends BasicCursor>> forms = new HashMap<>();
 
     BasicGridForm<? extends BasicCursor> getFormInstance(CallContext callContext,
-                                                         FormInstantiationParameters parameters,
+                                                         FormInstantiationParams parameters,
                                                          LyraService srv) {
         BasicGridForm<?> form = forms.computeIfAbsent(parameters.getDgridId(),
                 key -> getBasicGridFormInstance(callContext, parameters, srv));
@@ -29,11 +30,11 @@ public class FormFactory {
     }
 
     private BasicGridForm<? extends BasicCursor> setParameters(
-            BasicGridForm<? extends BasicCursor> form, FormInstantiationParameters parameters) {
+            BasicGridForm<? extends BasicCursor> form, FormInstantiationParams parameters) {
         ReflectionUtils.doWithLocalFields(form.getClass(),
                 field -> {
                     if (field.isAnnotationPresent(FormParams.class)
-                            && field.getType() == FormInstantiationParameters.class) {
+                            && field.getType() == FormInstantiationParams.class) {
                         field.setAccessible(true);
                         ReflectionUtils.setField(field, form, parameters);
                     }
@@ -43,14 +44,14 @@ public class FormFactory {
     }
 
     private BasicGridForm<? extends BasicCursor> getBasicGridFormInstance(CallContext callContext,
-                                                                          FormInstantiationParameters parameters,
+                                                                          FormInstantiationParams parameters,
                                                                           LyraService srv) {
         try {
             Class<?> clazz = Class.forName(parameters.getFormClass());
             Constructor<?> constructor;
             Object instance;
             try {
-                constructor = clazz.getConstructor(CallContext.class, FormInstantiationParameters.class);
+                constructor = clazz.getConstructor(CallContext.class, FormInstantiationParams.class);
                 instance = constructor.newInstance(callContext, parameters);
             } catch (NoSuchMethodException e) {
                 constructor = clazz.getConstructor(CallContext.class);
