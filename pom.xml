@@ -59,7 +59,6 @@
 
         <spring.test.version>5.1.6.RELEASE</spring.test.version>
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
-        <spring.boot.websocket.version>2.1.4.RELEASE</spring.boot.websocket.version>
         <spring.boot.starter.celesta.version>2.0.1</spring.boot.starter.celesta.version>
         <jackson.core.version>2.9.8</jackson.core.version>
         <celesta.version>7.1.00</celesta.version>
@@ -76,7 +75,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
-            <version>${spring.boot.websocket.version}</version>
+            <version>${spring.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
