@@ -6,6 +6,7 @@ import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celestaunit.CelestaTest;
 import ru.curs.lyra.dto.Column;
 import ru.curs.lyra.dto.Common;
+import ru.curs.lyra.dto.FormInstantiationParams;
 import ru.curs.lyra.dto.MetaDataResult;
 import ru.curs.lyra.kernel.BasicGridForm;
 
@@ -21,11 +22,11 @@ class MetadataFactoryTest {
 
     @Test
     void buildMetadataDefaultFormProperties(CallContext ctx) {
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestMetadataDefaultPropertiesForm", "foo");
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestMetadataDefaultPropertiesForm", "foo");
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
         MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
 
         Common common = metaDataResult.getCommon();
@@ -40,11 +41,11 @@ class MetadataFactoryTest {
 
     @Test
     void buildMetadataDefaultColumnProperties(CallContext ctx) {
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestMetadataDefaultPropertiesForm", "foo");
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestMetadataDefaultPropertiesForm", "foo");
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
         MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
 
         Column column = metaDataResult.getColumns().get("1");
@@ -63,11 +64,11 @@ class MetadataFactoryTest {
 
     @Test
     void buildMetadataDefaultUnboundColumnProperties(CallContext ctx) {
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestMetadataDefaultPropertiesForm", "foo");
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestMetadataDefaultPropertiesForm", "foo");
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
         MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
 
         Column column = metaDataResult.getColumns().get("3");
@@ -86,11 +87,11 @@ class MetadataFactoryTest {
 
     @Test
     void buildMetadataCommon(CallContext ctx) {
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestMetadataForm", "foo");
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestMetadataForm", "foo");
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
         MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
 
         Common common = metaDataResult.getCommon();
@@ -111,11 +112,11 @@ class MetadataFactoryTest {
 
     @Test
     void buildMetadataColumns(CallContext ctx) {
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestMetadataForm", "foo");
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestMetadataForm", "foo");
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
         MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
 
         assertEquals(4, metaDataResult.getColumns().size());
@@ -138,11 +139,11 @@ class MetadataFactoryTest {
 
     @Test
     void buildMetadataUnboundColumns(CallContext ctx) {
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestMetadataForm", "foo");
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestMetadataForm", "foo");
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
         MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
 
         assertEquals(4, metaDataResult.getColumns().size());

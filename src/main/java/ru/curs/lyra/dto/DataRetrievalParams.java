@@ -1,4 +1,4 @@
-package ru.curs.lyra.service;
+package ru.curs.lyra.dto;
 
 import java.util.Arrays;
 

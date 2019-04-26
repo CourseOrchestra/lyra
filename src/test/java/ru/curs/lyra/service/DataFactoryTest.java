@@ -6,6 +6,8 @@ import ru.curs.celesta.CallContext;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celestaunit.CelestaTest;
 import ru.curs.lyra.dto.DataResult;
+import ru.curs.lyra.dto.DataRetrievalParams;
+import ru.curs.lyra.dto.FormInstantiationParams;
 import ru.curs.lyra.dto.Labels;
 import ru.curs.lyra.kernel.BasicGridForm;
 
@@ -31,8 +33,8 @@ class DataFactoryTest {
         fooCursor.setName("Name3");
         fooCursor.insert();
 
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo", null);
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestParameterizedForm", "foo", null);
 
         dataRetrievalParams.setLimit(50);
         dataRetrievalParams.setOffset(0);
@@ -43,7 +45,7 @@ class DataFactoryTest {
 
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
 
         dataFactory.buildData(basicGridForm, dataRetrievalParams);
         dataFactory.buildData(basicGridForm, dataRetrievalParams);
@@ -84,12 +86,12 @@ class DataFactoryTest {
         fooCursor.setName("Name3");
         fooCursor.insert();
 
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestParameterizedForm", "foo");
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestParameterizedForm", "foo");
 
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
 
         basicGridForm.getApproxTotalCount();
         basicGridForm.getRows(0);
@@ -116,12 +118,12 @@ class DataFactoryTest {
         fooCursor.setName("Name3");
         fooCursor.insert();
 
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestDataForm", "foo");
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestDataForm", "foo");
 
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
 
         DataRetrievalParams dataRetrievalParams = new DataRetrievalParams();
         dataRetrievalParams.setLimit(50);
@@ -148,12 +150,12 @@ class DataFactoryTest {
     @Test
     void buildDataLabelsNoData(CallContext ctx) {
 
-        FormInstantiationParameters formInstantiationParameters
-                = new FormInstantiationParameters("ru.curs.lyra.service.forms.TestDataForm", "foo");
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestDataForm", "foo");
 
         formFactory.clearForms();
         BasicGridForm<? extends BasicCursor> basicGridForm =
-                formFactory.getFormInstance(ctx, formInstantiationParameters, null);
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
 
         DataRetrievalParams dataRetrievalParams = new DataRetrievalParams();
         dataRetrievalParams.setLimit(50);
