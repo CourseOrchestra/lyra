@@ -146,10 +146,10 @@ class LyraControllerTest {
     void getData() throws Exception {
 
         final class MetaDataParams {
-            FormInstantiationParams formInstantiationParams;
-            DataRetrievalParams dataRetrievalParams;
+            private FormInstantiationParams formInstantiationParams;
+            private DataRetrievalParams dataRetrievalParams;
 
-            MetaDataParams(FormInstantiationParams formInstantiationParams, DataRetrievalParams dataRetrievalParams) {
+            private MetaDataParams(FormInstantiationParams formInstantiationParams, DataRetrievalParams dataRetrievalParams) {
                 this.formInstantiationParams = formInstantiationParams;
                 this.dataRetrievalParams = dataRetrievalParams;
             }

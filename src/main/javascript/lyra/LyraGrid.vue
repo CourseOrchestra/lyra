@@ -403,7 +403,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
         const results = {
           data: parsedResponse.then((data) => {
             const results = data.items || data;
-            for (let i = 0, l = results.length; i < l; i++) {
+            for (let i = 0, l = results.length; i < l; i += 1) {
               results[i] = collection._restore(results[i], true);
             }
             return results;
