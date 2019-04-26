@@ -16,6 +16,9 @@ import ru.curs.lyra.dto.FormInstantiationParams;
 import ru.curs.lyra.dto.MetaDataResult;
 import ru.curs.lyra.service.LyraService;
 
+import static org.springframework.http.HttpHeaders.CONTENT_RANGE;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+
 
 /**
  * Implements controller layer for Lyra forms backend.
@@ -23,6 +26,7 @@ import ru.curs.lyra.service.LyraService;
 @RestController
 @RequestMapping("/lyra")
 public final class LyraController {
+
     private final LyraService srv;
 
     public LyraController(LyraService srv) {
@@ -60,13 +64,12 @@ public final class LyraController {
         Object data = dataResult.getObjAddData() == null ? dataResult.getData() : dataResult.getObjAddData();
 
         HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json;charset=UTF-8");
+        responseHeaders.set(CONTENT_TYPE, "application/json;charset=UTF-8");
 
         int totalCount = dataParams.getDataRetrievalParams().getTotalCount();
         int firstIndex = dataParams.getDataRetrievalParams().getOffset();
         int lastIndex = dataParams.getDataRetrievalParams().getOffset() + dataParams.getDataRetrievalParams().getLimit() - 1;
-        responseHeaders.set("Content-Range", "items " + firstIndex + "-"
-                + lastIndex + "/" + totalCount);
+        responseHeaders.set(CONTENT_RANGE, String.format("items %s-%s/%s", firstIndex, lastIndex, totalCount));
 
         return new ResponseEntity<>(data, responseHeaders, HttpStatus.OK);
     }
