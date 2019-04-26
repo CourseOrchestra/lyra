@@ -1,0 +1,4 @@
+celesta:
+  h2:
+    inMemory: true
+

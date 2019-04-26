@@ -44,11 +44,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit-platform.version>1.3.1</junit-platform.version>
-        <junit.version>5.3.1</junit.version>
+        <junit-platform.version>1.4.2</junit-platform.version>
+        <junit.version>5.4.2</junit.version>
 
-        <mockito.version>2.10.0</mockito.version>
-        <xmlgraphics.version>2.1</xmlgraphics.version>
+        <mockito.version>2.27.0</mockito.version>
+        <xmlgraphics.version>2.3</xmlgraphics.version>
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
         <spotbugs.maven.plugin.version>3.1.6</spotbugs.maven.plugin.version>
@@ -59,9 +59,9 @@
 
         <spring.test.version>5.1.6.RELEASE</spring.test.version>
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
-        <spring.boot.starter.celesta.version>2.0.1</spring.boot.starter.celesta.version>
+        <spring.boot.starter.celesta.version>2.1.0</spring.boot.starter.celesta.version>
         <jackson.core.version>2.9.8</jackson.core.version>
-        <celesta.version>7.1.00</celesta.version>
+        <celesta.version>7.1.3</celesta.version>
         <jacoco.version>0.8.1</jacoco.version>
     </properties>
 
