@@ -50,6 +50,7 @@ class DataFactoryTest {
 
         dataFactory.buildData(basicGridForm, dataRetrievalParams);
         dataFactory.buildData(basicGridForm, dataRetrievalParams);
+        dataFactory.buildData(basicGridForm, dataRetrievalParams);
     }
 
     @Test
