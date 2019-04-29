@@ -23,7 +23,7 @@ public final class GridDriver {
     /**
      * The default assumption for a records count in a table.
      */
-    private static final int DEFAULT_COUNT = 1024;
+    public static final int DEFAULT_COUNT = 1024;
 
     private final KeyInterpolator interpolator;
     private final InterpolationInitializer interpolationInitializer;
