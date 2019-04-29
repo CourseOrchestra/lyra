@@ -55,6 +55,10 @@
         <maven.checkstyle.plugin.version>3.0.0</maven.checkstyle.plugin.version>
         <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
+        <frontend.maven.plugin.version>1.7.6</frontend.maven.plugin.version>
+        <node.version>v10.15.3</node.version>
+        <asciidoctor.maven.plugin.version>1.6.0</asciidoctor.maven.plugin.version>
+        <asciidoctorj.diagram.version>1.5.11</asciidoctorj.diagram.version>
 
         <spring.test.version>5.1.6.RELEASE</spring.test.version>
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
@@ -75,11 +79,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
             <version>${spring.boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.core.version}</version>
         </dependency>
         <dependency>
             <groupId>ru.curs</groupId>
@@ -106,6 +105,12 @@
 
         <!--For Test-->
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.core.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
@@ -186,10 +191,10 @@
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.7.5</version>
+                <version>${frontend.maven.plugin.version}</version>
                 <configuration>
                     <workingDirectory>src/main/javascript/lyra</workingDirectory>
-                    <nodeVersion>v10.15.3</nodeVersion>
+                    <nodeVersion>${node.version}</nodeVersion>
                 </configuration>
                 <executions>
                     <execution>
@@ -224,12 +229,12 @@
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.7.1</version>
+                <version>${asciidoctor.maven.plugin.version}</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctorj-diagram</artifactId>
-                        <version>1.5.11</version>
+                        <version>${asciidoctorj.diagram.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>
