@@ -5,7 +5,7 @@
 
     <groupId>ru.curs</groupId>
     <artifactId>lyra</artifactId>
-    <version>1.1.6-SNAPSHOT</version>
+    <version>1.1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Lyra grid Java library</name>
@@ -49,12 +49,17 @@
 
         <mockito.version>2.27.0</mockito.version>
         <maven.compiler.plugin.version>3.8.0</maven.compiler.plugin.version>
+        <maven.surefire.plugin.version>2.22.1</maven.surefire.plugin.version>
         <maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
         <spotbugs.maven.plugin.version>3.1.11</spotbugs.maven.plugin.version>
         <checkstyle.version>8.19</checkstyle.version>
         <maven.checkstyle.plugin.version>3.0.0</maven.checkstyle.plugin.version>
         <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
+        <frontend.maven.plugin.version>1.7.6</frontend.maven.plugin.version>
+        <node.version>v10.15.3</node.version>
+        <asciidoctor.maven.plugin.version>1.6.0</asciidoctor.maven.plugin.version>
+        <asciidoctorj.diagram.version>1.5.11</asciidoctorj.diagram.version>
 
         <spring.test.version>5.1.6.RELEASE</spring.test.version>
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
@@ -75,11 +80,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
             <version>${spring.boot.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.core.version}</version>
         </dependency>
         <dependency>
             <groupId>ru.curs</groupId>
@@ -106,6 +106,12 @@
 
         <!--For Test-->
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.core.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
@@ -184,12 +190,17 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+            </plugin>
+            <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
-                <version>1.7.5</version>
+                <version>${frontend.maven.plugin.version}</version>
                 <configuration>
                     <workingDirectory>src/main/javascript/lyra</workingDirectory>
-                    <nodeVersion>v10.15.3</nodeVersion>
+                    <nodeVersion>${node.version}</nodeVersion>
                 </configuration>
                 <executions>
                     <execution>
@@ -224,12 +235,12 @@
             <plugin>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>1.5.7.1</version>
+                <version>${asciidoctor.maven.plugin.version}</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctorj-diagram</artifactId>
-                        <version>1.5.11</version>
+                        <version>${asciidoctorj.diagram.version}</version>
                     </dependency>
                 </dependencies>
                 <configuration>
