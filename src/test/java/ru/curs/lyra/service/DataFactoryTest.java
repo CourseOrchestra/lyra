@@ -26,7 +26,7 @@ class DataFactoryTest {
         fooCursor.setName("Name");
         fooCursor.insert();
 
-        fooCursor.setId(2);
+        fooCursor.setId(20);
         fooCursor.setName("Name2");
         fooCursor.insert();
 
@@ -50,7 +50,6 @@ class DataFactoryTest {
 
         dataFactory.buildData(basicGridForm, dataRetrievalParams);
         dataFactory.buildData(basicGridForm, dataRetrievalParams);
-        dataFactory.buildData(basicGridForm, dataRetrievalParams);
     }
 
     @Test
@@ -58,7 +57,7 @@ class DataFactoryTest {
         DataRetrievalParams dataRetrievalParams = new DataRetrievalParams();
         initTotalCountTests(ctx, dataRetrievalParams);
 
-        if (dataFactory.getBasicGridForm().getApproxTotalCount() != GridDriver.DEFAULT_COUNT) {
+        if (dataFactory.getLyraApproxTotalCountBeforeGetRows() != GridDriver.DEFAULT_COUNT) {
             assertTrue(dataFactory.isLyraExactTotalCount());
             assertEquals(3, dataRetrievalParams.getTotalCount());
         }

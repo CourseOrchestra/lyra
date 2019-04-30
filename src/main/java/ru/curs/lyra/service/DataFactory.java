@@ -344,5 +344,9 @@ class DataFactory {
         return basicGridForm;
     }
 
+    int getLyraApproxTotalCountBeforeGetRows() {
+        return lyraApproxTotalCountBeforeGetRows;
+    }
+
 
 }
