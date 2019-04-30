@@ -89,17 +89,13 @@ class DataFactory {
 
         if (lyraApproxTotalCountBeforeGetRows < basicGridForm.getGridHeight() + LYRA_EXACT_TOTALCOUNT_DELTA) {
 
-            if (lyraGridAddInfo.getDgridOldTotalCount() > 0) {
-                lyraApproxTotalCountBeforeGetRows = lyraGridAddInfo.getDgridOldTotalCount();
-            } else {
-                final int[] array = new int[1];
-                basicGridForm.externalAction(c -> {
-                    array[0] = c.count();
-                    return null;
-                }, null);
+            final int[] array = new int[1];
+            basicGridForm.externalAction(c -> {
+                array[0] = c.count();
+                return null;
+            }, null);
 
-                lyraApproxTotalCountBeforeGetRows = array[0];
-            }
+            lyraApproxTotalCountBeforeGetRows = array[0];
 
             lyraExactTotalCount = true;
         }
