@@ -553,17 +553,9 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
       });
     });
 
-    grid.on('dgrid-select', (event) => {
-      if (event.parentType && ((event.parentType.indexOf('mouse') > -1) || (event.parentType.indexOf('pointer') > -1))) {
-        return;
-      }
 
+    grid.on('dgrid-select', (event) => {
       emitSelect(grid.row(event.grid._focusedNode));
-    });
-    grid.on('.dgrid-row:click', (event) => {
-      if (grid.row(event) && grid.column(event)) {
-        emitSelect(grid.row(event));
-      }
     });
 
     function emitSelect(row) {
@@ -576,17 +568,25 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
       vueComponent.$emit('select', grid.formClass, grid.instanceId, obj);
     }
 
+    grid.on('.dgrid-row:click', (event) => {
+      emitClick(grid, event, 'click');
+    });
     grid.on('.dgrid-row:dblclick', (event) => {
+      emitClick(grid, event, 'dblclick');
+    });
+
+    function emitClick(grid, event, clickType) {
       if (grid.row(event) && grid.column(event)) {
-        obj = {};
+        const obj = {};
+        obj.currentColId = grid.column(event).id;
         obj.currentRowId = grid.row(event).id;
         obj.currentRowData = grid.row(event).data;
         obj.selection = getSelection(grid);
 
-        lyraGridEvents.$emit('dblclick', grid.formClass, grid.instanceId, obj);
-        vueComponent.$emit('dblclick', grid.formClass, grid.instanceId, obj);
+        lyraGridEvents.$emit(clickType, grid.formClass, grid.instanceId, obj);
+        vueComponent.$emit(clickType, grid.formClass, grid.instanceId, obj);
       }
-    });
+    }
 
 
     grid.on('dgrid-sort', (event) => {
@@ -848,16 +848,16 @@ function exportToExcelLyraVueDGrid(parentId, exportType, fileName) {
   const refreshId = grid.row(focusedNode).id;
 
   /*
-                      gwtLyraVueGridExportToExcel(
-                          grid.formClass,
-                          grid.instanceId,
-                          grid.context,
-                          refreshId,
-                          grid.dgridOldPosition,
-                          grid.limit,
-                          exportType,
-                          fileName);
-              */
+                        gwtLyraVueGridExportToExcel(
+                            grid.formClass,
+                            grid.instanceId,
+                            grid.context,
+                            refreshId,
+                            grid.dgridOldPosition,
+                            grid.limit,
+                            exportType,
+                            fileName);
+                */
 }
 
 function fileDownloadLyraVueDGrid(parentId, procName) {
@@ -865,14 +865,14 @@ function fileDownloadLyraVueDGrid(parentId, procName) {
   const recId = getSelection(grid)[0];
 
   /*
-                      gwtProcessFileDownloadLyraVue(
-                          grid.formClass,
-                          grid.instanceId,
-                          encodeURIComponent(grid.context),
-                          recId,
-                          procName,
-                          "false");
-              */
+                        gwtProcessFileDownloadLyraVue(
+                            grid.formClass,
+                            grid.instanceId,
+                            encodeURIComponent(grid.context),
+                            recId,
+                            procName,
+                            "false");
+                */
 }
 
 function setColumnsVisibility(parentId, columns) {
