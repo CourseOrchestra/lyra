@@ -7,11 +7,6 @@ node {
     def oldWarnings
 
 
-    stage ('Empty tmp dir') {
-        sh '''rm -rf tmp'''
-    }
-
-
     stage ('Clone') {
         checkout scm
     }
