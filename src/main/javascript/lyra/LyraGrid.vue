@@ -555,11 +555,12 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
 
     grid.on('dgrid-select', (event) => {
-      emitSelect(grid.row(event.grid._focusedNode));
+      emitSelect(grid.row(event.grid._focusedNode), grid.column(event.grid._focusedNode));
     });
 
-    function emitSelect(row) {
+    function emitSelect(row, col) {
       const obj = {};
+      obj.currentColId = col.id;
       obj.currentRowId = row.id;
       obj.currentRowData = row.data;
       obj.selection = getSelection(grid);
@@ -569,13 +570,13 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
     }
 
     grid.on('.dgrid-row:click', (event) => {
-      emitClick(grid, event, 'click');
+      emitClick(event, 'click');
     });
     grid.on('.dgrid-row:dblclick', (event) => {
-      emitClick(grid, event, 'dblclick');
+      emitClick(event, 'dblclick');
     });
 
-    function emitClick(grid, event, clickType) {
+    function emitClick(event, clickType) {
       if (grid.row(event) && grid.column(event)) {
         const obj = {};
         obj.currentColId = grid.column(event).id;
@@ -848,16 +849,16 @@ function exportToExcelLyraVueDGrid(parentId, exportType, fileName) {
   const refreshId = grid.row(focusedNode).id;
 
   /*
-                        gwtLyraVueGridExportToExcel(
-                            grid.formClass,
-                            grid.instanceId,
-                            grid.context,
-                            refreshId,
-                            grid.dgridOldPosition,
-                            grid.limit,
-                            exportType,
-                            fileName);
-                */
+                          gwtLyraVueGridExportToExcel(
+                              grid.formClass,
+                              grid.instanceId,
+                              grid.context,
+                              refreshId,
+                              grid.dgridOldPosition,
+                              grid.limit,
+                              exportType,
+                              fileName);
+                  */
 }
 
 function fileDownloadLyraVueDGrid(parentId, procName) {
@@ -865,14 +866,14 @@ function fileDownloadLyraVueDGrid(parentId, procName) {
   const recId = getSelection(grid)[0];
 
   /*
-                        gwtProcessFileDownloadLyraVue(
-                            grid.formClass,
-                            grid.instanceId,
-                            encodeURIComponent(grid.context),
-                            recId,
-                            procName,
-                            "false");
-                */
+                          gwtProcessFileDownloadLyraVue(
+                              grid.formClass,
+                              grid.instanceId,
+                              encodeURIComponent(grid.context),
+                              recId,
+                              procName,
+                              "false");
+                  */
 }
 
 function setColumnsVisibility(parentId, columns) {
