@@ -13,13 +13,9 @@
 
 <script>
 
-/*
-import SockJS from 'sockjs-client'
-import Stomp from 'stompjs'
-*/
-import SockJS from 'sockjs-client/dist/sockjs';
-import 'stompjs/lib/stomp';
 
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 import Vue from 'vue';
 import request from 'dojo/request';
 import query from 'dojo/query';
@@ -188,7 +184,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
         if (this.sortingPic || this.sortingAvailable) {
           div.innerHTML = '<tbody>'
-                        + '<tr>';
+            + '<tr>';
 
           div.innerHTML = `${div.innerHTML
           }<td>${this.label}</td>`;
@@ -197,28 +193,28 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sorted'> </span></td>`
 
-                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-                            + '<a title=\'Порядок и направление сортировки\'>'
-                            + `<img src class='${this.sortingPic} sorted-image'>`
-                            + '</a>'
-                            + '</td>';
+              + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+              + '<a title=\'Порядок и направление сортировки\'>'
+              + `<img src class='${this.sortingPic} sorted-image'>`
+              + '</a>'
+              + '</td>';
           }
 
           if (this.sortingAvailable) {
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sortable'> </span></td>`
 
-                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-                            + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
-                            + '<img src class=\'one sortable-image\'>'
-                            + '</a>'
-                            + '</td>';
+              + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+              + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
+              + '<img src class=\'one sortable-image\'>'
+              + '</a>'
+              + '</td>';
           }
 
 
           div.innerHTML = `${div.innerHTML
           }</tr>`
-                        + '</tbody>';
+            + '</tbody>';
         }
 
         return div;
