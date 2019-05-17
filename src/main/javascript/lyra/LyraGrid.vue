@@ -184,7 +184,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
         if (this.sortingPic || this.sortingAvailable) {
           div.innerHTML = '<tbody>'
-            + '<tr>';
+                        + '<tr>';
 
           div.innerHTML = `${div.innerHTML
           }<td>${this.label}</td>`;
@@ -193,28 +193,28 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sorted'> </span></td>`
 
-              + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-              + '<a title=\'Порядок и направление сортировки\'>'
-              + `<img src class='${this.sortingPic} sorted-image'>`
-              + '</a>'
-              + '</td>';
+                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+                            + '<a title=\'Порядок и направление сортировки\'>'
+                            + `<img src class='${this.sortingPic} sorted-image'>`
+                            + '</a>'
+                            + '</td>';
           }
 
           if (this.sortingAvailable) {
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sortable'> </span></td>`
 
-              + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-              + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
-              + '<img src class=\'one sortable-image\'>'
-              + '</a>'
-              + '</td>';
+                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+                            + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
+                            + '<img src class=\'one sortable-image\'>'
+                            + '</a>'
+                            + '</td>';
           }
 
 
           div.innerHTML = `${div.innerHTML
           }</tr>`
-            + '</tbody>';
+                        + '</tbody>';
         }
 
         return div;
@@ -592,14 +592,16 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
         sort = `${sort} desc`;
       }
 
-      const primaryKey = metadata.common.primaryKey.split(',');
-      for (let n = 0; n < primaryKey.length; n++) {
-        if ((n === 0) && (event.sort[0].property === primaryKey[n])) {
-          continue;
-        }
-        sort = `${sort},${primaryKey[n]}`;
-        if (event.sort[0].descending) {
-          sort = `${sort} desc`;
+      if (metadata.common.primaryKey) {
+        const primaryKey = metadata.common.primaryKey.split(',');
+        for (let n = 0; n < primaryKey.length; n++) {
+          if ((n === 0) && (event.sort[0].property === primaryKey[n])) {
+            continue;
+          }
+          sort = `${sort},${primaryKey[n]}`;
+          if (event.sort[0].descending) {
+            sort = `${sort} desc`;
+          }
         }
       }
 
@@ -845,16 +847,16 @@ function exportToExcelLyraVueDGrid(parentId, exportType, fileName) {
   const refreshId = grid.row(focusedNode).id;
 
   /*
-                          gwtLyraVueGridExportToExcel(
-                              grid.formClass,
-                              grid.instanceId,
-                              grid.context,
-                              refreshId,
-                              grid.dgridOldPosition,
-                              grid.limit,
-                              exportType,
-                              fileName);
-                  */
+                            gwtLyraVueGridExportToExcel(
+                                grid.formClass,
+                                grid.instanceId,
+                                grid.context,
+                                refreshId,
+                                grid.dgridOldPosition,
+                                grid.limit,
+                                exportType,
+                                fileName);
+                    */
 }
 
 function fileDownloadLyraVueDGrid(parentId, procName) {
@@ -862,14 +864,14 @@ function fileDownloadLyraVueDGrid(parentId, procName) {
   const recId = getSelection(grid)[0];
 
   /*
-                          gwtProcessFileDownloadLyraVue(
-                              grid.formClass,
-                              grid.instanceId,
-                              encodeURIComponent(grid.context),
-                              recId,
-                              procName,
-                              "false");
-                  */
+                            gwtProcessFileDownloadLyraVue(
+                                grid.formClass,
+                                grid.instanceId,
+                                encodeURIComponent(grid.context),
+                                recId,
+                                procName,
+                                "false");
+                    */
 }
 
 function setColumnsVisibility(parentId, columns) {
