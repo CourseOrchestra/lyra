@@ -44,6 +44,7 @@ public class TestMetadataForm extends BasicGridForm<FooCursor> {
     @FormField(caption = "REAL",
             visible = true,
             cssStyle = "white-space:nowrap;width:100px;text-align:right;",
+            sortable = false,
             scale = 1)
     public double getUnboundField1(CallContext ctx) {
         return rec().getId() + 0.12;

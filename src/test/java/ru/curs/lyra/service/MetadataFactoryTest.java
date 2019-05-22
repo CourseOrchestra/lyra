@@ -164,6 +164,23 @@ class MetadataFactoryTest {
     }
 
 
+    @Test
+    void buildMetadataSortableProperty(CallContext ctx) {
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestMetadataForm", "foo");
+        formFactory.clearForms();
+        BasicGridForm<? extends BasicCursor> basicGridForm =
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
+        MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
+
+        Column column = metaDataResult.getColumns().get("5");
+        assertFalse(column.isSortable());
+
+        column = metaDataResult.getColumns().get("6");
+        assertTrue(column.isSortable());
+    }
+
+
 }
 
 

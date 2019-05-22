@@ -82,11 +82,12 @@ class MetadataFactory {
             column.setId(field.getName());
             column.setCaption(field.getCaption());
             column.setVisible(field.isVisible());
+            column.setSortable(field.isSortable());
             column.setCssClassName(CSS_LYRA_TYPE + field.getType().toString().toLowerCase()
                     + Optional.ofNullable(field.getCssClassName()).map(s -> s.isEmpty() ? "" : " " + s).orElse(""));
             column.setCssStyle(field.getCssStyle());
             column.setSortingAvailable(lyraGridAvailableSorting.contains(field.getName()));
-            
+
             metadata.getColumns().put(String.valueOf(metadata.getColumns().size() + 1), column);
 
         }
