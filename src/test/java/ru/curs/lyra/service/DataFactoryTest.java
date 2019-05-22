@@ -182,5 +182,35 @@ class DataFactoryTest {
 
     }
 
+    @Test
+    void buildDataNullValueFormatting(CallContext ctx) {
+
+        FooCursor fooCursor = new FooCursor(ctx);
+        fooCursor.setId(1);
+        fooCursor.setName("Name");
+        fooCursor.insert();
+
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestDataForm", "foo");
+
+        formFactory.clearForms();
+        BasicGridForm<? extends BasicCursor> basicGridForm =
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
+
+        DataRetrievalParams dataRetrievalParams = new DataRetrievalParams();
+        dataRetrievalParams.setLimit(50);
+        dataRetrievalParams.setOffset(0);
+        dataRetrievalParams.setDgridOldPosition(0);
+        dataRetrievalParams.setSortingOrFilteringChanged(true);
+        dataRetrievalParams.setFirstLoading(true);
+        dataRetrievalParams.setRefreshId(null);
+
+        DataResult dataResult = dataFactory.buildData(basicGridForm, dataRetrievalParams);
+
+        assertNull(dataResult.getData().get(0).get("intField"));
+        assertNull(dataResult.getData().get(0).get("datetimeField"));
+
+    }
+
 
 }

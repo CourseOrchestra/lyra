@@ -5,5 +5,10 @@ create table foo (
   /**
   {"caption": "name field caption"}
    */
-  name varchar (10)
+  name varchar (10),
+
+  intField int,
+
+  datetimeField datetime
+
 );
