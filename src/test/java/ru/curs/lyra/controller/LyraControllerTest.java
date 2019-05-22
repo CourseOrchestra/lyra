@@ -110,7 +110,7 @@ class LyraControllerTest {
         assertEquals("ID", sum.get("id"));
         assertEquals("NAME", sum.get("name"));
 
-        assertEquals(4, metaDataResult.getColumns().size());
+        assertEquals(6, metaDataResult.getColumns().size());
 
         Column column = metaDataResult.getColumns().get("1");
         assertEquals("id", column.getId());
@@ -126,14 +126,14 @@ class LyraControllerTest {
         assertEquals("lyra-type-varchar className2", column.getCssClassName());
         assertEquals("width:300px;text-align:left;", column.getCssStyle());
 
-        column = metaDataResult.getColumns().get("3");
+        column = metaDataResult.getColumns().get("5");
         assertEquals("unboundField1", column.getId());
         assertEquals("REAL", column.getCaption());
         assertTrue(column.isVisible());
         assertEquals("lyra-type-real", column.getCssClassName());
         assertEquals("white-space:nowrap;width:100px;text-align:right;", column.getCssStyle());
 
-        column = metaDataResult.getColumns().get("4");
+        column = metaDataResult.getColumns().get("6");
         assertEquals("unboundField2", column.getId());
         assertEquals("DATETIME", column.getCaption());
         assertFalse(column.isVisible());

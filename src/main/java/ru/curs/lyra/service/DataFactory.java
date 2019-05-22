@@ -296,15 +296,21 @@ class DataFactory {
     }
 
     private String getStringValueOfDate(LyraFieldValue lyraFieldValue) {
+        if (lyraFieldValue.getValue() == null) {
+            return null;
+        }
+
         DateFormat df = DateFormat.getDateTimeInstance(lyraFieldValue.meta().getDateFormat(),
                 lyraFieldValue.meta().getDateFormat());
         return df.format(lyraFieldValue.getValue());
     }
 
     private String getStringValueOfNumber(LyraFieldValue lyraFieldValue) {
+        if (lyraFieldValue.getValue() == null) {
+            return null;
+        }
 
         NumberFormat nf = NumberFormat.getNumberInstance();
-
         if (lyraFieldValue.meta().getType() == LyraFieldType.INT) {
             nf.setMinimumFractionDigits(0);
             nf.setMaximumFractionDigits(0);
