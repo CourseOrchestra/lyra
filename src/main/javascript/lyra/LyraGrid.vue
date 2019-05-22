@@ -143,6 +143,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
       column.parentId = metadata.columns[k].parentId;
       column.field = metadata.columns[k].id;
       column.hidden = !metadata.columns[k].visible;
+      column.sortable = metadata.columns[k].sortable;
       // column["unhidable"] = true;
       column.label = metadata.columns[k].caption;
       column.sortingAvailable = metadata.columns[k].sortingAvailable;
@@ -847,16 +848,16 @@ function exportToExcelLyraVueDGrid(parentId, exportType, fileName) {
   const refreshId = grid.row(focusedNode).id;
 
   /*
-                            gwtLyraVueGridExportToExcel(
-                                grid.formClass,
-                                grid.instanceId,
-                                grid.context,
-                                refreshId,
-                                grid.dgridOldPosition,
-                                grid.limit,
-                                exportType,
-                                fileName);
-                    */
+                              gwtLyraVueGridExportToExcel(
+                                  grid.formClass,
+                                  grid.instanceId,
+                                  grid.context,
+                                  refreshId,
+                                  grid.dgridOldPosition,
+                                  grid.limit,
+                                  exportType,
+                                  fileName);
+                      */
 }
 
 function fileDownloadLyraVueDGrid(parentId, procName) {
@@ -864,14 +865,14 @@ function fileDownloadLyraVueDGrid(parentId, procName) {
   const recId = getSelection(grid)[0];
 
   /*
-                            gwtProcessFileDownloadLyraVue(
-                                grid.formClass,
-                                grid.instanceId,
-                                encodeURIComponent(grid.context),
-                                recId,
-                                procName,
-                                "false");
-                    */
+                              gwtProcessFileDownloadLyraVue(
+                                  grid.formClass,
+                                  grid.instanceId,
+                                  encodeURIComponent(grid.context),
+                                  recId,
+                                  procName,
+                                  "false");
+                      */
 }
 
 function setColumnsVisibility(parentId, columns) {

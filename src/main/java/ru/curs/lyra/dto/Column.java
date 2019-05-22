@@ -8,6 +8,7 @@ public final class Column {
     private String id;
     private String caption;
     private boolean visible;
+    private boolean sortable;
     private String cssClassName;
     private String cssStyle;
     private boolean sortingAvailable;
@@ -108,4 +109,14 @@ public final class Column {
     public void setSortingAvailable(boolean sortingAvailable) {
         this.sortingAvailable = sortingAvailable;
     }
+
+
+    public boolean isSortable() {
+        return sortable;
+    }
+
+    public void setSortable(boolean sortable) {
+        this.sortable = sortable;
+    }
+
 }

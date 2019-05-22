@@ -15,6 +15,10 @@ public class LyraFormField extends LyraNamedElement {
      */
     public static final String EDITABLE = "editable";
     /**
+     * 'Sortable' property name.
+     */
+    public static final String SORTABLE = "sortable";
+    /**
      * 'Caption' property name.
      */
     public static final String CAPTION = "caption";
@@ -65,6 +69,7 @@ public class LyraFormField extends LyraNamedElement {
 
     private LyraFieldType type = LyraFieldType.VARCHAR;
     private boolean editable;
+    private boolean sortable;
     private boolean visible;
     private boolean required;
     private String caption;
@@ -88,6 +93,9 @@ public class LyraFormField extends LyraNamedElement {
         return this;
     }
 
+    /**
+     * Get CssStyle.
+     */
     public String getCssStyle() {
         return cssStyle;
     }
@@ -138,6 +146,23 @@ public class LyraFormField extends LyraNamedElement {
      */
     public LyraFormField setEditable(boolean editable) {
         this.editable = editable;
+        return this;
+    }
+
+    /**
+     * Is the field sortable?
+     */
+    public boolean isSortable() {
+        return sortable;
+    }
+
+    /**
+     * Sets sortable property.
+     *
+     * @param sortable sortable property.
+     */
+    public LyraFormField setSortable(boolean sortable) {
+        this.sortable = sortable;
         return this;
     }
 

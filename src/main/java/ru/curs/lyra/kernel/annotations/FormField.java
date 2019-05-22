@@ -16,6 +16,8 @@ public @interface FormField {
 
     boolean editable() default true;
 
+    boolean sortable() default true;
+
     boolean required() default false;
 
     int scale() default LyraFormField.DEFAULT_SCALE;

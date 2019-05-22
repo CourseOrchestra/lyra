@@ -107,6 +107,7 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
             JSONObject metadata = new JSONObject(json);
             f.setCaption(metadata.has(CAPTION) ? metadata.getString(CAPTION) : f.getName());
             f.setEditable(getPropertyVal(metadata, EDITABLE, true));
+            f.setSortable(getPropertyVal(metadata, SORTABLE, true));
             f.setVisible(getPropertyVal(metadata, VISIBLE, true));
             if (metadata.has(SCALE)) {
                 f.setScale(metadata.getInt(SCALE));
@@ -332,6 +333,7 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
                             f.setCaption(formField.caption())
                                     .setVisible(formField.visible())
                                     .setEditable(formField.editable())
+                                    .setSortable(formField.sortable())
                                     .setRequired(formField.required())
                                     .setScale(formField.scale())
                                     .setType(lyraFieldType)
