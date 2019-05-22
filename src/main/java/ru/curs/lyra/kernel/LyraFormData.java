@@ -160,7 +160,7 @@ public final class LyraFormData {
         private String cssClassName;
         private String cssStyle;
 
-        private int dateFormat = DEFAULT_DATE_FORMAT;
+        private String dateFormat = DEFAULT_DATE_FORMAT;
         private String decimalSeparator = DEFAULT_DECIMAL_SEPARATOR;
         private String groupingSeparator = DEFAULT_GROUPING_SEPARATOR;
 
@@ -195,7 +195,7 @@ public final class LyraFormData {
                     cssStyle = buf;
 
                     buf = attributes.getValue(DATE_FORMAT);
-                    dateFormat = Integer.parseInt(buf);
+                    dateFormat = buf;
 
                     buf = attributes.getValue(DECIMAL_SEPARATOR);
                     decimalSeparator = buf;

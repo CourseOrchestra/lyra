@@ -11,10 +11,10 @@ import ru.curs.lyra.kernel.LyraFieldType;
 import ru.curs.lyra.kernel.LyraFieldValue;
 import ru.curs.lyra.kernel.LyraFormData;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -300,9 +300,8 @@ class DataFactory {
             return null;
         }
 
-        DateFormat df = DateFormat.getDateTimeInstance(lyraFieldValue.meta().getDateFormat(),
-                lyraFieldValue.meta().getDateFormat());
-        return df.format(lyraFieldValue.getValue());
+        SimpleDateFormat dateFormat = new SimpleDateFormat(lyraFieldValue.meta().getDateFormat());
+        return dateFormat.format(lyraFieldValue.getValue());
     }
 
     private String getStringValueOfNumber(LyraFieldValue lyraFieldValue) {

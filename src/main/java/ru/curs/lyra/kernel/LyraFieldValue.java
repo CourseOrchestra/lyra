@@ -41,7 +41,7 @@ public final class LyraFieldValue extends LyraNamedElement {
             xmlWriter.writeAttribute(CSS_STYLE, lff.getCssStyle());
         }
 
-        xmlWriter.writeAttribute(DATE_FORMAT, Integer.toString(lff.getDateFormat()));
+        xmlWriter.writeAttribute(DATE_FORMAT, lff.getDateFormat());
 
         if (lff.getDecimalSeparator() != null) {
             xmlWriter.writeAttribute(DECIMAL_SEPARATOR, lff.getDecimalSeparator());
