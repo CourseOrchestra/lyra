@@ -93,6 +93,9 @@ public class LyraFormField extends LyraNamedElement {
         return this;
     }
 
+    /**
+     * Get CssStyle.
+     */
     public String getCssStyle() {
         return cssStyle;
     }
