@@ -115,7 +115,7 @@ public class SerializerTest {
         fd.serialize(bos);
 
         String expected = String.format(
-                "<?xml version=\"1.0\" ?><schema recversion=\"0\" formId=\"myform\"><z type=\"INT\" dateFormat=\"3\" decimalSeparator=\",\" groupingSeparator=\" \" required=\"true\">123</z><aa type=\"VARCHAR\" dateFormat=\"3\" decimalSeparator=\",\" groupingSeparator=\" \">русский текст</aa><fe type=\"DATETIME\" dateFormat=\"3\" decimalSeparator=\",\" groupingSeparator=\" \">%s</fe><bs type=\"BIT\" dateFormat=\"3\" decimalSeparator=\",\" groupingSeparator=\" \">true</bs><we type=\"BIT\" dateFormat=\"3\" decimalSeparator=\",\" groupingSeparator=\" \" null=\"true\"></we></schema>",
+                "<?xml version=\"1.0\" ?><schema recversion=\"0\" formId=\"myform\"><z type=\"INT\" dateFormat=\"dd.MM.yyyy\" decimalSeparator=\",\" groupingSeparator=\" \" required=\"true\">123</z><aa type=\"VARCHAR\" dateFormat=\"dd.MM.yyyy\" decimalSeparator=\",\" groupingSeparator=\" \">русский текст</aa><fe type=\"DATETIME\" dateFormat=\"dd.MM.yyyy\" decimalSeparator=\",\" groupingSeparator=\" \">%s</fe><bs type=\"BIT\" dateFormat=\"dd.MM.yyyy\" decimalSeparator=\",\" groupingSeparator=\" \">true</bs><we type=\"BIT\" dateFormat=\"dd.MM.yyyy\" decimalSeparator=\",\" groupingSeparator=\" \" null=\"true\"></we></schema>",
                 new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(d));
 
         String actual = bos.toString("utf-8");

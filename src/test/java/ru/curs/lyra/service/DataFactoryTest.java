@@ -12,6 +12,9 @@ import ru.curs.lyra.dto.Labels;
 import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.grid.GridDriver;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @CelestaTest
@@ -209,6 +212,38 @@ class DataFactoryTest {
 
         assertNull(dataResult.getData().get(0).get("intField"));
         assertNull(dataResult.getData().get(0).get("datetimeField"));
+
+    }
+
+    @Test
+    void buildDataDatetimeFormatting(CallContext ctx) {
+
+        Date dt = new Date();
+
+        FooCursor fooCursor = new FooCursor(ctx);
+        fooCursor.setId(1);
+        fooCursor.setName("Name");
+        fooCursor.setDatetimeField(dt);
+        fooCursor.insert();
+
+        FormInstantiationParams formInstantiationParams
+                = new FormInstantiationParams("ru.curs.lyra.service.forms.TestDataForm", "foo");
+
+        formFactory.clearForms();
+        BasicGridForm<? extends BasicCursor> basicGridForm =
+                formFactory.getFormInstance(ctx, formInstantiationParams, null);
+
+        DataRetrievalParams dataRetrievalParams = new DataRetrievalParams();
+        dataRetrievalParams.setLimit(50);
+        dataRetrievalParams.setOffset(0);
+        dataRetrievalParams.setDgridOldPosition(0);
+        dataRetrievalParams.setSortingOrFilteringChanged(true);
+        dataRetrievalParams.setFirstLoading(true);
+        dataRetrievalParams.setRefreshId(null);
+
+        DataResult dataResult = dataFactory.buildData(basicGridForm, dataRetrievalParams);
+
+        assertEquals((new SimpleDateFormat("yyyy.MM.dd")).format(dt), dataResult.getData().get(0).get("datetimeField"));
 
     }
 

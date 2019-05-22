@@ -1,7 +1,5 @@
 package ru.curs.lyra.kernel;
 
-import java.text.DateFormat;
-
 /**
  * Lyra form field metadata.
  */
@@ -60,7 +58,7 @@ public class LyraFormField extends LyraNamedElement {
      * Значение по умолчанию для числа знаков после запятой.
      */
     public static final int DEFAULT_SCALE = 2;
-    public static final int DEFAULT_DATE_FORMAT = DateFormat.SHORT;
+    public static final String DEFAULT_DATE_FORMAT = "dd.MM.yyyy";
     public static final String DEFAULT_DECIMAL_SEPARATOR = ",";
     public static final String DEFAULT_GROUPING_SEPARATOR = " ";
 
@@ -79,7 +77,7 @@ public class LyraFormField extends LyraNamedElement {
     // adding_field's_property
     private String cssClassName;
     private String cssStyle;
-    private int dateFormat = DEFAULT_DATE_FORMAT;
+    private String dateFormat = DEFAULT_DATE_FORMAT;
     private String decimalSeparator = DEFAULT_DECIMAL_SEPARATOR;
     private String groupingSeparator = DEFAULT_GROUPING_SEPARATOR;
 
@@ -261,11 +259,11 @@ public class LyraFormField extends LyraNamedElement {
         return this;
     }
 
-    public int getDateFormat() {
+    public String getDateFormat() {
         return dateFormat;
     }
 
-    public LyraFormField setDateFormat(int dateFormat) {
+    public LyraFormField setDateFormat(String dateFormat) {
         this.dateFormat = dateFormat;
         return this;
     }

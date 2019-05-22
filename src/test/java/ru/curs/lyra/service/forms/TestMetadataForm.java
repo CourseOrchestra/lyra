@@ -12,8 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.text.DateFormat.MEDIUM;
-
 @LyraForm(gridWidth = "500px", gridHeight = "470px",
         gridHeader = "<h1>Header</h1>",
         gridFooter = "<h1>Footer</h1>",
@@ -53,7 +51,7 @@ public class TestMetadataForm extends BasicGridForm<FooCursor> {
     @FormField(caption = "DATETIME",
             visible = false,
             cssStyle = "white-space:nowrap;width:70px;text-align:center;",
-            dateFormat = MEDIUM)
+            dateFormat = "yyyy.MM.dd G 'at' HH:mm:ss z")
     public Date getUnboundField2(CallContext ctx) {
         return Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
     }

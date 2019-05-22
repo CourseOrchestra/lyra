@@ -29,7 +29,7 @@ public @interface FormField {
 
     String cssStyle() default "";
 
-    int dateFormat() default LyraFormField.DEFAULT_DATE_FORMAT;
+    String dateFormat() default LyraFormField.DEFAULT_DATE_FORMAT;
 
     String decimalSeparator() default LyraFormField.DEFAULT_DECIMAL_SEPARATOR;
 

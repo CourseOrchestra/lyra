@@ -81,3 +81,6 @@ DATETIME
 getSomething
 isSomething
 VARCHAR
+dateFormat
+datetime
+sortable

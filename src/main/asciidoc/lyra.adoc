@@ -141,7 +141,7 @@ The {apidocs}ru/curs/lyra/kernel/LyraFormField.html[`LyraFormField`] object retu
 
 * `createAllBoundFields()`, which is equivalent to calling the `createField` method for each of the table fields.
 
-* `createAllUnboundFields()`, which is equivalent to calling the `createField` method for each of the properties of a class declared with `@FormField` annotation. 
+* `createAllUnboundFields()`, which is equivalent to calling the `createField` method for each of the properties of a class declared with `@FormField` annotation.
 
 For example, if we want all unbound fields in the form to go first, and then all bound fields, and we are satisfied with the default (`CelestaDoc` or annotation-set) field property values, then we can write this:
 
@@ -175,7 +175,7 @@ WARNING: Note that field names within a form must be unique, just as field names
 
 === afterReceiving(...) and beforeSending(...) Methods
 
-A form class may and should also contain business logic that performs certain actions when values are entered by a user into a form. Two main entry points available in each of form classes are 
+A form class may and should also contain business logic that performs certain actions when values are entered by a user into a form. Two main entry points available in each of form classes are
 
 [source, java]
 ----
@@ -202,15 +202,17 @@ Each form has a set of attributes that can be defined using optional named param
 * `gridheight` — высота грида (в пикселах)
 
 == Field Attributes
-Each form field (`LyraFormField` class instance) has a set of following attributes: 
+Each form field (`LyraFormField` class instance) has a set of following attributes:
 
 
 * `caption` — 'human-readable' caption of the field.
 * `editable` — set to `false`, is the field needs to be read-only.
+* `sortable` — indicates whether or not the grid should allow sorting by values in this field, by clicking on the column's header cell. Defaults to true.
 * `visible` — set to `false`, if the field needs to be hidden from form.
 * `required` — required field. *Warning*: bound fields related to `not null` table fields will be always treated as required, regardless of the value of `required` property.
 * `scale` — maximum decimal point numbers  (for `REAL`-typed fields).
 * `width` — visible width of the field (in pixels).
+* `dateFormat` — format of the datetime field.
 
 === Methods of Setting Field Attributes
 So, the properties of form fields in Lyra can be set:
@@ -322,7 +324,7 @@ public class TestForm extends BasicGridForm<OrderLineCursor> {
     public String getField1(CallContext ctx) {
         return "foo";
     }
-    
+
     public void beforeSending(OrderLineCursor c){
         //do something before the cursor is serialized and sent to the form
     }

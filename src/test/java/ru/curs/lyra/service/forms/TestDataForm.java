@@ -11,6 +11,8 @@ public class TestDataForm extends BasicGridForm<FooCursor> {
     public TestDataForm(CallContext context) {
         super(context);
         createAllBoundFields();
+
+        getFieldsMeta().get("datetimeField").setDateFormat("yyyy.MM.dd");
     }
 
     @Override

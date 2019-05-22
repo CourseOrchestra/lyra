@@ -134,7 +134,7 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
             f.setCssClassName(metadata.has(CSS_CLASS_NAME) ? metadata.getString(CSS_CLASS_NAME) : null);
             f.setCssStyle(metadata.has(CSS_STYLE) ? metadata.getString(CSS_STYLE) : null);
             f.setDateFormat(metadata.has(DATE_FORMAT)
-                    ? metadata.getInt(DATE_FORMAT) : DEFAULT_DATE_FORMAT);
+                    ? metadata.getString(DATE_FORMAT) : DEFAULT_DATE_FORMAT);
             f.setDecimalSeparator(metadata.has(DECIMAL_SEPARATOR)
                     ? metadata.getString(DECIMAL_SEPARATOR) : DEFAULT_DECIMAL_SEPARATOR);
             f.setGroupingSeparator(metadata.has(GROUPING_SEPARATOR)
