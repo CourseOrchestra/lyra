@@ -16,7 +16,6 @@
 
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
-import Vue from 'vue';
 import request from 'dojo/request';
 import query from 'dojo/query';
 import lang from 'dojo/_base/lang';
@@ -61,24 +60,6 @@ stompClient.connect({}, (frame) => {
 });
 
 
-export const lyraGridEvents = new Vue();
-lyraGridEvents.$on('refresh', (formClass, instanceId, context) => {
-  refreshLyraVueDGrid(getParentId(formClass, instanceId), context);
-});
-lyraGridEvents.$on('export-to-clipboard', (formClass, instanceId) => {
-  exportToClipboardLyraVueDGrid(getParentId(formClass, instanceId));
-});
-lyraGridEvents.$on('export-to-excel', (formClass, instanceId, exportType, fileName) => {
-  exportToExcelLyraVueDGrid(getParentId(formClass, instanceId), exportType, fileName);
-});
-lyraGridEvents.$on('file-download', (formClass, instanceId, procName) => {
-  fileDownloadLyraVueDGrid(getParentId(formClass, instanceId), procName);
-});
-lyraGridEvents.$on('set-columns-visibility', (formClass, instanceId, columns) => {
-  setColumnsVisibility(getParentId(formClass, instanceId), columns);
-});
-
-
 export default {
   name: 'LyraGrid',
 
@@ -95,15 +76,24 @@ export default {
   },
 
   mounted() {
+    this.$on('refresh', (context) => {
+      refreshLyraVueDGrid(getParentId(this.formclass, this.instanceid), context);
+    });
+    this.$on('set-columns-visibility', (context) => {
+      setColumnsVisibility(getParentId(this.formclass, this.instanceid), context);
+    });
+
+
     const { gridDivId } = this;
     const parentId = getParentId(this.formclass, this.instanceid);
 
     const vueComponent = this;
 
+
     const postData = {
       formClass: this.formclass,
       instanceId: this.instanceid,
-      clientParams: JSON.parse(this.context),
+      clientParams: this.context,
     };
 
     dojo.xhrPost({
@@ -122,7 +112,7 @@ export default {
         const div = document.getElementById(gridDivId);
         div.style = `width:${metadata.common.gridWidth}; height:${metadata.common.gridHeight};`;
 
-        createLyraVueDGrid(vueComponent, parentId, div.id, metadata, postData.formClass, postData.instanceId, JSON.stringify(postData.clientParams));
+        createLyraVueDGrid(vueComponent, parentId, div.id, metadata, postData.formClass, postData.instanceId, postData.clientParams);
       },
       error(error) {
         showErrorTextMessage(error.message);
@@ -224,7 +214,6 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
       columns.push(column);
     }
-    lyraGridEvents.$emit('columns-info', formClass, instanceId, columns);
     vueComponent.$emit('columns-info', formClass, instanceId, columns);
 
 
@@ -460,7 +449,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
 
         const formInstantiationParams = {};
-        formInstantiationParams.clientParams = JSON.parse(this.grid.context);
+        formInstantiationParams.clientParams = this.grid.context;
         formInstantiationParams.formClass = formClass;
         formInstantiationParams.instanceId = instanceId;
 
@@ -481,7 +470,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
           this.grid.oldFilter = filter;
         }
         const selectKey = getParamFromContext(this.grid.context, 'selectKey');
-        if (selectKey !== '') {
+        if (selectKey && (selectKey !== '')) {
           dataRetrievalParams.selectKey = selectKey;
         }
 
@@ -562,7 +551,6 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
       obj.currentRowData = row.data;
       obj.selection = getSelection(grid);
 
-      lyraGridEvents.$emit('select', grid.formClass, grid.instanceId, obj);
       vueComponent.$emit('select', grid.formClass, grid.instanceId, obj);
     }
 
@@ -581,7 +569,6 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
         obj.currentRowData = grid.row(event).data;
         obj.selection = getSelection(grid);
 
-        lyraGridEvents.$emit(clickType, grid.formClass, grid.instanceId, obj);
         vueComponent.$emit(clickType, grid.formClass, grid.instanceId, obj);
       }
     }
@@ -610,25 +597,23 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
       const { context } = event.grid;
 
       const refreshParams = {
-        selectKey: '',
         sort,
         filter: '',
       };
 
       let objContext;
-      if (!context || context.trim() === '') {
+      if (!context) {
         objContext = { refreshParams };
       } else {
-        objContext = JSON.parse(context);
+        objContext = context;
         if (objContext.refreshParams) {
-          objContext.refreshParams.selectKey = '';
           objContext.refreshParams.sort = sort;
         } else {
           objContext.refreshParams = refreshParams;
         }
       }
 
-      event.grid.context = JSON.stringify(objContext);
+      event.grid.context = objContext;
 
       setExternalSorting(event.grid._columns, sort);
       event.grid.renderHeader();
@@ -744,11 +729,8 @@ function setExternalSorting(columns, sort) {
 
 function getParamFromContext(context, param) {
   let ret = '';
-  if (context && context.trim() !== '') {
-    const objContext = JSON.parse(context);
-    if (objContext && objContext.refreshParams && objContext.refreshParams[param]) {
-      ret = objContext.refreshParams[param];
-    }
+  if (context && context.refreshParams && context.refreshParams[param]) {
+    ret = context.refreshParams[param];
   }
   return ret;
 }
@@ -761,7 +743,7 @@ function refreshLyraVueDGrid(parentId, context) {
     const sort = getParamFromContext(context, 'sort');
     const filter = getParamFromContext(context, 'filter');
     if ((sort === grid.oldSort) && (filter === grid.oldFilter)) {
-      if (context && context.trim() !== '') {
+      if (context) {
         grid.context = context;
       }
 
@@ -778,24 +760,23 @@ function refreshLyraVueDGrid(parentId, context) {
       }
 
       const refreshParams = {
-        selectKey,
         sort: '',
         filter: '',
       };
 
       let objContext;
-      if (!context || context.trim() === '') {
+      if (!context) {
         objContext = { refreshParams };
       } else {
-        objContext = JSON.parse(context);
+        objContext = context;
         if (objContext.refreshParams) {
-          objContext.refreshParams.selectKey = selectKey;
+          objContext.refreshParams.selectKey = [selectKey];
         } else {
           objContext.refreshParams = refreshParams;
         }
       }
 
-      grid.context = JSON.stringify(objContext);
+      grid.context = objContext;
 
       setExternalSorting(grid._columns, sort);
       grid.renderHeader();
@@ -804,7 +785,7 @@ function refreshLyraVueDGrid(parentId, context) {
       grid.refresh({ keepScrollPosition: false });
     }
   } else {
-    if (context && context.trim() !== '') {
+    if (context) {
       grid.context = context;
     }
 
@@ -819,61 +800,6 @@ function refreshLyraVueDGrid(parentId, context) {
   }
 }
 
-function exportToClipboardLyraVueDGrid(parentId) {
-  let str = '';
-
-  const grid = grid;
-
-  for (const col in grid.columns) {
-    str = `${str + grid.columns[col].label}\t`;
-  }
-
-  str = `${str}\n`;
-
-  for (const id in grid.selection) {
-    if (grid.selection[id]) {
-      for (const col in grid.columns) {
-        str = `${str + grid.row(id).data[col]}\t`;
-      }
-      str = `${str}\n`;
-    }
-  }
-
-  // gwtLyraVueGridExportToClipboard(str);
-}
-
-function exportToExcelLyraVueDGrid(parentId, exportType, fileName) {
-  const grid = arrGrids[parentId];
-  const focusedNode = grid._focusedNode || grid.contentNode;
-  const refreshId = grid.row(focusedNode).id;
-
-  /*
-                              gwtLyraVueGridExportToExcel(
-                                  grid.formClass,
-                                  grid.instanceId,
-                                  grid.context,
-                                  refreshId,
-                                  grid.dgridOldPosition,
-                                  grid.limit,
-                                  exportType,
-                                  fileName);
-                      */
-}
-
-function fileDownloadLyraVueDGrid(parentId, procName) {
-  const grid = arrGrids[parentId];
-  const recId = getSelection(grid)[0];
-
-  /*
-                              gwtProcessFileDownloadLyraVue(
-                                  grid.formClass,
-                                  grid.instanceId,
-                                  encodeURIComponent(grid.context),
-                                  recId,
-                                  procName,
-                                  "false");
-                      */
-}
 
 function setColumnsVisibility(parentId, columns) {
   const grid = arrGrids[parentId];
