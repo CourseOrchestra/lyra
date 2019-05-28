@@ -37,9 +37,41 @@ import domConstruct from 'dojo/dom-construct';
 const arrGrids = [];
 
 
-const socket = new SockJS('/lyra/scrollback');
+let lyraConfig = null;
+try {
+  lyraConfig = getLyraConfig();
+} catch (err) {
+  //
+}
+
+function getMetadataUrl() {
+  let url = '/lyra/metadata';
+  if (lyraConfig) {
+    url = lyraConfig.baseUrlMetadata + url;
+  }
+  return url;
+}
+
+function getDataUrl() {
+  let url = '/lyra/data';
+  if (lyraConfig) {
+    url = lyraConfig.baseUrlData + url;
+  }
+  return url;
+}
+
+function getScrollbackUrl() {
+  let url = '/lyra/scrollback';
+  if (lyraConfig) {
+    url = lyraConfig.baseUrlScrollback + url;
+  }
+  return url;
+}
+
+
+const socket = new SockJS(getScrollbackUrl());
 const stompClient = Stomp.over(socket);
-stompClient.connect({}, (frame) => {
+stompClient.connect({}, (/* frame */) => {
   stompClient.subscribe('/position', (scrollBackParams) => {
     const params = JSON.parse(scrollBackParams.body);
     const grid = arrGrids[params.dgridId];
@@ -97,7 +129,7 @@ export default {
     };
 
     dojo.xhrPost({
-      url: 'lyra/metadata',
+      url: getMetadataUrl(),
 
       headers: {
         'Content-Type': 'application/json',
@@ -175,7 +207,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
         if (this.sortingPic || this.sortingAvailable) {
           div.innerHTML = '<tbody>'
-                        + '<tr>';
+            + '<tr>';
 
           div.innerHTML = `${div.innerHTML
           }<td>${this.label}</td>`;
@@ -184,28 +216,28 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sorted'> </span></td>`
 
-                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-                            + '<a title=\'Порядок и направление сортировки\'>'
-                            + `<img src class='${this.sortingPic} sorted-image'>`
-                            + '</a>'
-                            + '</td>';
+              + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+              + '<a title=\'Порядок и направление сортировки\'>'
+              + `<img src class='${this.sortingPic} sorted-image'>`
+              + '</a>'
+              + '</td>';
           }
 
           if (this.sortingAvailable) {
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sortable'> </span></td>`
 
-                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-                            + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
-                            + '<img src class=\'one sortable-image\'>'
-                            + '</a>'
-                            + '</td>';
+              + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+              + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
+              + '<img src class=\'one sortable-image\'>'
+              + '</a>'
+              + '</td>';
           }
 
 
           div.innerHTML = `${div.innerHTML
           }</tr>`
-                        + '</tbody>';
+            + '</tbody>';
         }
 
         return div;
@@ -366,7 +398,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
     const store = new declare([Rest, Cache])(lang.mixin({
 
-      target: 'lyra/data',
+      target: getDataUrl(),
       idProperty: 'internalId',
 
       grid,
