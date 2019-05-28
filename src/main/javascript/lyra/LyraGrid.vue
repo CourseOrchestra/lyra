@@ -1,8 +1,8 @@
 <template>
   <div class="lyra-grid">
-    <div v-html="header"/>
-    <div :id="gridDivId"/>
-    <div v-html="footer"/>
+    <div v-html="header" />
+    <div :id="gridDivId" />
+    <div v-html="footer" />
   </div>
 </template>
 
@@ -210,11 +210,11 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
             + '<tr>';
 
           div.innerHTML = `${div.innerHTML
-            }<td>${this.label}</td>`;
+          }<td>${this.label}</td>`;
 
           if (this.sortingPic) {
             div.innerHTML = `${div.innerHTML
-                }<td><span class='sort-gap before-sorted'> </span></td>`
+            }<td><span class='sort-gap before-sorted'> </span></td>`
 
               + '<td align=\'right\' style=\'vertical-align: middle;\'>'
               + '<a title=\'Порядок и направление сортировки\'>'
@@ -225,7 +225,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
           if (this.sortingAvailable) {
             div.innerHTML = `${div.innerHTML
-                }<td><span class='sort-gap before-sortable'> </span></td>`
+            }<td><span class='sort-gap before-sortable'> </span></td>`
 
               + '<td align=\'right\' style=\'vertical-align: middle;\'>'
               + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
@@ -236,7 +236,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
 
           div.innerHTML = `${div.innerHTML
-              }</tr>`
+          }</tr>`
             + '</tbody>';
         }
 
