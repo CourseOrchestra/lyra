@@ -133,7 +133,7 @@ export default {
 
       headers: {
         'Content-Type': 'application/json',
-        'Content-Encoding': 'UTF-8',
+        // 'Content-Encoding': 'UTF-8',
       },
 
       postData: JSON.stringify(postData),
@@ -407,7 +407,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
       _fetchRange(scparams) {
         const headers = lang.delegate({
           'Content-Type': 'application/json',
-          'Content-Encoding': 'UTF-8',
+          // 'Content-Encoding': 'UTF-8',
         }, { Accept: this.accepts });
 
         const response = request(this.target, {
