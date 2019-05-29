@@ -17,7 +17,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/lyra/scrollback").withSockJS();
+        registry.addEndpoint("/lyra/scrollback")
+                .setAllowedOrigins("*")
+                .withSockJS();
     }
 
 }
