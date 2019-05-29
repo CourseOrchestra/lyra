@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.curs</groupId>
@@ -64,7 +65,7 @@
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
         <spring.boot.starter.celesta.version>2.1.0</spring.boot.starter.celesta.version>
         <jackson.core.version>2.9.8</jackson.core.version>
-        <celesta.version>7.1.3</celesta.version>
+        <celesta.version>7.1.5</celesta.version>
         <jacoco.version>0.8.3</jacoco.version>
     </properties>
 
