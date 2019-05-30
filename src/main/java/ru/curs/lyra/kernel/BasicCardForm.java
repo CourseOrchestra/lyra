@@ -9,6 +9,8 @@ import java.io.*;
 
 /**
  * Base Java class for Lyra card form.
+ *
+ * @param <T> type of the form's main cursor
  */
 public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm<T> {
 
@@ -21,6 +23,8 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
 
     /**
      * Отыскивает первую запись в наборе записей.
+     *
+     * @param ctx текущий контекст вызова
      */
     public String findRec(CallContext ctx) {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
@@ -36,6 +40,7 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
      * Отменяет текущие изменения в курсоре и возвращает актуальную информацию
      * из базы данных.
      *
+     * @param ctx  текущий контекст вызова
      * @param data сериализованный курсор
      */
     public synchronized String revert(CallContext ctx, String data) {
@@ -58,6 +63,7 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
     /**
      * Перемещает курсор.
      *
+     * @param ctx  текущий контекст вызова
      * @param cmd  Команда перемещения (комбинация знаков &lt;, &gt;, =, +, -, см.
      *             документацию по методу курсора navigate)
      * @param data сериализованный курсор.
@@ -84,6 +90,8 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
 
     /**
      * Инициирует новую запись для вставки в базу данных.
+     *
+     * @param ctx текущий контекст вызова
      */
     public synchronized String newRec(CallContext ctx) {
         Cursor c = getRecCursor(ctx);
@@ -101,6 +109,7 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
     /**
      * Удаляет текущую запись.
      *
+     * @param ctx  текущий контекст вызова
      * @param data сериализованный курсор.
      */
     public synchronized String deleteRec(CallContext ctx, String data) {

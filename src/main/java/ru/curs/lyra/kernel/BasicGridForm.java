@@ -10,6 +10,8 @@ import java.util.*;
 
 /**
  * Base Java class for Lyra grid form.
+ *
+ * @param <T> type of the form's main cursor
  */
 public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm<T> {
 
@@ -35,6 +37,12 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
         }
     }
 
+    /**
+     * Returns contents of grid given scrollbar's position.
+     *
+     * @param ctx      current CallContext
+     * @param position New scrollbar's position.
+     */
     public synchronized List<LyraFormData> getRows(CallContext ctx, int position) {
         return getRowsH(ctx, position, getGridHeight());
     }
@@ -42,7 +50,9 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
     /**
      * Returns contents of grid given scrollbar's position.
      *
+     * @param ctx      current CallContext
      * @param position New scrollbar's position.
+     * @param h        Form's height in rows
      */
     public synchronized List<LyraFormData> getRowsH(CallContext ctx, int position, int h) {
         BasicCursor c = rec(ctx);
@@ -54,12 +64,20 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
         }
     }
 
+    /**
+     * Returns contents of grid for current cursor's position.
+     *
+     * @param ctx current CallContext
+     */
     public synchronized List<LyraFormData> getRows(CallContext ctx) {
         return getRowsH(ctx, getGridHeight());
     }
 
     /**
      * Returns contents of grid for current cursor's position.
+     *
+     * @param ctx current CallContext
+     * @param h   form height in rows
      */
     public synchronized List<LyraFormData> getRowsH(CallContext ctx, int h) {
         BasicCursor bc = getCursor(ctx);
@@ -79,7 +97,8 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
     /**
      * Positions grid to a certain record.
      *
-     * @param pk Values of primary key.
+     * @param ctx current CallContext
+     * @param pk Values of primary key
      */
     public synchronized List<LyraFormData> setPositionH(CallContext ctx, int h, Object... pk) {
         BasicCursor bc = getCursor(ctx);
