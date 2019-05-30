@@ -21,7 +21,7 @@ class BasicLyraFormTest {
         LyraFormField newField = testForm.createField("something");
         assertEquals("something", newField.getName());
         assertEquals(LyraFieldType.INT, newField.getType());
-        assertEquals(TestFormWithUnboundFields.RETURN_VALUE, newField.getAccessor().getValue(new Object[0]));
+        assertEquals(TestFormWithUnboundFields.RETURN_VALUE, newField.getAccessor().getValue(testForm.rec(ctx)));
 
         assertEquals(1, testForm.getFieldsMeta().size());
         assertSame(newField, testForm.getFieldsMeta().get("something"));
@@ -41,7 +41,7 @@ class BasicLyraFormTest {
         TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
         LyraFormField newField = testForm.createField("noContext");
         assertEquals("noContext", newField.getName());
-        assertEquals(TestFormWithUnboundFields.RETURN_VALUE2, newField.getAccessor().getValue(new Object[0]));
+        assertEquals(TestFormWithUnboundFields.RETURN_VALUE2, newField.getAccessor().getValue(testForm.rec(ctx)));
         assertEquals("test caption", newField.getCaption());
     }
 
@@ -101,6 +101,6 @@ class BasicLyraFormTest {
         TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
         LyraFormField exception = testForm.createField("exception");
         assertTrue(assertThrows(CelestaException.class,
-                () -> exception.getAccessor().getValue(new Object[0])).getMessage().contains("test message"));
+                () -> exception.getAccessor().getValue(testForm.rec(ctx))).getMessage().contains("test message"));
     }
 }

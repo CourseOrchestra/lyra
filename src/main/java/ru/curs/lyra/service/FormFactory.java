@@ -21,7 +21,6 @@ public class FormFactory {
                                                          LyraService srv) {
         BasicGridForm<?> form = forms.computeIfAbsent(parameters.getDgridId(),
                 key -> getBasicGridFormInstance(callContext, parameters, srv));
-        form.setCallContext(callContext);
         return setParameters(form, parameters);
     }
 

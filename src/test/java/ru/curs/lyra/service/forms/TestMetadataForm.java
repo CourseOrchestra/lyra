@@ -45,7 +45,7 @@ public class TestMetadataForm extends BasicGridForm<FooCursor> {
             sortable = false,
             scale = 1)
     public double getUnboundField1(CallContext ctx) {
-        return rec().getId() + 0.12;
+        return rec(ctx).getId() + 0.12;
     }
 
     @FormField(caption = "DATETIME",

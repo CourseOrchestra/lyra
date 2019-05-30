@@ -61,10 +61,9 @@ public final class LyraFormData {
         }
 
         this.formId = formId;
-        Object[] vals = c._currentValues();
 
         for (LyraFormField lff : map.values()) {
-            Object val = lff.getAccessor().getValue(vals);
+            Object val = lff.getAccessor().getValue(c);
             LyraFieldValue lfv = new LyraFieldValue(lff, val);
             fields.addElement(lfv);
         }

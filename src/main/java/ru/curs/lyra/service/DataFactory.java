@@ -1,5 +1,6 @@
 package ru.curs.lyra.service;
 
+import ru.curs.celesta.CallContext;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.dbutils.Cursor;
 import ru.curs.lyra.dto.DataResult;
@@ -32,15 +33,16 @@ class DataFactory {
     private static final String INTERNAL_COLUMN_ID = "internalId";
     private static final int LYRA_EXACT_TOTALCOUNT_DELTA = 20;
 
-    private BasicGridForm<? extends BasicCursor> basicGridForm;
-    private DataRetrievalParams dataRetrievalParams;
+    private final CallContext ctx;
+    private final BasicGridForm<? extends BasicCursor> basicGridForm;
+    private final DataRetrievalParams dataRetrievalParams;
 
-    private LyraGridAddInfo lyraGridAddInfo;
+    private final LyraGridAddInfo lyraGridAddInfo;
     private int position;
-    private int lyraApproxTotalCountBeforeGetRows;
+    private final int lyraApproxTotalCountBeforeGetRows;
     private int lyraApproxTotalCountAfterGetRows;
-    private boolean lyraExactTotalCount;
-    private int dgridDelta;
+    private final boolean lyraExactTotalCount;
+    private final int dgridDelta;
     private List<LyraFormData> records;
 
 
@@ -48,28 +50,11 @@ class DataFactory {
      * @param aBasicGridForm       Lyra BasicGridForm
      * @param aDataRetrievalParams DataRetrievalParams
      */
-    DataResult buildData(BasicGridForm<? extends BasicCursor> aBasicGridForm,
-                         DataRetrievalParams aDataRetrievalParams) {
+    DataFactory(CallContext ctx,
+                BasicGridForm<? extends BasicCursor> aBasicGridForm,
+                DataRetrievalParams aDataRetrievalParams) {
 
-        init(aBasicGridForm, aDataRetrievalParams);
-
-        setLyraExactTotalCount();
-
-        setRecords();
-
-        setTotalCount();
-
-        printLog();
-
-        setLyraGridAddInfo();
-
-        return setDataResult();
-
-    }
-
-
-    private void init(BasicGridForm<? extends BasicCursor> aBasicGridForm,
-                      DataRetrievalParams aDataRetrievalParams) {
+        this.ctx = ctx;
         this.basicGridForm = aBasicGridForm;
         this.dataRetrievalParams = aDataRetrievalParams;
 
@@ -80,25 +65,23 @@ class DataFactory {
 
         lyraGridAddInfo =
                 ((LyraGridScrollBack) basicGridForm.getChangeNotifier()).getLyraGridAddInfo();
-        lyraApproxTotalCountBeforeGetRows = basicGridForm.getApproxTotalCount();
+
         dgridDelta = dataRetrievalParams.getOffset() - dataRetrievalParams.getDgridOldPosition();
-    }
 
-    private void setLyraExactTotalCount() {
-        lyraExactTotalCount = false;
-
-        if (lyraApproxTotalCountBeforeGetRows < basicGridForm.getGridHeight() + LYRA_EXACT_TOTALCOUNT_DELTA) {
-
-            final int[] array = new int[1];
-            basicGridForm.externalAction(c -> {
-                array[0] = c.count();
-                return null;
-            }, null);
-
-            lyraApproxTotalCountBeforeGetRows = array[0];
-
+        int approxCount = basicGridForm.getApproxTotalCount();
+        if (approxCount < basicGridForm.getGridHeight() + LYRA_EXACT_TOTALCOUNT_DELTA) {
+            lyraApproxTotalCountBeforeGetRows =
+                    basicGridForm.rec(ctx).count();
             lyraExactTotalCount = true;
+        } else {
+            lyraApproxTotalCountBeforeGetRows = approxCount;
+            lyraExactTotalCount = false;
         }
+
+        setRecords();
+        setTotalCount();
+        printLog();
+        setLyraGridAddInfo();
     }
 
 
@@ -107,12 +90,12 @@ class DataFactory {
         if (dataRetrievalParams.isFirstLoading()) {
 
             if (dataRetrievalParams.getSelectKey() == null) {
-                records = basicGridForm.getRows(0);
+                records = basicGridForm.getRows(ctx, 0);
             } else {
                 if (dataRetrievalParams.isSortingOrFilteringChanged()) {
-                    basicGridForm.getRows(0);
+                    basicGridForm.getRows(ctx, 0);
                 }
-                records = basicGridForm.setPosition(dataRetrievalParams.getSelectKey());
+                records = basicGridForm.setPosition(ctx, dataRetrievalParams.getSelectKey());
             }
 
         } else {
@@ -157,9 +140,9 @@ class DataFactory {
 
                 }
 
-                records = basicGridForm.getRows(position);
+                records = basicGridForm.getRows(ctx, position);
             } else {
-                records = basicGridForm.setPosition(dataRetrievalParams.getRefreshId());
+                records = basicGridForm.setPosition(ctx, dataRetrievalParams.getRefreshId());
             }
 
         }
@@ -210,7 +193,7 @@ class DataFactory {
     }
 
 
-    private DataResult setDataResult() {
+    public DataResult dataResult() {
         List<Map<String, Object>> data = new ArrayList<>();
 
         int from;
@@ -269,11 +252,12 @@ class DataFactory {
             int dgridNewPosition = (int) d;
             data.get(0).put(DGRID_NEW_POSITION, dgridNewPosition);
 
-            basicGridForm.externalAction(c -> {
-                Object[] keyValues = ((Cursor) c).getCurrentKeyValues();
-                data.get(0).put(DGRID_NEW_POSITION_ID, keyValues);
-                return null;
-            }, null);
+            BasicCursor c = basicGridForm.rec(ctx);
+            if (c instanceof Cursor) {
+                data.get(0).put(DGRID_NEW_POSITION_ID, ((Cursor) c).getCurrentKeyValues());
+            } else {
+                data.get(0).put(DGRID_NEW_POSITION_ID, c._currentValues()[0]);
+            }
 
         }
 

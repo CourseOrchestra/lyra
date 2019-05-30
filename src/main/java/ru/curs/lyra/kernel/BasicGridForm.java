@@ -35,32 +35,8 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
         }
     }
 
-    public <T> T externalAction(ExternalAction<T> f, T fallBack) {
-        CallContext context = getContext();
-        if (context == null) {
-            return fallBack;
-        }
-        boolean closeContext = context.isClosed();
-        if (closeContext) {
-            setCallContext(context.getCopy());
-        }
-        try {
-            return f.call(rec());
-        } catch (CelestaException e) {
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new CelestaException("Error %s while retrieving grid rows: %s",
-                    e.getClass().getName(), e.getMessage());
-        } finally {
-            if (closeContext) {
-                getContext().close();
-            }
-        }
-    }
-
-    public synchronized List<LyraFormData> getRows(int position) {
-        return getRowsH(position, getGridHeight());
+    public synchronized List<LyraFormData> getRows(CallContext ctx, int position) {
+        return getRowsH(ctx, position, getGridHeight());
     }
 
     /**
@@ -68,38 +44,36 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
      *
      * @param position New scrollbar's position.
      */
-    public synchronized List<LyraFormData> getRowsH(int position, int h) {
-        return externalAction(c -> {
-            actuateGridDriver(c);
-            if (gd.setPosition(position, c)) {
-                return returnRows(c, h);
-            } else {
-                return Collections.emptyList();
-            }
-        }, Collections.emptyList());
+    public synchronized List<LyraFormData> getRowsH(CallContext ctx, int position, int h) {
+        BasicCursor c = rec(ctx);
+        actuateGridDriver(c);
+        if (gd.setPosition(position, c)) {
+            return returnRows(c, h);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
-    public synchronized List<LyraFormData> getRows() {
-        return getRowsH(getGridHeight());
+    public synchronized List<LyraFormData> getRows(CallContext ctx) {
+        return getRowsH(ctx, getGridHeight());
     }
 
     /**
      * Returns contents of grid for current cursor's position.
      */
-    public synchronized List<LyraFormData> getRowsH(int h) {
-        return externalAction(bc -> {
-            // TODO: optimize for reducing DB SELECT calls!
-            if (bc.navigate("=<-")) {
-                gd.setPosition(bc);
-                return returnRows(bc, h);
-            } else {
-                return Collections.emptyList();
-            }
-        }, Collections.emptyList());
+    public synchronized List<LyraFormData> getRowsH(CallContext ctx, int h) {
+        BasicCursor bc = getCursor(ctx);
+        // TODO: optimize for reducing DB SELECT calls!
+        if (bc.navigate("=<-")) {
+            gd.setPosition(bc);
+            return returnRows(bc, h);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
-    public synchronized List<LyraFormData> setPosition(Object... pk) {
-        return setPositionH(getGridHeight(), pk);
+    public synchronized List<LyraFormData> setPosition(CallContext ctx, Object... pk) {
+        return setPositionH(ctx, getGridHeight(), pk);
     }
 
     /**
@@ -107,34 +81,30 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
      *
      * @param pk Values of primary key.
      */
-    public synchronized List<LyraFormData> setPositionH(int h, Object... pk) {
-        return externalAction(bc -> {
-            actuateGridDriver(bc);
-
-            if (bc instanceof Cursor) {
-                Cursor c = (Cursor) bc;
-                if (c.meta().getPrimaryKey().size() != pk.length) {
-                    throw new CelestaException(
-                            "Invalid number of 'setPosition' arguments for '%s': expected %d, provided %d.",
-                            c.meta().getName(), c.meta().getPrimaryKey().size(), pk.length);
-                }
-                int i = 0;
-                for (String name : c.meta().getPrimaryKey().keySet()) {
-                    c.setValue(name, pk[i++]);
-                }
-            } else {
-                bc.setValue(bc.meta().getColumns().keySet().iterator().next(), pk[0]);
+    public synchronized List<LyraFormData> setPositionH(CallContext ctx, int h, Object... pk) {
+        BasicCursor bc = getCursor(ctx);
+        actuateGridDriver(bc);
+        if (bc instanceof Cursor) {
+            Cursor c = (Cursor) bc;
+            if (c.meta().getPrimaryKey().size() != pk.length) {
+                throw new CelestaException(
+                        "Invalid number of 'setPosition' arguments for '%s': expected %d, provided %d.",
+                        c.meta().getName(), c.meta().getPrimaryKey().size(), pk.length);
             }
-
-            if (bc.navigate("=<-")) {
-                gd.setPosition(bc);
-                return returnRows(bc, h);
-            } else {
-                return Collections.emptyList();
+            int i = 0;
+            for (String name : c.meta().getPrimaryKey().keySet()) {
+                c.setValue(name, pk[i++]);
             }
+        } else {
+            bc.setValue(bc.meta().getColumns().keySet().iterator().next(), pk[0]);
+        }
 
-        }, Collections.emptyList());
-
+        if (bc.navigate("=<-")) {
+            gd.setPosition(bc);
+            return returnRows(bc, h);
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     private List<LyraFormData> returnRows(BasicCursor c, int h) {
@@ -224,21 +194,16 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
         return gd.getTopVisiblePosition();
     }
 
-    public void saveCursorPosition() {
-        externalAction(c -> {
-            BasicCursor copy = c._getBufferCopy(getContext(), null);
-            copy.close();
-            savedPositions.push(copy);
-            return null;
-        }, null);
+    public void saveCursorPosition(CallContext ctx) {
+        BasicCursor c = rec(ctx);
+        BasicCursor copy = c._getBufferCopy(ctx, null);
+        copy.close();
+        savedPositions.push(copy);
     }
 
-    public void restoreCursorPosition() {
-        externalAction(c -> {
-            BasicCursor copy = savedPositions.pop();
-            rec().copyFieldsFrom(copy);
-            return null;
-        }, null);
+    public void restoreCursorPosition(CallContext ctx) {
+        BasicCursor copy = savedPositions.pop();
+        rec(ctx).copyFieldsFrom(copy);
     }
 
     /**
@@ -255,9 +220,4 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
         return null;
     }
 
-
-    @FunctionalInterface
-    public interface ExternalAction<T> {
-        T call(BasicCursor t);
-    }
 }

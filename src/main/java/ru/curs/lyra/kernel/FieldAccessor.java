@@ -15,9 +15,9 @@ public interface FieldAccessor {
     /**
      * Get field's value.
      *
-     * @param c Cursor values (ignored for unbound field).
+     * @param c Live cursor(ignored for unbound field).
      */
-    Object getValue(Object[] c);
+    Object getValue(BasicCursor c);
 
     /**
      * Set field's value.
@@ -48,8 +48,8 @@ final class FieldAccessorFactory {
         }
 
         @Override
-        public final Object getValue(Object[] c) {
-            return c[index];
+        public final Object getValue(BasicCursor c) {
+            return c._currentValues()[index];
         }
 
         @Override
@@ -148,7 +148,7 @@ final class UnboundFieldAccessor implements FieldAccessor {
     }
 
     @Override
-    public Object getValue(Object[] c) {
+    public Object getValue(BasicCursor c) {
 
         Object value;
         try {
@@ -156,7 +156,7 @@ final class UnboundFieldAccessor implements FieldAccessor {
             if (getter.getParameterCount() == 0) {
                 value = getter.invoke(basicLyraForm);
             } else {
-                value = getter.invoke(basicLyraForm, basicLyraForm.getContext());
+                value = getter.invoke(basicLyraForm, c.callContext());
             }
         } catch (IllegalAccessException e) {
             //this will never happen

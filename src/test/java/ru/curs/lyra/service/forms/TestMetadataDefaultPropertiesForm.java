@@ -27,7 +27,7 @@ public class TestMetadataDefaultPropertiesForm extends BasicGridForm<FooCursor> 
 
     @FormField
     public double getUnboundField1(CallContext ctx) {
-        return rec().getId() + 0.12;
+        return rec(ctx).getId() + 0.12;
     }
 
     @FormField
