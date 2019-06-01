@@ -43,7 +43,7 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
      * @param ctx      current CallContext
      * @param position New scrollbar's position.
      */
-    public synchronized List<LyraFormData> getRows(CallContext ctx, int position) {
+    public List<LyraFormData> getRows(CallContext ctx, int position) {
         return getRowsH(ctx, position, getGridHeight());
     }
 
@@ -80,12 +80,15 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
      * @param h   form height in rows
      */
     public synchronized List<LyraFormData> getRowsH(CallContext ctx, int h) {
-        BasicCursor bc = getCursor(ctx);
-        // TODO: optimize for reducing DB SELECT calls!
-        if (bc.navigate("=<-")) {
+        BasicCursor bc = rec(ctx);
+        String cmd =
+                Arrays.stream(bc._currentValues()).anyMatch(Objects::nonNull)
+                        ? "=<-" : "-";
+        if (bc.navigate(cmd)) {
             gd.setPosition(bc);
             return returnRows(bc, h);
         } else {
+            gd.truncate();
             return Collections.emptyList();
         }
     }
@@ -98,10 +101,10 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
      * Positions grid to a certain record.
      *
      * @param ctx current CallContext
-     * @param pk Values of primary key
+     * @param pk  Values of primary key
      */
     public synchronized List<LyraFormData> setPositionH(CallContext ctx, int h, Object... pk) {
-        BasicCursor bc = getCursor(ctx);
+        BasicCursor bc = rec(ctx);
         actuateGridDriver(bc);
         if (bc instanceof Cursor) {
             Cursor c = (Cursor) bc;

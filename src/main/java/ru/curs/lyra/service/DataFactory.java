@@ -130,7 +130,7 @@ class DataFactory {
                                 double d = lyraApproxTotalCountBeforeGetRows;
                                 d = d / LyraGridScrollBack.DGRID_MAX_TOTALCOUNT;
                                 d = d * dataRetrievalParams.getOffset();
-                                position = (int) d;
+                                position = (int) Math.round(d);
 
                             }
 

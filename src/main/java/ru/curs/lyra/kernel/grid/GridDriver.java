@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public final class GridDriver {
 
     public static final int DEFAULT_SMALL_SCROLL = 120;
-
+    public static final long REFINEMENT_DELAY_MS = 500;
     /**
      * The default assumption for a records count in a table.
      */
@@ -241,10 +241,14 @@ public final class GridDriver {
         } else {
             // table became empty!
             c._clearBuffer(true);
-            topVisiblePosition = BigInteger.ZERO;
-            interpolator.resetToEmptyTable();
+            truncate();
             return false;
         }
+    }
+
+    public void truncate() {
+        topVisiblePosition = BigInteger.ZERO;
+        interpolator.resetToEmptyTable();
     }
 
     /**
@@ -402,12 +406,12 @@ final class RequestTask {
      * The miminum time, in milliseconds, without any requests for a record
      * position, for the latest request to be executed.
      */
-    private static final long MIN_DELAY = 500;
+
     private final long timeToStart;
     private final BigInteger key;
 
     RequestTask(BigInteger key, boolean immediate) {
-        this.timeToStart = System.currentTimeMillis() + (immediate ? 0 : MIN_DELAY);
+        this.timeToStart = System.currentTimeMillis() + (immediate ? 0 : GridDriver.REFINEMENT_DELAY_MS);
         this.key = key;
     }
 

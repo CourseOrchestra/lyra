@@ -7,6 +7,8 @@ import ru.curs.lyra.kernel.annotations.FormField;
 
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 public class TestFormWithUnboundFields extends BasicGridForm<FooCursor> {
 
     public static final int RETURN_VALUE = 100;
@@ -15,6 +17,7 @@ public class TestFormWithUnboundFields extends BasicGridForm<FooCursor> {
 
     public TestFormWithUnboundFields(CallContext context) {
         super(context);
+        assertFalse(context.isClosed());
     }
 
     @Override
@@ -24,6 +27,7 @@ public class TestFormWithUnboundFields extends BasicGridForm<FooCursor> {
 
     @FormField
     int getSomething(CallContext ctx) {
+        assertFalse(ctx.isClosed());
         return RETURN_VALUE;
     }
 
