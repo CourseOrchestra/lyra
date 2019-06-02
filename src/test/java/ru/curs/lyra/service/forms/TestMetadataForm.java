@@ -3,6 +3,7 @@ package ru.curs.lyra.service.forms;
 import foo.FooCursor;
 import ru.curs.celesta.CallContext;
 import ru.curs.lyra.kernel.BasicGridForm;
+import ru.curs.lyra.kernel.GridRefinementHandler;
 import ru.curs.lyra.kernel.annotations.FormField;
 import ru.curs.lyra.kernel.annotations.LyraForm;
 
@@ -18,8 +19,8 @@ import java.util.Map;
         visibleColumnsHeader = false,
         allowTextSelection = false)
 public class TestMetadataForm extends BasicGridForm<FooCursor> {
-    public TestMetadataForm(CallContext context) {
-        super(context);
+    public TestMetadataForm(CallContext context, GridRefinementHandler handler) {
+        super(context, handler);
         createAllBoundFields();
 
         getFieldsMeta().get("id").setCssClassName("className1");

@@ -3,13 +3,15 @@ package ru.curs.lyra.service;
 import ru.curs.lyra.dto.LyraGridAddInfo;
 import ru.curs.lyra.dto.ScrollBackParams;
 import ru.curs.lyra.kernel.BasicGridForm;
+import ru.curs.lyra.kernel.GridRefinementHandler;
 
 import java.time.LocalDateTime;
+import java.util.function.Consumer;
 
 /**
  * Класс для обработки обратного движения ползунка.
  */
-public final class LyraGridScrollBack implements Runnable {
+public final class LyraGridScrollBack implements GridRefinementHandler {
 
     static final int DGRID_MAX_TOTALCOUNT = 50000;
     static final int DGRID_SMALLSTEP = 100;
@@ -18,8 +20,6 @@ public final class LyraGridScrollBack implements Runnable {
     private final LyraService srv;
 
     private String dgridId;
-
-    private BasicGridForm basicGridForm;
 
     private LyraGridAddInfo lyraGridAddInfo = new LyraGridAddInfo();
 
@@ -37,17 +37,9 @@ public final class LyraGridScrollBack implements Runnable {
         lyraGridAddInfo = aLyraGridAddInfo;
     }
 
-    @SuppressWarnings("unused")
-    BasicGridForm getBasicGridForm() {
-        return basicGridForm;
-    }
-
-    void setBasicGridForm(final BasicGridForm aBasicGridForm) {
-        basicGridForm = aBasicGridForm;
-    }
 
     @Override
-    public void run() {
+    public void accept(BasicGridForm<?> basicGridForm) {
 
         System.out.println("LyraGridScrollBack.ddddddddddddd2");
         System.out.println("className: " + basicGridForm.getClass().getSimpleName());

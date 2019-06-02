@@ -24,8 +24,8 @@ public class BasicGridFormTest {
         fillTable(ctx);
 
         final CountDownLatch latch = new CountDownLatch(1);
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
-        testForm.setChangeNotifier(() -> latch.countDown());
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx,
+                f -> latch.countDown());
 
         List<LyraFormData> rows = testForm.getRowsH(ctx, 5);
         assertEquals(5, rows.size());
@@ -58,8 +58,8 @@ public class BasicGridFormTest {
         fillTable(ctx);
         //2 = one for initial refinement, one for refinement after interpolation
         final CountDownLatch latch = new CountDownLatch(2);
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
-        testForm.setChangeNotifier(() -> latch.countDown());
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx,
+                f -> latch.countDown());
 
         long start = System.nanoTime();
         List<LyraFormData> rows = testForm.getRowsH(ctx, GridDriver.DEFAULT_SMALL_SCROLL + 50, 6);
@@ -88,11 +88,11 @@ public class BasicGridFormTest {
         //NB: only one!
         final CountDownLatch latch = new CountDownLatch(1);
 
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
-        testForm.setChangeNotifier(() -> latch.countDown());
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx,
+                f -> latch.countDown());
 
         long start = System.nanoTime();
-        final  int position = GridDriver.DEFAULT_SMALL_SCROLL / 2;
+        final int position = GridDriver.DEFAULT_SMALL_SCROLL / 2;
         List<LyraFormData> rows = testForm.getRowsH(ctx, position, 6);
 
         latch.await();
@@ -114,12 +114,13 @@ public class BasicGridFormTest {
     @Test
     void outScrolling(CallContext ctx) {
         fillTable(ctx);
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx,
+                null);
         List<LyraFormData> rows = testForm.getRowsH(ctx, NUM_RECORDS * 2, 6);
         assertEquals(6, rows.size());
         for (int i = 0; i < rows.size(); i++) {
-           assertEquals(NUM_RECORDS - 6 + i, rows.get(i).getKeyValues()[0]);
-           // System.out.println(rows.get(i).getKeyValues()[0]);
+            assertEquals(NUM_RECORDS - 6 + i, rows.get(i).getKeyValues()[0]);
+            // System.out.println(rows.get(i).getKeyValues()[0]);
         }
 
         //we're still positioned
@@ -134,18 +135,18 @@ public class BasicGridFormTest {
     void approxTotalCountRefinedAutomatically(CallContext ctx) throws InterruptedException {
         fillTable(ctx);
         final CountDownLatch latch = new CountDownLatch(1);
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
-        testForm.setChangeNotifier(() -> latch.countDown());
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx,
+                f -> latch.countDown());
         assertEquals(DEFAULT_COUNT, testForm.getApproxTotalCount());
         latch.await();
         assertEquals(NUM_RECORDS, testForm.getApproxTotalCount());
     }
 
     @Test
-    void tableTruncation(CallContext ctx) throws InterruptedException {
+    void tableTruncation(CallContext ctx) {
         fillTable(ctx);
 
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx, null);
 
         List<LyraFormData> rows = testForm.getRowsH(ctx, 5);
         assertEquals(5, rows.size());

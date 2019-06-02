@@ -30,12 +30,7 @@ public final class GridDriver {
     private final KeyEnumerator rootKeyEnumerator;
     private final Map<String, KeyEnumerator> keyEnumerators = new HashMap<>();
 
-    /**
-     * Key columns' names.
-     */
-    // private final String[] names;
-
-    private Runnable changeNotifier;
+    private final Runnable changeNotifier;
 
     private CounterThread counterThread = null;
 
@@ -115,12 +110,8 @@ public final class GridDriver {
         }
     }
 
-    public GridDriver(BasicCursor c, Runnable callback) {
-        this(c);
-        setChangeNotifier(callback);
-    }
-
-    public GridDriver(BasicCursor c) {
+    public GridDriver(BasicCursor c, Runnable changeNotifier) {
+        this.changeNotifier = changeNotifier;
         // place to save filters and ordering
         closedCopy = c._getBufferCopy(c.callContext(), null);
         closedCopy.copyFiltersFrom(c);
@@ -359,16 +350,6 @@ public final class GridDriver {
      */
     public int getApproxTotalCount() {
         return interpolator.getApproximateCount();
-    }
-
-    /**
-     * Sets change notifier (a method that is being called when grid metrics
-     * update is ready).
-     *
-     * @param changeNotifier new change modifier.
-     */
-    public void setChangeNotifier(Runnable changeNotifier) {
-        this.changeNotifier = changeNotifier;
     }
 
     /**

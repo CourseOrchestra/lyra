@@ -3,6 +3,7 @@ package ru.curs.lyra.service.forms;
 import foo.FooCursor;
 import ru.curs.celesta.CallContext;
 import ru.curs.lyra.kernel.BasicGridForm;
+import ru.curs.lyra.kernel.GridRefinementHandler;
 import ru.curs.lyra.kernel.annotations.FormField;
 import ru.curs.lyra.kernel.annotations.LyraForm;
 
@@ -12,8 +13,8 @@ import java.util.Date;
 
 @LyraForm
 public class TestMetadataDefaultPropertiesForm extends BasicGridForm<FooCursor> {
-    public TestMetadataDefaultPropertiesForm(CallContext context) {
-        super(context);
+    public TestMetadataDefaultPropertiesForm(CallContext context, GridRefinementHandler handler) {
+        super(context, handler);
         createAllBoundFields();
 
         createField("unboundField1");

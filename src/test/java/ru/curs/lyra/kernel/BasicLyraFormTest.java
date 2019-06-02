@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BasicLyraFormTest {
     @Test
     void createUnboundField(CallContext ctx) {
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx, null);
         LyraFormField newField = testForm.createField("something");
         assertEquals("something", newField.getName());
         assertEquals(LyraFieldType.INT, newField.getType());
@@ -29,7 +29,7 @@ class BasicLyraFormTest {
 
     @Test
     void createNonExistentUnboundField(CallContext ctx) {
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx, null);
         assertTrue(
                 assertThrows(CelestaException.class,
                         () -> testForm.createField("nonexistent")).getMessage().contains("nonexistent")
@@ -38,7 +38,7 @@ class BasicLyraFormTest {
 
     @Test
     void createUnboundFieldWithNoContextParameter(CallContext ctx) {
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx, null);
         LyraFormField newField = testForm.createField("noContext");
         assertEquals("noContext", newField.getName());
         assertEquals(TestFormWithUnboundFields.RETURN_VALUE2, newField.getAccessor().getValue(testForm.rec(ctx)));
@@ -47,7 +47,7 @@ class BasicLyraFormTest {
 
     @Test
     void createAllUnboundFields(CallContext ctx) {
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx, null);
         testForm.createAllUnboundFields();
 
         assertEquals(4, testForm.getFieldsMeta().size());
@@ -67,7 +67,7 @@ class BasicLyraFormTest {
 
     @Test
     void createBoundField(CallContext ctx) {
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx, null);
         LyraFormField newField = testForm.createField("name");
         assertEquals(LyraFieldType.VARCHAR, newField.getType());
         assertEquals("name field caption", newField.getCaption());
@@ -76,7 +76,7 @@ class BasicLyraFormTest {
     @Test
     void createAllBoundFields(CallContext ctx) {
         Table meta = new FooCursor(ctx).meta();
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx, null);
         testForm.createAllBoundFields();
         Map<String, LyraFormField> fieldsMeta = testForm.getFieldsMeta();
         assertTrue(fieldsMeta.size() > 0);
@@ -91,14 +91,14 @@ class BasicLyraFormTest {
 
     @Test
     void createDuplicatedUnboundFields(CallContext ctx) {
-        TestFormWithDuplicatedFields form = new TestFormWithDuplicatedFields(ctx);
+        TestFormWithDuplicatedFields form = new TestFormWithDuplicatedFields(ctx, null);
         assertTrue(assertThrows(CelestaException.class, () ->
                 form.createAllUnboundFields()).getMessage().contains("foo"));
     }
 
     @Test
     void catchGetterException(CallContext ctx) {
-        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx);
+        TestFormWithUnboundFields testForm = new TestFormWithUnboundFields(ctx, null);
         LyraFormField exception = testForm.createField("exception");
         assertTrue(assertThrows(CelestaException.class,
                 () -> exception.getAccessor().getValue(testForm.rec(ctx))).getMessage().contains("test message"));

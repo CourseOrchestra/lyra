@@ -3,6 +3,7 @@ package ru.curs.lyra.kernel.forms;
 import foo.FooCursor;
 import ru.curs.celesta.CallContext;
 import ru.curs.lyra.kernel.BasicGridForm;
+import ru.curs.lyra.kernel.GridRefinementHandler;
 import ru.curs.lyra.kernel.annotations.FormField;
 
 import java.util.Date;
@@ -15,8 +16,8 @@ public class TestFormWithUnboundFields extends BasicGridForm<FooCursor> {
 
     public static final String RETURN_VALUE2 = "text return value";
 
-    public TestFormWithUnboundFields(CallContext context) {
-        super(context);
+    public TestFormWithUnboundFields(CallContext context, GridRefinementHandler notifier) {
+        super(context, notifier);
         assertFalse(context.isClosed());
     }
 
@@ -37,16 +38,16 @@ public class TestFormWithUnboundFields extends BasicGridForm<FooCursor> {
     }
 
     @FormField
-    Date getException(){
+    Date getException() {
         throw new IllegalStateException("test message");
     }
 
     @FormField
-    boolean isBoolean(){
+    boolean isBoolean() {
         return true;
     }
 
-    int notAGetter(CallContext ctx){
+    int notAGetter(CallContext ctx) {
         return 0;
     }
 }

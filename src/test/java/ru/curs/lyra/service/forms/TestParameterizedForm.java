@@ -4,6 +4,7 @@ import foo.FooCursor;
 import ru.curs.celesta.CallContext;
 import ru.curs.lyra.dto.FormInstantiationParams;
 import ru.curs.lyra.kernel.BasicGridForm;
+import ru.curs.lyra.kernel.GridRefinementHandler;
 import ru.curs.lyra.kernel.annotations.FormParams;
 import ru.curs.lyra.kernel.annotations.LyraForm;
 
@@ -19,8 +20,8 @@ public class TestParameterizedForm extends BasicGridForm<FooCursor> {
 
     private FormInstantiationParams constructorParams;
 
-    public TestParameterizedForm(CallContext context, FormInstantiationParams constructorParams) {
-        super(context);
+    public TestParameterizedForm(CallContext context, GridRefinementHandler handler, FormInstantiationParams constructorParams) {
+        super(context, handler);
         this.constructorParams = constructorParams;
         createAllBoundFields();
     }

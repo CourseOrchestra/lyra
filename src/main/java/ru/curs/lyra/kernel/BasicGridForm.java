@@ -7,6 +7,7 @@ import ru.curs.celesta.dbutils.Cursor;
 import ru.curs.lyra.kernel.grid.GridDriver;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Base Java class for Lyra grid form.
@@ -19,20 +20,26 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
 
     private GridDriver gd;
     private final LinkedList<BasicCursor> savedPositions = new LinkedList<>();
+    private final GridRefinementHandler changeNotifier;
+    private final Runnable driverNotifier;
 
-    public BasicGridForm(CallContext context) {
+    public BasicGridForm(CallContext context, GridRefinementHandler changeNotifier) {
         super(context);
+        this.changeNotifier = changeNotifier;
+        if (changeNotifier == null){
+            driverNotifier = null;
+        } else {
+            driverNotifier = () -> changeNotifier.accept(this);
+        }
         actuateGridDriver(getCursor(context));
     }
 
     private void actuateGridDriver(BasicCursor c) {
         if (gd == null) {
-            gd = new GridDriver(c);
+            gd = new GridDriver(c, driverNotifier);
         } else if (!gd.isValidFor(c)) {
-            Runnable notifier = gd.getChangeNotifier();
             int maxExactScrollValue = gd.getMaxExactScrollValue();
-            gd = new GridDriver(c);
-            gd.setChangeNotifier(notifier);
+            gd = new GridDriver(c, driverNotifier);
             gd.setMaxExactScrollValue(maxExactScrollValue);
         }
     }
@@ -164,19 +171,10 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
     }
 
     /**
-     * Sets change notifier to be run when refined grid parameters are ready.
-     *
-     * @param callback A callback to be run.
-     */
-    public void setChangeNotifier(Runnable callback) {
-        gd.setChangeNotifier(callback);
-    }
-
-    /**
      * Returns change notifier.
      */
-    public Runnable getChangeNotifier() {
-        return gd.getChangeNotifier();
+    public GridRefinementHandler getChangeNotifier() {
+        return changeNotifier;
     }
 
     /**

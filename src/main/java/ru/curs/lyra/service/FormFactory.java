@@ -11,6 +11,7 @@ import ru.curs.lyra.kernel.annotations.FormParams;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class FormFactory {
 
@@ -49,17 +50,15 @@ public class FormFactory {
             Class<?> clazz = Class.forName(parameters.getFormClass());
             Constructor<?> constructor;
             Object instance;
+            LyraGridScrollBack scrollBack = new LyraGridScrollBack(srv, parameters.getDgridId());
             try {
-                constructor = clazz.getConstructor(CallContext.class, FormInstantiationParams.class);
-                instance = constructor.newInstance(callContext, parameters);
+                constructor = clazz.getConstructor(CallContext.class, Consumer.class, FormInstantiationParams.class);
+                instance = constructor.newInstance(callContext, scrollBack, parameters);
             } catch (NoSuchMethodException e) {
-                constructor = clazz.getConstructor(CallContext.class);
-                instance = constructor.newInstance(callContext);
+                constructor = clazz.getConstructor(CallContext.class, Consumer.class);
+                instance = constructor.newInstance(callContext, scrollBack);
             }
             BasicGridForm<? extends BasicCursor> form = (BasicGridForm<?>) instance;
-            LyraGridScrollBack scrollBack = new LyraGridScrollBack(srv, parameters.getDgridId());
-            scrollBack.setBasicGridForm(form);
-            form.setChangeNotifier(scrollBack);
             return setParameters(form, parameters);
         } catch (Exception e) {
             throw new CelestaException(e);
