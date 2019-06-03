@@ -6,6 +6,7 @@ import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.lyra.dto.FormInstantiationParams;
 import ru.curs.lyra.kernel.BasicGridForm;
+import ru.curs.lyra.kernel.GridRefinementHandler;
 import ru.curs.lyra.kernel.annotations.FormParams;
 
 import java.lang.reflect.Constructor;
@@ -52,10 +53,10 @@ public class FormFactory {
             Object instance;
             LyraGridScrollBack scrollBack = new LyraGridScrollBack(srv, parameters.getDgridId());
             try {
-                constructor = clazz.getConstructor(CallContext.class, Consumer.class, FormInstantiationParams.class);
+                constructor = clazz.getConstructor(CallContext.class, GridRefinementHandler.class, FormInstantiationParams.class);
                 instance = constructor.newInstance(callContext, scrollBack, parameters);
             } catch (NoSuchMethodException e) {
-                constructor = clazz.getConstructor(CallContext.class, Consumer.class);
+                constructor = clazz.getConstructor(CallContext.class, GridRefinementHandler.class);
                 instance = constructor.newInstance(callContext, scrollBack);
             }
             BasicGridForm<? extends BasicCursor> form = (BasicGridForm<?>) instance;
