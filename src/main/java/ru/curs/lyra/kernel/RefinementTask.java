@@ -1,6 +1,7 @@
 package ru.curs.lyra.kernel;
 
 import java.math.BigInteger;
+import java.util.Objects;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -10,12 +11,13 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 /**
  * Task for asynchronous grid refinement.
  */
-public class RefinementTask implements Delayed {
+public final class RefinementTask implements Delayed {
     /**
      * Sequence number to break scheduling ties, and in turn to
      * guarantee FIFO order among tied entries.
      */
-    private static final AtomicLong sequencer = new AtomicLong();
+    private static final AtomicLong SEQUENCER = new AtomicLong();
+    private static final long MILLION = 1_000_000L;
 
     private final long time;
 
@@ -30,13 +32,13 @@ public class RefinementTask implements Delayed {
 
 
     public RefinementTask(BigInteger key, long delayMs) {
-        immediate = delayMs <= 0;
-        this.time = now() + delayMs * 1_000_000L;
-        this.sequenceNumber = sequencer.getAndIncrement();
+        this.immediate = delayMs <= 0;
+        this.time = now() + delayMs * MILLION;
+        this.sequenceNumber = SEQUENCER.getAndIncrement();
         this.key = key;
     }
 
-    final long now() {
+    private long now() {
         return System.nanoTime();
     }
 
@@ -47,19 +49,21 @@ public class RefinementTask implements Delayed {
 
     @Override
     public int compareTo(Delayed other) {
-        if (other == this) // compare zero if same object
+        if (other == this) {// compare zero if same object
             return 0;
+        }
         if (other instanceof RefinementTask) {
             RefinementTask x = (RefinementTask) other;
             long diff = time - x.time;
-            if (diff < 0)
+            if (diff < 0) {
                 return -1;
-            else if (diff > 0)
+            } else if (diff > 0) {
                 return 1;
-            else if (sequenceNumber < x.sequenceNumber)
+            } else if (sequenceNumber < x.sequenceNumber) {
                 return -1;
-            else
+            } else {
                 return 1;
+            }
         }
         long diff = getDelay(NANOSECONDS) - other.getDelay(NANOSECONDS);
         return (diff < 0) ? -1 : (diff > 0) ? 1 : 0;
@@ -72,7 +76,26 @@ public class RefinementTask implements Delayed {
         return immediate;
     }
 
+    /**
+     * Key of the record to refine position.
+     */
     public BigInteger getKey() {
         return key;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RefinementTask that = (RefinementTask) o;
+        return time == that.time &&
+                sequenceNumber == that.sequenceNumber &&
+                immediate == that.immediate &&
+                Objects.equals(key, that.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(time, key, sequenceNumber, immediate);
     }
 }

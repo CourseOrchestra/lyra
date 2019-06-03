@@ -9,27 +9,41 @@ import java.util.concurrent.DelayQueue;
 public abstract class RefinementScheduler implements Callable<Void> {
     private final DelayQueue<RefinementTask> queue = new DelayQueue<>();
 
-    RefinementTask freshest(RefinementTask task) {
+    private RefinementTask freshest(RefinementTask task) {
         RefinementTask result = task;
         RefinementTask fresherTask = task;
         while (fresherTask != null) {
-            if (fresherTask.isImmediate())
+            if (fresherTask.isImmediate()) {
                 return fresherTask;
+            }
             result = fresherTask;
             fresherTask = queue.poll();
         }
         return result;
     }
 
+    /**
+     * Calls interpolator refiner.
+     * @return false, if no further interpolator refinement needed.
+     */
     protected abstract boolean refineInterpolator();
 
+    /**
+     * Performs single point refinement.
+     * @param task Refinement task
+     */
     protected abstract void refineAndNotify(RefinementTask task);
 
+    /**
+     * Adds task to scheduler.
+     * @param task Delayed refinement task
+     */
     public void setTask(RefinementTask task) {
         queue.put(task);
     }
 
-    public Void call() throws InterruptedException {
+    @Override
+    public final Void call() throws InterruptedException {
         //if the next queue poll should be blocking or non-blocking
         boolean block = false;
 

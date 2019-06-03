@@ -2,6 +2,7 @@ package ru.curs.lyra.kernel;
 
 import ru.curs.celesta.CelestaException;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,12 +46,15 @@ public abstract class LyraNamedElement {
     }
 
     @Override
-    public final int hashCode() {
-        return name.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LyraNamedElement that = (LyraNamedElement) o;
+        return Objects.equals(name, that.name);
     }
 
     @Override
-    public final boolean equals(Object obj) {
-        return obj instanceof LyraNamedElement ? name.equals(((LyraNamedElement) obj).getName()) : name.equals(obj);
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
