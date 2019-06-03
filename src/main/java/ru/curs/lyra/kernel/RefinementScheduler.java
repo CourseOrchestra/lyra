@@ -43,7 +43,7 @@ public abstract class RefinementScheduler implements Callable<Void> {
     }
 
     @Override
-    public final Void call() throws InterruptedException {
+    public Void call() throws InterruptedException {
         //if the next queue poll should be blocking or non-blocking
         boolean block = false;
 
