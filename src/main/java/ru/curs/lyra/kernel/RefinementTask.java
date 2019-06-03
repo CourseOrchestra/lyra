@@ -49,7 +49,7 @@ public final class RefinementTask implements Delayed {
 
     @Override
     public int compareTo(Delayed other) {
-        if (other == this) {// compare zero if same object
+        if (other == this) { // compare zero if same object
             return 0;
         }
         if (other instanceof RefinementTask) {
@@ -88,10 +88,10 @@ public final class RefinementTask implements Delayed {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RefinementTask that = (RefinementTask) o;
-        return time == that.time &&
-                sequenceNumber == that.sequenceNumber &&
-                immediate == that.immediate &&
-                Objects.equals(key, that.key);
+        return time == that.time
+                && sequenceNumber == that.sequenceNumber
+                && immediate == that.immediate
+                && Objects.equals(key, that.key);
     }
 
     @Override

@@ -7,7 +7,6 @@ import ru.curs.celesta.dbutils.Cursor;
 import ru.curs.lyra.kernel.grid.GridDriver;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * Base Java class for Lyra grid form.

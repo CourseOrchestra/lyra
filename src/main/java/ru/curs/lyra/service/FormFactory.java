@@ -12,7 +12,6 @@ import ru.curs.lyra.kernel.annotations.FormParams;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class FormFactory {
 

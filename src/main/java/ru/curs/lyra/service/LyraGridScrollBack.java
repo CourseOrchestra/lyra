@@ -6,7 +6,6 @@ import ru.curs.lyra.kernel.BasicGridForm;
 import ru.curs.lyra.kernel.GridRefinementHandler;
 
 import java.time.LocalDateTime;
-import java.util.function.Consumer;
 
 /**
  * Класс для обработки обратного движения ползунка.
