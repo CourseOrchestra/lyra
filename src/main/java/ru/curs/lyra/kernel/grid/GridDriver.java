@@ -7,9 +7,13 @@ import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.dbutils.adaptors.DBAdaptor;
 import ru.curs.celesta.dbutils.term.WhereTermsMaker;
 import ru.curs.celesta.score.*;
+import ru.curs.lyra.kernel.RefinementScheduler;
+import ru.curs.lyra.kernel.RefinementTask;
 
 import java.math.BigInteger;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -19,25 +23,18 @@ import java.util.stream.Collectors;
 public final class GridDriver {
 
     public static final int DEFAULT_SMALL_SCROLL = 120;
-
+    public static final long REFINEMENT_DELAY_MS = 500;
     /**
      * The default assumption for a records count in a table.
      */
     public static final int DEFAULT_COUNT = 1024;
-
     private final KeyInterpolator interpolator;
     private final InterpolationInitializer interpolationInitializer;
     private final KeyEnumerator rootKeyEnumerator;
     private final Map<String, KeyEnumerator> keyEnumerators = new HashMap<>();
-
-    /**
-     * Key columns' names.
-     */
-    // private final String[] names;
-
-    private Runnable changeNotifier;
-
-    private CounterThread counterThread = null;
+    private final Runnable changeNotifier;
+    private final Counter counter = new Counter();
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     /**
      * Inexact primary key for latest refinement request (cached to prevent
@@ -50,8 +47,6 @@ public final class GridDriver {
      */
     private BigInteger topVisiblePosition;
 
-    private RequestTask task;
-
     /**
      * A closed copy of underlying cursor that handles filters and sorting.
      */
@@ -59,68 +54,44 @@ public final class GridDriver {
 
     private int smallScroll = DEFAULT_SMALL_SCROLL;
 
-    /**
-     * Handles asynchronous interpolation table refinement requests.
-     */
-    private final class CounterThread extends Thread {
+    private final class Counter extends RefinementScheduler {
+        private BasicCursor c;
 
         @Override
-        public void run() {
+        protected boolean refineInterpolator() {
+            int count = interpolator.getApproximateCount();
+            return interpolationInitializer.initialize(c, count);
+        }
 
-            CallContext closedCopyCallContext = closedCopy.callContext();
+        @Override
+        protected void refineAndNotify(RefinementTask task) {
+            // Execute the refinement task!
+            setCursorOrdinal(c, task.getKey());
+            int result = c.position();
+            interpolator.setPoint(task.getKey(), result);
+            if (changeNotifier != null) {
+                changeNotifier.run();
+            }
+        }
 
+        @Override
+        public Void call() throws InterruptedException {
+            List<String> columns = Arrays.stream(
+                    closedCopy.orderByColumnNames()).map(WhereTermsMaker::unquot).collect(Collectors.toList());
             try (CallContext sysContext =
                          new SystemCallContext(
-                                 closedCopyCallContext.getCelesta(),
+                                 closedCopy.callContext().getCelesta(),
                                  "LyraCounterThread")) {
-                List<String> columns = Arrays.stream(
-                        closedCopy.orderByColumnNames()).map(WhereTermsMaker::unquot).collect(Collectors.toList());
-                BasicCursor c = closedCopy._getBufferCopy(sysContext, columns);
+                c = closedCopy._getBufferCopy(sysContext, columns);
                 c.copyFiltersFrom(closedCopy);
                 c.copyOrderFrom(closedCopy);
-
-                while (true) {
-                    RequestTask myRequest = task;
-                    if (myRequest == null) {
-                        int count = interpolator.getApproximateCount();
-                        if (interpolationInitializer.initialize(c, count)) {
-                            continue;
-                        }
-                        return;
-                    }
-
-                    // check if it's time to execute the request
-                    long delta = myRequest.getDelayBeforeRun();
-                    if (delta > 0) {
-                        Thread.sleep(delta);
-                        continue;
-                    }
-
-                    task = null;
-
-                    // Execute the refinement task!
-                    setCursorOrdinal(c, myRequest.getKey());
-                    int result = c.position();
-                    interpolator.setPoint(myRequest.getKey(), result);
-                    if (changeNotifier != null) {
-                        changeNotifier.run();
-                    }
-                }
-            } catch (CelestaException | InterruptedException e) {
-                // terminate thread silently
-                return;
-            } finally {
-                counterThread = null;
+                return super.call();
             }
         }
     }
 
-    public GridDriver(BasicCursor c, Runnable callback) {
-        this(c);
-        setChangeNotifier(callback);
-    }
-
-    public GridDriver(BasicCursor c) {
+    public GridDriver(BasicCursor c, Runnable changeNotifier) {
+        this.changeNotifier = changeNotifier;
         // place to save filters and ordering
         closedCopy = c._getBufferCopy(c.callContext(), null);
         closedCopy.copyFiltersFrom(c);
@@ -161,6 +132,8 @@ public final class GridDriver {
             rootKeyEnumerator = new CompositeKeyEnumerator(km);
         }
 
+
+
         if (c.navigate("+")) {
             BigInteger higherOrd = getCursorOrdinal(c);
             c.navigate("-");
@@ -187,6 +160,8 @@ public final class GridDriver {
                 return GridDriver.this.getCursorOrdinal(c);
             }
         };
+
+        executorService.submit(counter);
     }
 
     /**
@@ -241,10 +216,14 @@ public final class GridDriver {
         } else {
             // table became empty!
             c._clearBuffer(true);
-            topVisiblePosition = BigInteger.ZERO;
-            interpolator.resetToEmptyTable();
+            truncate();
             return false;
         }
+    }
+
+    public void truncate() {
+        topVisiblePosition = BigInteger.ZERO;
+        interpolator.resetToEmptyTable();
     }
 
     /**
@@ -264,12 +243,9 @@ public final class GridDriver {
             return;
         }
         latestRequest = key;
-
-        task = new RequestTask(key, immediate);
-        if (counterThread == null || !counterThread.isAlive()) {
-            counterThread = new CounterThread();
-            counterThread.start();
-        }
+        RefinementTask task = new RefinementTask(key,
+                immediate ? 0L : REFINEMENT_DELAY_MS);
+        counter.setTask(task);
     }
 
     synchronized BigInteger getCursorOrdinal(BasicCursor c) {
@@ -358,16 +334,6 @@ public final class GridDriver {
     }
 
     /**
-     * Sets change notifier (a method that is being called when grid metrics
-     * update is ready).
-     *
-     * @param changeNotifier new change modifier.
-     */
-    public void setChangeNotifier(Runnable changeNotifier) {
-        this.changeNotifier = changeNotifier;
-    }
-
-    /**
      * Gets change notifier.
      */
     public Runnable getChangeNotifier() {
@@ -392,30 +358,4 @@ public final class GridDriver {
         return smallScroll;
     }
 
-}
-
-/**
- * Position refinement request parameters.
- */
-final class RequestTask {
-    /**
-     * The miminum time, in milliseconds, without any requests for a record
-     * position, for the latest request to be executed.
-     */
-    private static final long MIN_DELAY = 500;
-    private final long timeToStart;
-    private final BigInteger key;
-
-    RequestTask(BigInteger key, boolean immediate) {
-        this.timeToStart = System.currentTimeMillis() + (immediate ? 0 : MIN_DELAY);
-        this.key = key;
-    }
-
-    long getDelayBeforeRun() {
-        return timeToStart - System.currentTimeMillis();
-    }
-
-    BigInteger getKey() {
-        return key;
-    }
 }

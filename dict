@@ -84,3 +84,4 @@ VARCHAR
 dateFormat
 datetime
 sortable
+GridRefinementHandler

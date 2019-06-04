@@ -39,7 +39,7 @@ public class SerializerTest {
         LyraFormField lff;
         lff = new LyraFormField("z", new FieldAccessor() {
             @Override
-            public Object getValue(Object[] c) {
+            public Object getValue(BasicCursor c) {
                 return 123;
             }
 
@@ -54,7 +54,7 @@ public class SerializerTest {
 
         lff = new LyraFormField("aa", new FieldAccessor() {
             @Override
-            public Object getValue(Object[] c) {
+            public Object getValue(BasicCursor c) {
                 return "русский текст";
             }
 
@@ -69,7 +69,7 @@ public class SerializerTest {
         final Date d = new Date();
         lff = new LyraFormField("fe", new FieldAccessor() {
             @Override
-            public Object getValue(Object[] c) {
+            public Object getValue(BasicCursor c) {
                 return d;
             }
 
@@ -83,7 +83,7 @@ public class SerializerTest {
 
         lff = new LyraFormField("bs", new FieldAccessor() {
             @Override
-            public Object getValue(Object[] c) {
+            public Object getValue(BasicCursor c) {
                 return true;
             }
 
@@ -97,7 +97,7 @@ public class SerializerTest {
 
         lff = new LyraFormField("we", new FieldAccessor() {
             @Override
-            public Object getValue(Object[] c) {
+            public Object getValue(BasicCursor c) {
                 return null;
             }
 
@@ -155,7 +155,7 @@ public class SerializerTest {
                 try {
                     LyraFormField lff = new LyraFormField(name, new FieldAccessor() {
                         @Override
-                        public Object getValue(Object[] c) {
+                        public Object getValue(BasicCursor c) {
                             return "русский текст";
                         }
 

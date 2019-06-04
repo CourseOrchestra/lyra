@@ -55,7 +55,7 @@ or
       gridheight="200px")
 class TestForm extends BasicGridForm{
 ....
-}a
+}
 ----
 
 If you add {apidocs}ru/curs/lyra/service/FormInstantiationParameters.html[`FormInstantiationParameters`] argument to the form's constructor,
@@ -301,8 +301,8 @@ TODO: redraw this diagram in PlantUML
 public class TestForm extends BasicGridForm<OrderLineCursor> {
 
     //Constructor will be run only once: each form is a Spring's singleton Component
-    public TestForm(CallContext c) {
-        super(c);
+    public TestForm(CallContext c, GridRefinementHandler handler) {
+        super(c, handler);
         //First, we add to the form all the table's fields in the order they declared in SQL
         createAllBoundFields();
 

@@ -1,6 +1,7 @@
 package ru.curs.lyra.kernel;
 
 import ru.curs.celesta.CallContext;
+import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.dbutils.Cursor;
 
@@ -8,6 +9,8 @@ import java.io.*;
 
 /**
  * Base Java class for Lyra card form.
+ *
+ * @param <T> type of the form's main cursor
  */
 public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm<T> {
 
@@ -20,10 +23,12 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
 
     /**
      * Отыскивает первую запись в наборе записей.
+     *
+     * @param ctx текущий контекст вызова
      */
-    public String findRec() {
+    public String findRec(CallContext ctx) {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
-        serialize(rec(), result);
+        serialize(rec(ctx), result);
         try {
             return result.toString(UTF_8);
         } catch (UnsupportedEncodingException e) {
@@ -35,11 +40,12 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
      * Отменяет текущие изменения в курсоре и возвращает актуальную информацию
      * из базы данных.
      *
+     * @param ctx  текущий контекст вызова
      * @param data сериализованный курсор
      */
-    public synchronized String revert(String data) {
+    public synchronized String revert(CallContext ctx, String data) {
 
-        Cursor c = getCursor();
+        Cursor c = getRecCursor(ctx);
 
         ByteArrayInputStream dataIS;
         try {
@@ -57,13 +63,14 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
     /**
      * Перемещает курсор.
      *
+     * @param ctx  текущий контекст вызова
      * @param cmd  Команда перемещения (комбинация знаков &lt;, &gt;, =, +, -, см.
      *             документацию по методу курсора navigate)
      * @param data сериализованный курсор.
      */
-    public synchronized String move(String cmd, String data) {
+    public synchronized String move(CallContext ctx, String cmd, String data) {
         try {
-            T rec = rec();
+            T rec = rec(ctx);
             if (rec instanceof Cursor) {
                 Cursor c = (Cursor) rec;
                 ByteArrayInputStream dataIS = new ByteArrayInputStream(data.getBytes(UTF_8));
@@ -74,7 +81,7 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
             }
             rec.navigate(cmd);
             ByteArrayOutputStream result = new ByteArrayOutputStream();
-            serialize(rec(), result);
+            serialize(rec(ctx), result);
             return result.toString(UTF_8);
         } catch (UnsupportedEncodingException e) {
             return "";
@@ -83,9 +90,11 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
 
     /**
      * Инициирует новую запись для вставки в базу данных.
+     *
+     * @param ctx текущий контекст вызова
      */
-    public synchronized String newRec() {
-        Cursor c = getCursor();
+    public synchronized String newRec(CallContext ctx) {
+        Cursor c = getRecCursor(ctx);
         c.clear();
         c.setRecversion(0);
         ByteArrayOutputStream result = new ByteArrayOutputStream();
@@ -100,10 +109,11 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
     /**
      * Удаляет текущую запись.
      *
+     * @param ctx  текущий контекст вызова
      * @param data сериализованный курсор.
      */
-    public synchronized String deleteRec(String data) {
-        Cursor c = getCursor();
+    public synchronized String deleteRec(CallContext ctx, String data) {
+        Cursor c = getRecCursor(ctx);
 
         ByteArrayInputStream dataIS;
         try {
@@ -121,6 +131,15 @@ public abstract class BasicCardForm<T extends BasicCursor> extends BasicLyraForm
             return result.toString(UTF_8);
         } catch (UnsupportedEncodingException e) {
             return "";
+        }
+    }
+
+    private Cursor getRecCursor(CallContext ctx) {
+        BasicCursor rec = rec(ctx);
+        if (rec instanceof Cursor) {
+            return (Cursor) rec;
+        } else {
+            throw new CelestaException("Cursor %s is not modifiable.", rec.meta().getName());
         }
     }
 

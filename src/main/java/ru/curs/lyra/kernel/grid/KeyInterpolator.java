@@ -163,7 +163,12 @@ public class KeyInterpolator {
      * Returns an (approximate) records count.
      */
     public int getApproximateCount() {
-        return data.lastEntry().getKey() + 1;
+        if (data.size() == 1 && BigInteger.ZERO.equals(data.get(0))) {
+            //interpolation table for an empty dataset
+            return 0;
+        } else {
+            return data.lastEntry().getKey() + 1;
+        }
     }
 
     /**
@@ -279,4 +284,5 @@ public class KeyInterpolator {
         data.put(0, BigInteger.ZERO);
         isLAVValid = false;
     }
+
 }
