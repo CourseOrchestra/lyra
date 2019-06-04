@@ -20,8 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @CelestaTest
 class DataFactoryTest {
     private final FormFactory formFactory = new FormFactory();
-    private final DataFactory dataFactory = new DataFactory();
-
+    private DataFactory dataFactory;
     void initTotalCountTests(CallContext ctx, DataRetrievalParams dataRetrievalParams) {
 
         FooCursor fooCursor = new FooCursor(ctx);
@@ -51,8 +50,11 @@ class DataFactoryTest {
         BasicGridForm<? extends BasicCursor> basicGridForm =
                 formFactory.getFormInstance(ctx, formInstantiationParams, null);
 
-        dataFactory.buildData(basicGridForm, dataRetrievalParams);
-        dataFactory.buildData(basicGridForm, dataRetrievalParams);
+
+        dataFactory = new DataFactory(ctx, basicGridForm, dataRetrievalParams);
+        //TODO: check for result
+        dataFactory.dataResult();
+        dataFactory.dataResult();
     }
 
     @Test
@@ -102,7 +104,7 @@ class DataFactoryTest {
                 formFactory.getFormInstance(ctx, formInstantiationParams, null);
 
         basicGridForm.getApproxTotalCount();
-        basicGridForm.getRows(0);
+        basicGridForm.getRows(ctx, 0);
 
         if (basicGridForm.getApproxTotalCount() != GridDriver.DEFAULT_COUNT) {
             assertEquals(1, basicGridForm.getApproxTotalCount());
@@ -142,7 +144,8 @@ class DataFactoryTest {
         dataRetrievalParams.setFirstLoading(true);
         dataRetrievalParams.setRefreshId(null);
 
-        DataResult dataResult = dataFactory.buildData(basicGridForm, dataRetrievalParams);
+        dataFactory = new DataFactory(ctx, basicGridForm, dataRetrievalParams);
+        DataResult dataResult = dataFactory.dataResult();
 
         assertNotNull(dataResult.getData());
         assertNull(dataResult.getObjAddData());
@@ -174,7 +177,8 @@ class DataFactoryTest {
         dataRetrievalParams.setFirstLoading(true);
         dataRetrievalParams.setRefreshId(null);
 
-        DataResult dataResult = dataFactory.buildData(basicGridForm, dataRetrievalParams);
+        dataFactory = new DataFactory(ctx, basicGridForm, dataRetrievalParams);
+        DataResult dataResult = dataFactory.dataResult();
 
         assertNotNull(dataResult.getObjAddData());
         assertNull(dataResult.getData());
@@ -208,7 +212,8 @@ class DataFactoryTest {
         dataRetrievalParams.setFirstLoading(true);
         dataRetrievalParams.setRefreshId(null);
 
-        DataResult dataResult = dataFactory.buildData(basicGridForm, dataRetrievalParams);
+        dataFactory = new DataFactory(ctx, basicGridForm, dataRetrievalParams);
+        DataResult dataResult = dataFactory.dataResult();
 
         assertNull(dataResult.getData().get(0).get("intField"));
         assertNull(dataResult.getData().get(0).get("datetimeField"));
@@ -241,7 +246,8 @@ class DataFactoryTest {
         dataRetrievalParams.setFirstLoading(true);
         dataRetrievalParams.setRefreshId(null);
 
-        DataResult dataResult = dataFactory.buildData(basicGridForm, dataRetrievalParams);
+        dataFactory = new DataFactory(ctx, basicGridForm, dataRetrievalParams);
+        DataResult dataResult = dataFactory.dataResult();
 
         assertEquals((new SimpleDateFormat("yyyy.MM.dd")).format(dt), dataResult.getData().get(0).get("datetimeField"));
 

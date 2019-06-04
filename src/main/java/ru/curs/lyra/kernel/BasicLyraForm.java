@@ -6,8 +6,13 @@ import org.springframework.util.ReflectionUtils;
 import ru.curs.celesta.CallContext;
 import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
-import ru.curs.celesta.dbutils.Cursor;
-import ru.curs.celesta.score.*;
+import ru.curs.celesta.score.CelestaDocUtils;
+import ru.curs.celesta.score.Column;
+import ru.curs.celesta.score.ColumnMeta;
+import ru.curs.celesta.score.DataGrainElement;
+import ru.curs.celesta.score.FloatingColumn;
+import ru.curs.celesta.score.GrainElement;
+import ru.curs.celesta.score.StringColumn;
 import ru.curs.lyra.kernel.annotations.FormField;
 import ru.curs.lyra.kernel.annotations.LyraForm;
 
@@ -43,7 +48,6 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
     };
 
     private T rec;
-    private CallContext context;
 
     LyraFormProperties lyraFormProperties = new LyraFormProperties();
 
@@ -61,7 +65,6 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
 
         createUnboundField(fieldsMeta, PROPERTIES);
 
-        this.context = context;
         rec = getCursor(context);
         rec.navigate("-");
         meta = rec.meta();
@@ -176,43 +179,21 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
     }
 
     /**
-     * Sets call context for current form.
-     *
-     * @param context new call context.
-     */
-    public synchronized void setCallContext(CallContext context) {
-        this.context = context;
-    }
-
-    /**
      * Gets current alive cursor.
      */
-    // NB: never make this public, since we don't always have a correct
-    // CallContext here!
-    protected synchronized T rec() {
+    public synchronized T rec(CallContext ctx) {
         if (rec == null) {
-            if (context != null) {
-                rec = getCursor(context);
-                rec.navigate("-");
-            }
+            rec = getCursor(ctx);
+            rec.navigate("-");
         } else {
-            if (rec.isClosed()) {
-                T rec2 = getCursor(context);
+            if (rec.callContext() != ctx) {
+                T rec2 = getCursor(ctx);
                 rec2.copyFieldsFrom(rec);
                 rec = rec2;
                 rec.navigate("=>+");
             }
         }
         return rec;
-    }
-
-    protected Cursor getCursor() {
-        rec = rec();
-        if (rec instanceof Cursor) {
-            return (Cursor) rec;
-        } else {
-            throw new CelestaException("Cursor %s is not modifiable.", rec.meta().getName());
-        }
     }
 
     /**
@@ -367,8 +348,4 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
     public void beforeSending(BasicCursor c) {
     }
 
-
-    CallContext getContext() {
-        return context;
-    }
 }

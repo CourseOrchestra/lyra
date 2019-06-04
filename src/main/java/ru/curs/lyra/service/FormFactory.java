@@ -6,6 +6,7 @@ import ru.curs.celesta.CelestaException;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.lyra.dto.FormInstantiationParams;
 import ru.curs.lyra.kernel.BasicGridForm;
+import ru.curs.lyra.kernel.GridRefinementHandler;
 import ru.curs.lyra.kernel.annotations.FormParams;
 
 import java.lang.reflect.Constructor;
@@ -21,7 +22,6 @@ public class FormFactory {
                                                          LyraService srv) {
         BasicGridForm<?> form = forms.computeIfAbsent(parameters.getDgridId(),
                 key -> getBasicGridFormInstance(callContext, parameters, srv));
-        form.setCallContext(callContext);
         return setParameters(form, parameters);
     }
 
@@ -50,17 +50,15 @@ public class FormFactory {
             Class<?> clazz = Class.forName(parameters.getFormClass());
             Constructor<?> constructor;
             Object instance;
+            LyraGridScrollBack scrollBack = new LyraGridScrollBack(srv, parameters.getDgridId());
             try {
-                constructor = clazz.getConstructor(CallContext.class, FormInstantiationParams.class);
-                instance = constructor.newInstance(callContext, parameters);
+                constructor = clazz.getConstructor(CallContext.class, GridRefinementHandler.class, FormInstantiationParams.class);
+                instance = constructor.newInstance(callContext, scrollBack, parameters);
             } catch (NoSuchMethodException e) {
-                constructor = clazz.getConstructor(CallContext.class);
-                instance = constructor.newInstance(callContext);
+                constructor = clazz.getConstructor(CallContext.class, GridRefinementHandler.class);
+                instance = constructor.newInstance(callContext, scrollBack);
             }
             BasicGridForm<? extends BasicCursor> form = (BasicGridForm<?>) instance;
-            LyraGridScrollBack scrollBack = new LyraGridScrollBack(srv, parameters.getDgridId());
-            scrollBack.setBasicGridForm(form);
-            form.setChangeNotifier(scrollBack);
             return setParameters(form, parameters);
         } catch (Exception e) {
             throw new CelestaException(e);

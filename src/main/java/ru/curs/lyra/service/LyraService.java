@@ -16,8 +16,6 @@ public class LyraService {
 
     private final FormFactory formFactory = new FormFactory();
     private final MetadataFactory metadataFactory = new MetadataFactory();
-    private final DataFactory dataFactory = new DataFactory();
-
 
     private SimpMessageSendingOperations messagingTemplate;
 
@@ -64,7 +62,7 @@ public class LyraService {
         BasicGridForm<? extends BasicCursor> basicGridForm =
                 formFactory.getFormInstance(callContext, formInstantiationParams, this);
 
-        return dataFactory.buildData(basicGridForm, dataRetrievalParams);
+        return new DataFactory(callContext, basicGridForm, dataRetrievalParams).dataResult();
     }
 
 
