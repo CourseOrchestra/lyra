@@ -56,6 +56,10 @@ public final class GridDriver {
 
     private final class Counter extends RefinementScheduler {
         private BasicCursor c;
+        private final List<String> columns =
+                Arrays.stream(closedCopy.orderByColumnNames())
+                        .map(WhereTermsMaker::unquot)
+                        .collect(Collectors.toList());
 
         @Override
         protected boolean refineInterpolator() {
@@ -75,18 +79,19 @@ public final class GridDriver {
         }
 
         @Override
-        public Void call() throws InterruptedException {
-            List<String> columns = Arrays.stream(
-                    closedCopy.orderByColumnNames()).map(WhereTermsMaker::unquot).collect(Collectors.toList());
-            try (CallContext sysContext =
-                         new SystemCallContext(
-                                 closedCopy.callContext().getCelesta(),
-                                 "LyraCounterThread")) {
-                c = closedCopy._getBufferCopy(sysContext, columns);
-                c.copyFiltersFrom(closedCopy);
-                c.copyOrderFrom(closedCopy);
-                return super.call();
-            }
+        protected void acquireContext() {
+            CallContext sysContext =
+                    new SystemCallContext(
+                            closedCopy.callContext().getCelesta(),
+                            "LyraCounterThread");
+            c = closedCopy._getBufferCopy(sysContext, columns);
+            c.copyFiltersFrom(closedCopy);
+            c.copyOrderFrom(closedCopy);
+        }
+
+        @Override
+        protected void releaseContext() {
+            c.callContext().close();
         }
     }
 
@@ -131,7 +136,6 @@ public final class GridDriver {
             }
             rootKeyEnumerator = new CompositeKeyEnumerator(km);
         }
-
 
 
         if (c.navigate("+")) {
