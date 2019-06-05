@@ -51,15 +51,12 @@ public final class GridDriver {
      * A closed copy of underlying cursor that handles filters and sorting.
      */
     private final BasicCursor closedCopy;
+    private final List<String> columns;
 
     private int smallScroll = DEFAULT_SMALL_SCROLL;
 
     private final class Counter extends RefinementScheduler {
         private BasicCursor c;
-        private final List<String> columns =
-                Arrays.stream(closedCopy.orderByColumnNames())
-                        .map(WhereTermsMaker::unquot)
-                        .collect(Collectors.toList());
 
         @Override
         protected boolean refineInterpolator() {
@@ -165,6 +162,9 @@ public final class GridDriver {
             }
         };
 
+        columns = Arrays.stream(closedCopy.orderByColumnNames())
+                .map(WhereTermsMaker::unquot)
+                .collect(Collectors.toList());
         executorService.submit(counter);
     }
 
