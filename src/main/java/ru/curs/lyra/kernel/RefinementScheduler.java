@@ -24,18 +24,32 @@ public abstract class RefinementScheduler implements Callable<Void> {
 
     /**
      * Calls interpolator refiner.
+     *
      * @return false, if no further interpolator refinement needed.
      */
     protected abstract boolean refineInterpolator();
 
     /**
      * Performs single point refinement.
+     *
      * @param task Refinement task
      */
     protected abstract void refineAndNotify(RefinementTask task);
 
+
+    /**
+     * Acquire CallContext and database connection from pool.
+     */
+    protected abstract void acquireContext();
+
+    /**
+     * Release context and connection (before block waiting).
+     */
+    protected abstract void releaseContext();
+
     /**
      * Adds task to scheduler.
+     *
      * @param task Delayed refinement task
      */
     public void setTask(RefinementTask task) {
@@ -43,13 +57,21 @@ public abstract class RefinementScheduler implements Callable<Void> {
     }
 
     @Override
-    public Void call() throws InterruptedException {
+    public final Void call() throws InterruptedException {
         //if the next queue poll should be blocking or non-blocking
         boolean block = false;
-
+        acquireContext();
         while (true) {
-            RefinementTask task = freshest(
-                    block ? queue.take() : queue.poll());
+            RefinementTask task;
+            if (block) {
+                //long, blocking wait that may never end
+                //or be interrupted by InterruptedException
+                releaseContext();
+                task = freshest(queue.take());
+                acquireContext();
+            } else {
+                task = freshest(queue.poll());
+            }
             if (task == null) {
                 //nothing to do yet, refine interpolator
                 block = !refineInterpolator();

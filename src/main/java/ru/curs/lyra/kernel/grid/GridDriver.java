@@ -51,6 +51,7 @@ public final class GridDriver {
      * A closed copy of underlying cursor that handles filters and sorting.
      */
     private final BasicCursor closedCopy;
+    private final List<String> columns;
 
     private int smallScroll = DEFAULT_SMALL_SCROLL;
 
@@ -75,18 +76,19 @@ public final class GridDriver {
         }
 
         @Override
-        public Void call() throws InterruptedException {
-            List<String> columns = Arrays.stream(
-                    closedCopy.orderByColumnNames()).map(WhereTermsMaker::unquot).collect(Collectors.toList());
-            try (CallContext sysContext =
-                         new SystemCallContext(
-                                 closedCopy.callContext().getCelesta(),
-                                 "LyraCounterThread")) {
-                c = closedCopy._getBufferCopy(sysContext, columns);
-                c.copyFiltersFrom(closedCopy);
-                c.copyOrderFrom(closedCopy);
-                return super.call();
-            }
+        protected void acquireContext() {
+            CallContext sysContext =
+                    new SystemCallContext(
+                            closedCopy.callContext().getCelesta(),
+                            "LyraCounterThread");
+            c = closedCopy._getBufferCopy(sysContext, columns);
+            c.copyFiltersFrom(closedCopy);
+            c.copyOrderFrom(closedCopy);
+        }
+
+        @Override
+        protected void releaseContext() {
+            c.callContext().close();
         }
     }
 
@@ -133,7 +135,6 @@ public final class GridDriver {
         }
 
 
-
         if (c.navigate("+")) {
             BigInteger higherOrd = getCursorOrdinal(c);
             c.navigate("-");
@@ -161,6 +162,9 @@ public final class GridDriver {
             }
         };
 
+        columns = Arrays.stream(closedCopy.orderByColumnNames())
+                .map(WhereTermsMaker::unquot)
+                .collect(Collectors.toList());
         executorService.submit(counter);
     }
 
