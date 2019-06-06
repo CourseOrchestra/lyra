@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RefinementSchedulerTest {
     @Test
@@ -23,6 +26,8 @@ public class RefinementSchedulerTest {
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         try {
             executorService.submit(s);
+            s.ctxLatch.await();
+            assertEquals(1, s.ctxCount.get());
             s.setTask(t2);
             s.setTask(t1);
             Thread.sleep(20);
@@ -32,7 +37,10 @@ public class RefinementSchedulerTest {
             assertEquals(Arrays.asList(t1, t2), s.l);
         } finally {
             executorService.shutdownNow();
+
         }
+        executorService.awaitTermination(100, TimeUnit.MILLISECONDS);
+        assertEquals(0, s.ctxCount.get());
     }
 
     @Test
@@ -77,6 +85,8 @@ public class RefinementSchedulerTest {
     class DummyRefinementScheduler extends RefinementScheduler {
         List<RefinementTask> l = new ArrayList<>();
         AtomicInteger count = new AtomicInteger(10);
+        AtomicInteger ctxCount = new AtomicInteger(0);
+        CountDownLatch ctxLatch = new CountDownLatch(1);
 
         @Override
         protected boolean refineInterpolator() {
@@ -92,6 +102,17 @@ public class RefinementSchedulerTest {
         @Override
         protected void refineAndNotify(RefinementTask task) {
             l.add(task);
+        }
+
+        @Override
+        protected void acquireContext() {
+            ctxCount.incrementAndGet();
+            ctxLatch.countDown();
+        }
+
+        @Override
+        protected void releaseContext() {
+            assertTrue(ctxCount.decrementAndGet() >= 0);
         }
     }
 }
