@@ -331,3 +331,32 @@ public class TestForm extends BasicGridForm<OrderLineCursor> {
 
 }
 ----
+
+== Client part
+
+=== The Lyra config
+
+The Lyra config should be specified as a function that returns the config object:
+
+----
+function getLyraConfig() {
+    return {
+        baseUrl: "http://localhost:8081",
+    };
+}
+
+window.getLyraConfig = getLyraConfig;
+----
+
+[cols="1, 1, options="header"]
+|====
+^.^|Property
+^.^|Description
+
+| `baseUrl`
+|
+It's a base URL to which the Lyra's endpoint paths are appended.
+
+|====
+
+
