@@ -45,25 +45,23 @@ try {
 }
 
 function getMetadataUrl() {
-  let url = '/lyra/metadata';
-  if (lyraConfig) {
-    url = lyraConfig.baseUrlMetadata + url;
-  }
-  return url;
+  const url = '/lyra/metadata';
+  return lyraConfig && lyraConfig.baseUrl ? lyraConfig.baseUrl + url : url;
 }
 
 function getDataUrl() {
-  let url = '/lyra/data';
-  if (lyraConfig) {
-    url = lyraConfig.baseUrlData + url;
-  }
-  return url;
+  const url = '/lyra/data';
+  return lyraConfig && lyraConfig.baseUrl ? lyraConfig.baseUrl + url : url;
 }
 
 function getScrollbackUrl() {
   let url = '/lyra/scrollback';
   if (lyraConfig) {
-    url = lyraConfig.baseUrlScrollback + url;
+    if (lyraConfig.baseUrlScrollback) {
+      url = lyraConfig.baseUrlScrollback + url;
+    } else if (lyraConfig.baseUrl) {
+      url = lyraConfig.baseUrl + url;
+    }
   }
   return url;
 }
