@@ -85,3 +85,6 @@ dateFormat
 datetime
 sortable
 GridRefinementHandler
+baseUrl
+config
+getLyraConfig
