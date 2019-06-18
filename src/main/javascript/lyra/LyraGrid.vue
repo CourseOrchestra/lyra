@@ -140,7 +140,12 @@ export default {
       preventCache: true,
       load(metadata) {
         const div = document.getElementById(gridDivId);
-        div.style = `width:${metadata.common.gridWidth}; height:${metadata.common.gridHeight};`;
+
+        try {
+          div.style = `width:${metadata.common.gridWidth}; height:${metadata.common.gridHeight};`;
+        } catch (e) {
+          return;
+        }
 
         createLyraVueDGrid(vueComponent, parentId, div.id, metadata, postData.formClass, postData.instanceId, postData.clientParams);
       },
@@ -205,7 +210,7 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
 
         if (this.sortingPic || this.sortingAvailable) {
           div.innerHTML = '<tbody>'
-                        + '<tr>';
+            + '<tr>';
 
           div.innerHTML = `${div.innerHTML
           }<td>${this.label}</td>`;
@@ -214,28 +219,28 @@ function createLyraVueDGrid(vueComponent, parentId, gridDivId, metadata, formCla
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sorted'> </span></td>`
 
-                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-                            + '<a title=\'Порядок и направление сортировки\'>'
-                            + `<img src class='${this.sortingPic} sorted-image'>`
-                            + '</a>'
-                            + '</td>';
+              + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+              + '<a title=\'Порядок и направление сортировки\'>'
+              + `<img src class='${this.sortingPic} sorted-image'>`
+              + '</a>'
+              + '</td>';
           }
 
           if (this.sortingAvailable) {
             div.innerHTML = `${div.innerHTML
             }<td><span class='sort-gap before-sortable'> </span></td>`
 
-                            + '<td align=\'right\' style=\'vertical-align: middle;\'>'
-                            + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
-                            + '<img src class=\'one sortable-image\'>'
-                            + '</a>'
-                            + '</td>';
+              + '<td align=\'right\' style=\'vertical-align: middle;\'>'
+              + '<a title=\'По данному полю есть индекс одиночной сортировки\'>'
+              + '<img src class=\'one sortable-image\'>'
+              + '</a>'
+              + '</td>';
           }
 
 
           div.innerHTML = `${div.innerHTML
           }</tr>`
-                        + '</tbody>';
+            + '</tbody>';
         }
 
         return div;
