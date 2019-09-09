@@ -102,7 +102,7 @@ class LyraControllerTest {
         assertEquals(10, common.getLimit());
         assertFalse(common.isVisibleColumnsHeader());
         assertFalse(common.isAllowTextSelection());
-        assertEquals("id", common.getPrimaryKey());
+        assertEquals("id", common.getPrimaryKey()[0]);
 
         Map<String, String> sum = common.getSummaryRow();
         assertNotNull(sum);
@@ -112,28 +112,28 @@ class LyraControllerTest {
 
         assertEquals(6, metaDataResult.getColumns().size());
 
-        Column column = metaDataResult.getColumns().get("1");
+        Column column = metaDataResult.getColumns().get(0);
         assertEquals("id", column.getId());
         assertEquals("id", column.getCaption());
         assertTrue(column.isVisible());
         assertEquals("lyra-type-int className1", column.getCssClassName());
         assertEquals("width:100px;text-align:right;", column.getCssStyle());
 
-        column = metaDataResult.getColumns().get("2");
+        column = metaDataResult.getColumns().get(1);
         assertEquals("name", column.getId());
         assertEquals("name field caption", column.getCaption());
         assertFalse(column.isVisible());
         assertEquals("lyra-type-varchar className2", column.getCssClassName());
         assertEquals("width:300px;text-align:left;", column.getCssStyle());
 
-        column = metaDataResult.getColumns().get("5");
+        column = metaDataResult.getColumns().get(4);
         assertEquals("unboundField1", column.getId());
         assertEquals("REAL", column.getCaption());
         assertTrue(column.isVisible());
         assertEquals("lyra-type-real", column.getCssClassName());
         assertEquals("white-space:nowrap;width:100px;text-align:right;", column.getCssStyle());
 
-        column = metaDataResult.getColumns().get("6");
+        column = metaDataResult.getColumns().get(5);
         assertEquals("unboundField2", column.getId());
         assertEquals("DATETIME", column.getCaption());
         assertFalse(column.isVisible());

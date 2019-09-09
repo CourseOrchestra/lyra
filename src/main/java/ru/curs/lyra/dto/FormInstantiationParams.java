@@ -56,6 +56,6 @@ public class FormInstantiationParams {
      * Grid identifier.
      */
     public String getDgridId() {
-        return formClass + "." + instanceId;
+        return (formClass + "." + instanceId).replace(".", "-");
     }
 }
