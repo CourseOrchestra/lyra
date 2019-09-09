@@ -40,12 +40,12 @@ module.exports = function setConfig(config) {
         },
         { type: 'text-summary' },
         { type: 'text' },
-        /*
-                {
-                  type: 'cobertura', // for Jenkins
-                  subdir: '.',
-                },
-        */
+
+        {
+          type: 'cobertura', // for Jenkins
+          subdir: '.',
+        },
+
       ],
     },
 
