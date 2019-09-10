@@ -44,7 +44,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jenkins.clientUnitTest.reportsDirectory>target/client-coverage</jenkins.clientUnitTest.reportsDirectory>
         <junit-platform.version>1.5.2</junit-platform.version>
         <junit.version>5.5.2</junit.version>
 
