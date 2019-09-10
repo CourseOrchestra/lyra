@@ -63,8 +63,6 @@ fi'''
         step( [ $class: 'JacocoPublisher', execPattern: '**/target/jacoco.exec' ] )
 
         cobertura coberturaReportFile: '**/target/client-coverage/cobertura-coverage.xml'
-        step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: '**/target/client-coverage/cobertura-coverage.xml', failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: true])
-        step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: '**/target/client-coverage/cobertura-coverage.xml', failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
 
         def checkstyle = scanForIssues tool: checkStyle(pattern: '**/target/checkstyle-result.xml')
         publishIssues issues: [checkstyle]
