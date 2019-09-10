@@ -40,12 +40,10 @@ module.exports = function setConfig(config) {
         },
         { type: 'text-summary' },
         { type: 'text' },
-
         {
           type: 'cobertura',
           subdir: '.',
         },
-
       ],
     },
 
