@@ -11,14 +11,14 @@ node {
     }
 
     stage ('Artifactory configuration') {
-        rtMaven.tool = 'M3' 
+        rtMaven.tool = 'M3'
         rtMaven.deployer releaseRepo: 'libs-release-local', snapshotRepo: 'libs-snapshot-local', server: server
         rtMaven.resolver releaseRepo: 'libs-release', snapshotRepo: 'libs-snapshot', server: server
-        
+
         rtNpm.tool = 'NODE11'
         rtNpm.deployer repo: 'npm-local', server: server
         rtNpm.resolver repo: 'npm-remote', server: server
-        
+
         buildInfo = Artifactory.newBuildInfo()
         buildInfo.env.capture = true
 
@@ -35,7 +35,7 @@ node {
         server.download spec: downloadSpec
         oldWarnings = readYaml file: 'previous.yml'
     }
-    
+
     stage ('Spellcheck'){
         result = sh (returnStdout: true,
            script: """for f in \$(find . -name '*.adoc'); do cat \$f | sed "s/-/ /g" | aspell --master=en --personal=./dict list; done | sort | uniq""")
@@ -62,6 +62,8 @@ fi'''
         junit 'target/surefire-reports/**/*.xml'
         step( [ $class: 'JacocoPublisher', execPattern: '**/target/jacoco.exec' ] )
 
+        cobertura coberturaReportFile: '**/target/client-coverage/cobertura-coverage.xml'
+
         def checkstyle = scanForIssues tool: checkStyle(pattern: '**/target/checkstyle-result.xml')
         publishIssues issues: [checkstyle]
         def spotbugs = scanForIssues tool: spotBugs(pattern: '**/target/spotbugsXml.xml')
@@ -69,7 +71,7 @@ fi'''
         def eslint = scanForIssues tool: esLint(pattern: '**/target/eslint.xml')
         publishIssues issues: [eslint]
     }
-    
+
     stage ('Ratcheting') {
         def warningsMap = countWarnings()
         writeYaml file: 'target/warnings.yml', data: warningsMap
@@ -78,9 +80,9 @@ fi'''
 
     if (env.BRANCH_NAME == 'master') {
         stage ('NPM publish'){
-            rtNpm.publish buildInfo: buildInfo, path: 'src/main/javascript/lyra'        
+            rtNpm.publish buildInfo: buildInfo, path: 'src/main/javascript/lyra'
         }
-   
+
         stage ('Publish build info') {
             def uploadSpec = """
             {
