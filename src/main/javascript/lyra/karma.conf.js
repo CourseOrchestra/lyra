@@ -42,7 +42,7 @@ module.exports = function setConfig(config) {
         { type: 'text' },
 
         {
-          type: 'cobertura', // for Jenkins
+          type: 'cobertura',
           subdir: '.',
         },
 
