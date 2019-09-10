@@ -62,7 +62,7 @@ fi'''
         junit 'target/surefire-reports/**/*.xml'
         step( [ $class: 'JacocoPublisher', execPattern: '**/target/jacoco.exec' ] )
 
-        cobertura coberturaReportFile: '**/target/client-coverage/cobertura-coverage.xml'
+        cobertura coberturaReportFile: '**/target/client-coverage/cobertura-coverage.xml' fileCoverageTargets: '*/src/main/javascript/lyra/src/'
 
         def checkstyle = scanForIssues tool: checkStyle(pattern: '**/target/checkstyle-result.xml')
         publishIssues issues: [checkstyle]
