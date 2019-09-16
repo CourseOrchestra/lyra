@@ -51,7 +51,7 @@ module.exports = function setConfig(config) {
 
     browserNoActivityTimeout: 900000,
 
-    /// browsers: ['jsdom'],
+    // browsers: ['jsdom'],
     browsers: ['ChromeHeadless'],
     // browsers: ['Chrome'],
 
