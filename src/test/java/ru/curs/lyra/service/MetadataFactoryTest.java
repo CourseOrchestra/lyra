@@ -48,13 +48,13 @@ class MetadataFactoryTest {
                 formFactory.getFormInstance(ctx, formInstantiationParams, null);
         MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
 
-        Column column = metaDataResult.getColumns().get("1");
+        Column column = metaDataResult.getColumns().get(0);
         assertEquals("id", column.getId());
         assertTrue(column.isVisible());
         assertEquals("lyra-type-int", column.getCssClassName());
         assertNull(column.getCssStyle());
 
-        column = metaDataResult.getColumns().get("2");
+        column = metaDataResult.getColumns().get(1);
         assertEquals("name", column.getId());
         assertTrue(column.isVisible());
         assertEquals("lyra-type-varchar", column.getCssClassName());
@@ -71,13 +71,13 @@ class MetadataFactoryTest {
                 formFactory.getFormInstance(ctx, formInstantiationParams, null);
         MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
 
-        Column column = metaDataResult.getColumns().get("5");
+        Column column = metaDataResult.getColumns().get(4);
         assertEquals("unboundField1", column.getId());
         assertTrue(column.isVisible());
         assertEquals("lyra-type-real", column.getCssClassName());
         assertEquals("", column.getCssStyle());
 
-        column = metaDataResult.getColumns().get("6");
+        column = metaDataResult.getColumns().get(5);
         assertEquals("unboundField2", column.getId());
         assertTrue(column.isVisible());
         assertEquals("lyra-type-datetime", column.getCssClassName());
@@ -100,7 +100,7 @@ class MetadataFactoryTest {
         assertEquals(10, common.getLimit());
         assertFalse(common.isVisibleColumnsHeader());
         assertFalse(common.isAllowTextSelection());
-        assertEquals("id", common.getPrimaryKey());
+        assertEquals("id", common.getPrimaryKey()[0]);
 
         Map<String, String> sum = common.getSummaryRow();
         assertNotNull(sum);
@@ -121,14 +121,14 @@ class MetadataFactoryTest {
 
         assertEquals(6, metaDataResult.getColumns().size());
 
-        Column column = metaDataResult.getColumns().get("1");
+        Column column = metaDataResult.getColumns().get(0);
         assertEquals("id", column.getId());
         assertEquals("id", column.getCaption());
         assertTrue(column.isVisible());
         assertEquals("lyra-type-int className1", column.getCssClassName());
         assertEquals("width:100px;text-align:right;", column.getCssStyle());
 
-        column = metaDataResult.getColumns().get("2");
+        column = metaDataResult.getColumns().get(1);
         assertEquals("name", column.getId());
         assertEquals("name field caption", column.getCaption());
         assertFalse(column.isVisible());
@@ -148,14 +148,14 @@ class MetadataFactoryTest {
 
         assertEquals(6, metaDataResult.getColumns().size());
 
-        Column column = metaDataResult.getColumns().get("5");
+        Column column = metaDataResult.getColumns().get(4);
         assertEquals("unboundField1", column.getId());
         assertEquals("REAL", column.getCaption());
         assertTrue(column.isVisible());
         assertEquals("lyra-type-real", column.getCssClassName());
         assertEquals("white-space:nowrap;width:100px;text-align:right;", column.getCssStyle());
 
-        column = metaDataResult.getColumns().get("6");
+        column = metaDataResult.getColumns().get(5);
         assertEquals("unboundField2", column.getId());
         assertEquals("DATETIME", column.getCaption());
         assertFalse(column.isVisible());
@@ -173,10 +173,10 @@ class MetadataFactoryTest {
                 formFactory.getFormInstance(ctx, formInstantiationParams, null);
         MetaDataResult metaDataResult = metadataFactory.buildMetadata(basicGridForm);
 
-        Column column = metaDataResult.getColumns().get("5");
+        Column column = metaDataResult.getColumns().get(4);
         assertFalse(column.isSortable());
 
-        column = metaDataResult.getColumns().get("6");
+        column = metaDataResult.getColumns().get(5);
         assertTrue(column.isSortable());
     }
 

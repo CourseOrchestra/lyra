@@ -43,17 +43,7 @@ class MetadataFactory {
         common.setAllowTextSelection(basicGridForm.getFormProperties().getAllowTextSelection());
 
         if (basicGridForm.meta() instanceof Table) {
-            Object[] arr = ((Table) basicGridForm.meta()).getPrimaryKey().keySet().toArray();
-
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < arr.length; i++) {
-                if (i > 0) {
-                    sb.append(",");
-                }
-                sb.append(arr[i]);
-            }
-
-            common.setPrimaryKey(sb.toString());
+            common.setPrimaryKey(((Table) basicGridForm.meta()).getPrimaryKey().keySet().stream().toArray(String[]::new));
         }
 
         common.setSummaryRow(basicGridForm.getSummaryRow());
@@ -88,7 +78,7 @@ class MetadataFactory {
             column.setCssStyle(field.getCssStyle());
             column.setSortingAvailable(lyraGridAvailableSorting.contains(field.getName()));
 
-            metadata.getColumns().put(String.valueOf(metadata.getColumns().size() + 1), column);
+            metadata.getColumns().add(column);
 
         }
 

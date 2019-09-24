@@ -2,11 +2,12 @@
 :toc: left
 :apidocs: https://courseorchestra.github.io/lyra/apidocs/index.html?
 
-Lyra provides a quick way to develop user interface forms linked to https://courseorchestra.github.io/celesta/#data_accessors_section[Celesta cursors]. Cursors can be filtered and sorted.
+Lyra provides a quick way to develop user interface forms linked to https://courseorchestra.github.io/celesta/#data_accessors_section[Celesta cursors].
+Cursors can be filtered and sorted.
 
 In order to use lyra, one should add the following dependency to their project:
 
-[source, xml]
+[source,xml]
 ----
 <dependency>
 <groupId>ru.curs</groupId>
@@ -17,9 +18,14 @@ In order to use lyra, one should add the following dependency to their project:
 
 == Lyra Form
 
-Lyra forms can be of two types: Card and Grid. Each form is defined by a class inherited from the appropriate base class ({apidocs}ru/curs/lyra/kernel/BasicCardForm.html[`BasicCardForm`] or {apidocs}ru/curs/lyra/kernel/BasicGridForm.html[`BasicGridForm`]). The form itself is set declaratively and is characterized by:
+Lyra forms can be of two types:
+Card and Grid.
+Each form is defined by a class inherited from the appropriate base class ({apidocs}ru/curs/lyra/kernel/BasicCardForm.html[`BasicCardForm`] or {apidocs}ru/curs/lyra/kernel/BasicGridForm.html[`BasicGridForm`]).
+The form itself is set declaratively and is characterized by:
 
-* *https://courseorchestra.github.io/celesta/#data_accessors_section[Cursor]*, to which the form is linked. Each of the Lyra forms must override the `getCursor (CallContext context)` method, which  returns the corresponding Celesta cursor. If necessary, in the same method, filters and sorting can be applied to the cursor.
+* *https://courseorchestra.github.io/celesta/#data_accessors_section[Cursor]*, to which the form is linked.
+Each of the Lyra forms must override the `getCursor (CallContext context)` method, which returns the corresponding Celesta cursor.
+If necessary, in the same method, filters and sorting can be applied to the cursor.
 * *set of bound and unbound fields* displayed on the form.
 
 Lyra takes on the task of transferring information between the form and the server, as well as navigating through the table records.
@@ -27,6 +33,7 @@ The grid form also by itself solves the problem of fast display, scrolling and p
 For the developer it is sufficient only to declare the fields they would like to have on the form, with order and properties.
 
 === Field Types
+
 Fields, as already mentioned, can be of two types:
 
 * *bound* with the cursor field (i.e. column of the table), the values of the bound fields are stored in the database automatically,
@@ -37,6 +44,7 @@ When the user edits the bound fields, their new values are written into the fiel
 The values of the unbound fields are passed as parameters to the appropriate methods, and Java code executed on the server can use these values.
 
 === Designing a Form from Scratch in Five Steps
+
 To create a Lyra form from scratch, you must follow the following steps:
 
 *Step 1.* Create a class inherited from {apidocs}ru/curs/lyra/kernel/BasicCardForm.html[`BasicCardForm`] or {apidocs}ru/curs/lyra/kernel/BasicGridForm.html[`BasicGridForm`], optionally annotated with {apidocs}ru/curs/lyra/kernel/annotations/LyraForm.html[`@LyraForm`]:
@@ -49,6 +57,7 @@ class TestForm extends BasicCardForm{
 ----
 
 or
+
 [source,java]
 ----
 @LyraForm(gridwidth="600px",
@@ -58,12 +67,13 @@ class TestForm extends BasicGridForm{
 }
 ----
 
-If you add {apidocs}ru/curs/lyra/service/FormInstantiationParameters.html[`FormInstantiationParameters`] argument to the form's constructor,
-the respective object will be passed to the constructor automatically. You may also define
+If you add {apidocs}ru/curs/lyra/service/FormInstantiationParameters.html[`FormInstantiationParameters`] argument to the form's constructor, the respective object will be passed to the constructor automatically.
+You may also define
 `FormInstantiationParameters` field annotated with {apidocs}ru/curs/lyra/kernel/annotations/FormParams.html[`@FormParams`] annotation, and its value will be automatically injected.
 
-
-*Step 2*. Override `getCursor(CallContext context)` method so it returns sorted and filtered cursor. You may use
+*Step 2*.
+Override `getCursor(CallContext context)` method so it returns sorted and filtered cursor.
+You may use
 `FormInstantiationParameters` object defined in the previous step to define sorting and filtering.
 
 This cursor is going to be the source of the record set for the form:
@@ -77,9 +87,9 @@ This cursor is going to be the source of the record set for the form:
    }
 ----
 
-
 *Step 3 (optional).* If you need unbounded fields on the form, you should declare them as getters and, optionally, setters, annotated with {apidocs}ru/curs/lyra/kernel/annotations/FormField.html[`@FormField`].
 Getters / setters should follow the Java getter/setter names convention:
+
 [source,java]
 ----
     @FormField(celestatype="INT",
@@ -95,8 +105,7 @@ Getters / setters should follow the Java getter/setter names convention:
 ----
 
 *Step 3 (optional).* You may use CelestaSQL's https://courseorchestra.github.io/celesta/#_celestadoc[CelestaDoc] to set the bound field's properties.
-You may omit this step as well: first, Lyra will choose reasonable default values (e.g. table field name for caption,
-as needed in most cases); second, all the properties definitions can be set in the form's class itself.
+You may omit this step as well: first, Lyra will choose reasonable default values (e.g. table field name for caption, as needed in most cases); second, all the properties definitions can be set in the form's class itself.
 
 [source,sql]
 ----
@@ -113,13 +122,16 @@ attrInt int default 3
 );
 ----
 
-*Step 5*. In the form class constructor, define the set and order of form fields  by calling the following methods:
+*Step 5*.
+In the form class constructor, define the set and order of form fields by calling the following methods:
 
-* `LyraFormField createField(String name)` adds a field with the given name to the form and returns an object of type `LyraFormField`. The name value must match
+* `LyraFormField createField(String name)` adds a field with the given name to the form and returns an object of type `LyraFormField`.
+The name value must match
 
 ** either one of the column names of the form cursor (this creates a bound field),
 
-** or with the name of the property of the form class declared with {apidocs}ru/curs/lyra/kernel/annotations/FormField.html[`@FormField`] annotation, this creates and unbound field. The respective methods must be named according to common convention, e. g. `int getSomething(..)` for integer property named `something`, or `boolean isSomething(..)` if the type of the property is `boolean`.
+** or with the name of the property of the form class declared with {apidocs}ru/curs/lyra/kernel/annotations/FormField.html[`@FormField`] annotation, this creates and unbound field.
+The respective methods must be named according to common convention, e. g. `int getSomething(..)` for integer property named `something`, or `boolean isSomething(..)` if the type of the property is `boolean`.
 
 The type of unbound field is determined from the return type of `@FormField`-annotated method in the following way:
 
@@ -133,7 +145,6 @@ The type of unbound field is determined from the return type of `@FormField`-ann
 |String | VARCHAR
 |double | REAL
 |====
-
 
 `@FormField`-annotated method can either have or don't have the `CallContext` parameter.
 
@@ -154,7 +165,8 @@ For example, if we want all unbound fields in the form to go first, and then all
     }
 ----
 
-When writing a form constructor, the developer can choose one of the strategies so that the code is the most elegant, concise and flexible. As a rule, the choice of strategy is determined by one of the typical scenarios that one has to face:
+When writing a form constructor, the developer can choose one of the strategies so that the code is the most elegant, concise and flexible.
+As a rule, the choice of strategy is determined by one of the typical scenarios that one has to face:
 
 [cols="1, 1, options="header"]
 |====
@@ -171,28 +183,36 @@ When writing a form constructor, the developer can choose one of the strategies 
 
 |====
 
-WARNING: Note that field names within a form must be unique, just as field names in a table. Therefore, calling the  `createAllBoundFields()` method twice, as well as  calling the `createField(name)` method twice for the same name, will lead to an error. An error will also result in creating an unbound field with a name coinciding with a table field added to the form.
+WARNING: Note that field names within a form must be unique, just as field names in a table.
+Therefore, calling the  `createAllBoundFields()` method twice, as well as calling the `createField(name)` method twice for the same name, will lead to an error.
+An error will also result in creating an unbound field with a name coinciding with a table field added to the form.
 
 === afterReceiving(...) and beforeSending(...) Methods
 
-A form class may and should also contain business logic that performs certain actions when values are entered by a user into a form. Two main entry points available in each of form classes are
+A form class may and should also contain business logic that performs certain actions when values are entered by a user into a form.
+Two main entry points available in each of form classes are
 
-[source, java]
+[source,java]
 ----
 void afterReceiving (BasicCursor c)
 
 void beforeSending (BasicCursor c)
 ----
 
-The `afterReceiving (BasicCursor c)` method is called after receiving form data from the client, but before the data is flushed to the database. Thus, if you change the cursor fields in it, then the changed values will be transferred into the database. The argument `c` contains a cursor with fields that come from the form.
+The `afterReceiving (BasicCursor c)` method is called after receiving form data from the client, but before the data is flushed to the database.
+Thus, if you change the cursor fields in it, then the changed values will be transferred into the database.
+The argument `c` contains a cursor with fields that come from the form.
 
-The `beforeSending (BasicCursor c)` method is called before serialization of data and sending it to the form. Thus, if you change the fields in it, the modified values will be displayed on the form. The argument `c` contains a cursor with fields that come from the database.
+The `beforeSending (BasicCursor c)` method is called before serialization of data and sending it to the form.
+Thus, if you change the fields in it, the modified values will be displayed on the form.
+The argument `c` contains a cursor with fields that come from the database.
 
 Business logic can also be contained in getters and setters of unbound fields.
 
-
 === beforeShow(...) Method
-The method is invoked before the form is displayed to the user. In this method, some preparatory actions can be performed: for example, the cursor can be positioned on the desired record.
+
+The method is invoked before the form is displayed to the user.
+In this method, some preparatory actions can be performed: for example, the cursor can be positioned on the desired record.
 
 == Form Attributes
 
@@ -202,19 +222,23 @@ Each form has a set of attributes that can be defined using optional named param
 * `gridheight` — высота грида (в пикселах)
 
 == Field Attributes
+
 Each form field (`LyraFormField` class instance) has a set of following attributes:
 
 
 * `caption` — 'human-readable' caption of the field.
 * `editable` — set to `false`, is the field needs to be read-only.
-* `sortable` — indicates whether or not the grid should allow sorting by values in this field, by clicking on the column's header cell. Defaults to true.
+* `sortable` — indicates whether or not the grid should allow sorting by values in this field, by clicking on the column's header cell.
+Defaults to true.
 * `visible` — set to `false`, if the field needs to be hidden from form.
-* `required` — required field. *Warning*: bound fields related to `not null` table fields will be always treated as required, regardless of the value of `required` property.
-* `scale` — maximum decimal point numbers  (for `REAL`-typed fields).
+* `required` — required field.
+*Warning*: bound fields related to `not null` table fields will be always treated as required, regardless of the value of `required` property.
+* `scale` — maximum decimal point numbers (for `REAL`-typed fields).
 * `width` — visible width of the field (in pixels).
 * `dateFormat` — format of the datetime field.
 
 === Methods of Setting Field Attributes
+
 So, the properties of form fields in Lyra can be set:
 
 * In *design time*:
@@ -239,12 +263,15 @@ CREATE TABLE table1
  );
 ----
 
-WARNING: Setting the field attributes in CelestaDoc is convenient because the attribute specified in one place (i. e. in the CelestaSQL script) will be used by default in all forms that use the corresponding table as a data source. If needed, in each specific form, you can always redefine attributes at run time. If the form using the table is only one, then the correct approach is to set the corresponding field attributes directly in CelestaDoc. Note that the system automatically selects from the CelestaDoc *text the first occurring JSON object*, ignoring the rest of the text content that may also be present there for other purposes.
+WARNING: Setting the field attributes in CelestaDoc is convenient because the attribute specified in one place (i. e. in the CelestaSQL script) will be used by default in all forms that use the corresponding table as a data source.
+If needed, in each specific form, you can always redefine attributes at run time.
+If the form using the table is only one, then the correct approach is to set the corresponding field attributes directly in CelestaDoc.
+Note that the system automatically selects from the CelestaDoc *text the first occurring JSON object*, ignoring the rest of the text content that may also be present there for other purposes.
 
-The `@FormField` annotation is added to functions that return the values of unbound fields, and also has parameters `caption`, `editable`,` visible`, etc. These are optional parameters that correspond to the field attributes of the same name.
+The `@FormField` annotation is added to functions that return the values of unbound fields, and also has parameters `caption`, `editable`,` visible`, etc.
+These are optional parameters that correspond to the field attributes of the same name.
 
 If multiple values of the same property are defined in different places, they get overwritten in a certain order.
-
 
 [cols="1, 1, 1, options="header"]
 |====
@@ -254,7 +281,7 @@ If multiple values of the same property are defined in different places, they ge
 
 | `caption`
 |
-1.  @FormField annotation's `caption` parameter,
+1. @FormField annotation's `caption` parameter,
 
 2. if not set, then the getter method name.
 |
@@ -273,7 +300,7 @@ If multiple values of the same property are defined in different places, they ge
 
 | `visible`
 |
-1.  @FormField annotation's `visible` parameter,
+1. @FormField annotation's `visible` parameter,
 
 2. if not set, then `true`.
 |
@@ -283,15 +310,14 @@ If multiple values of the same property are defined in different places, they ge
 
 |====
 
-
 == Lyra Forms Implementation
+
 Below is a UML diagram of Lyra’s Java classes:
 
 
 image::Lyra.png[]
 
 TODO: redraw this diagram in PlantUML
-
 
 === Implementation Example with Comments
 
@@ -359,4 +385,29 @@ It's a base URL to which the Lyra's endpoint paths are appended.
 
 |====
 
+=== Lyra context
+
+Lyra context is an object:
+
+----
+    {
+        part1: 'part1',
+        part2: 'part2',
+        refreshParams:
+            {
+                selectKey: ['74000004000079300'],
+                sort: ['name', 'code'],
+                filter: {
+                    condition1: 'filter conditions1',
+                    condition2: 'filter conditions2',
+                }
+            }
+    };
+----
+
+* part1, part2 - arbitrary parameters,
+* refreshParams - parameters used to build the Lyra grid on the server:
+** selectKey - primary key for positioning on a specific record,
+** sort - sorting conditions,
+** filter - filter conditions.
 

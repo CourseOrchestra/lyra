@@ -1,12 +1,12 @@
 package ru.curs.lyra.dto;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class MetaDataResult {
 
     private Common common;
-    private Map<String, Column> columns = new HashMap<>();
+    private List<Column> columns = new ArrayList<>();
 
     public Common getCommon() {
         return common;
@@ -16,11 +16,11 @@ public final class MetaDataResult {
         this.common = common;
     }
 
-    public Map<String, Column> getColumns() {
+    public List<Column> getColumns() {
         return columns;
     }
 
-    public void setColumns(Map<String, Column> columns) {
+    public void setColumns(List<Column> columns) {
         this.columns = columns;
     }
 }

@@ -19,7 +19,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/lyra/scrollback")
                 .setAllowedOrigins("*")
-                .withSockJS();
+                .withSockJS()
+                .setClientLibraryUrl("https://cdn.jsdelivr.net/npm/sockjs-client@1.4.0/dist/sockjs.min.js");
     }
 
 }

@@ -1,7 +1,9 @@
-import LyraGrid from './LyraGrid.vue';
+import LyraGrid from './src/LyraGrid.vue';
 
-export default {
+export const Lyra = {
   install(Vue) {
     Vue.component('lyra-grid', LyraGrid);
   },
 };
+
+export default LyraGrid;

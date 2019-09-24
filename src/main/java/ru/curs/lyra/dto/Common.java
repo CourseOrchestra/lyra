@@ -1,5 +1,6 @@
 package ru.curs.lyra.dto;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -13,7 +14,7 @@ public final class Common {
     private String selectionModel;
     private boolean visibleColumnsHeader;
     private boolean allowTextSelection;
-    private String primaryKey;
+    private String[] primaryKey;
     private Map<String, String> summaryRow;
 
     /**
@@ -131,8 +132,8 @@ public final class Common {
     /**
      * getPrimaryKey.
      */
-    public String getPrimaryKey() {
-        return primaryKey;
+    public String[] getPrimaryKey() {
+        return primaryKey == null ? null : Arrays.copyOf(primaryKey, primaryKey.length);
     }
 
     /**
@@ -140,8 +141,8 @@ public final class Common {
      *
      * @param primaryKey primaryKey
      */
-    public void setPrimaryKey(String primaryKey) {
-        this.primaryKey = primaryKey;
+    public void setPrimaryKey(String[] primaryKey) {
+        this.primaryKey = primaryKey == null ? null : Arrays.copyOf(primaryKey, primaryKey.length);
     }
 
     /**

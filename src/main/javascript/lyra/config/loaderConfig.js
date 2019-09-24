@@ -1,4 +1,4 @@
-function getConfig(env) {
+module.exports = function getConfig(env) {
   const dojoConfig = {
     baseUrl: '.',
     packages: [
@@ -10,9 +10,6 @@ function getConfig(env) {
     ],
     async: true,
     has: { 'dojo-config-api': 0 },
-    map: { '*': { dstore: 'dojo-dstore' } },
   };
   return dojoConfig;
-}
-
-module.exports = getConfig;
+};

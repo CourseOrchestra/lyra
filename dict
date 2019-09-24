@@ -88,3 +88,5 @@ GridRefinementHandler
 baseUrl
 config
 getLyraConfig
+refreshParams
+selectKey

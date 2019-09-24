@@ -29,9 +29,9 @@ class LyraServiceTest {
     void getMetadataCssClassNameByFieldType(CallContext ctx) {
         FormInstantiationParams ip = new FormInstantiationParams("ru.curs.lyra.service.forms.TestForm", "foo");
         MetaDataResult metadata = srv.getMetadata(ctx, ip);
-        assertEquals("lyra-type-varchar", metadata.getColumns().get("1").getCssClassName());
-        assertEquals("lyra-type-int", metadata.getColumns().get("3").getCssClassName());
-        assertEquals("lyra-type-datetime", metadata.getColumns().get("6").getCssClassName());
+        assertEquals("lyra-type-varchar", metadata.getColumns().get(0).getCssClassName());
+        assertEquals("lyra-type-int", metadata.getColumns().get(2).getCssClassName());
+        assertEquals("lyra-type-datetime", metadata.getColumns().get(5).getCssClassName());
     }
 
 
