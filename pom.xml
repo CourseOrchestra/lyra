@@ -4,7 +4,7 @@
 
     <groupId>ru.curs</groupId>
     <artifactId>lyra</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <version>1.2.3</version>
     <packaging>jar</packaging>
 
     <name>Lyra grid Java library</name>
