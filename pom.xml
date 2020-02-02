@@ -43,17 +43,16 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit-platform.version>1.5.2</junit-platform.version>
-        <junit.version>5.5.2</junit.version>
+        <junit.version>5.6.0</junit.version>
 
         <mockito.version>3.0.0</mockito.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
         <maven.jar.plugin.version>3.1.2</maven.jar.plugin.version>
         <spotbugs.maven.plugin.version>3.1.12.2</spotbugs.maven.plugin.version>
-        <checkstyle.version>8.23</checkstyle.version>
+        <checkstyle.version>8.29</checkstyle.version>
         <maven.checkstyle.plugin.version>3.1.0</maven.checkstyle.plugin.version>
-        <maven.source.plugin.version>3.1.0</maven.source.plugin.version>
+        <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
         <frontend.maven.plugin.version>1.8.0</frontend.maven.plugin.version>
         <node.version>v12.10.0</node.version>
@@ -149,32 +148,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-engine</artifactId>
-            <version>${junit-platform.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-launcher</artifactId>
-            <version>${junit-platform.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
+            <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
