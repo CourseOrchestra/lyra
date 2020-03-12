@@ -6,26 +6,155 @@
     margin-left: 10px;
 }
 
-.lyra-grid .dgrid {
-    border-top: 1px solid #DDD;
-    border-bottom: 1px solid #DDD;
-    border-left: none;
-    border-right: 1px solid #FAFAFA;
-}
 
 .lyra-grid .dgrid-header {
     background: none;
+    margin: 0px 10px;
 }
+
+
+.lyra-grid .dgrid {
+    border: none;
+}
+.dgrid-cell {
+    border: none;
+    font-family: Roboto;
+    font-size: 15px;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.55;
+    letter-spacing: normal;
+    text-align: center;
+    color: #21262c;
+}
+.lyra-grid .dgrid-header .dgrid-cell:hover {
+    background: #e5e5ea;
+    cursor: pointer;
+    color: #fb6229;
+    border: none;
+}
+
+.lyra-grid .dgrid-row {
+    min-height: 50px;
+    border-radius: 4px;
+    background: #fff;
+    margin: 10px;
+    transition: all 0.2s ease;
+}
+.lyra-grid .dgrid-row:hover {
+    cursor: pointer;
+    background: #e5e5ea;
+    box-shadow: 0 5px 7px 0 rgba(0, 0, 0, 0.22);
+}
+.lyra-grid .border-purple {
+    border: solid 1px #5856d6;
+    border-bottom: solid 3px #5856d6;
+}
+.lyra-grid .border-purple:hover{
+    border: solid 1px #eeeefb;
+    border-bottom: solid 3px #eeeefb;
+}
+.lyra-grid .border-purple:active{
+    border: solid 1px #eeeefb;
+    border-bottom: solid 3px #eeeefb;
+}
+.lyra-grid .border-red {
+    border: solid 1px #de251d;
+    border-bottom: solid 3px #de251d;
+}
+.lyra-grid .border-red:hover {
+    border: solid 1px #fce9e8;
+    border-bottom: solid 3px #fce9e8;
+}
+.lyra-grid .border-red:active {
+    border: solid 1px #fce9e8;
+    border-bottom: solid 3px #fce9e8;
+}
+.lyra-grid .border-green {
+    border: solid 1px #4cd964;
+    border-bottom: solid 3px #4cd964;
+}
+.lyra-grid .border-green:hover {
+     border: solid 1px #eaf8eb;
+     border-bottom: solid 3px #eaf8eb;
+ }
+.lyra-grid .border-green:active {
+    border: solid 1px #eaf8eb;
+    border-bottom: solid 3px #eaf8eb;
+}
+.lyra-grid .border-light-green {
+    border: solid 1px #b8fdc3;
+    border-bottom: solid 3px #b8fdc3;
+}
+.lyra-grid .border-light-green:hover {
+    border: solid 1px #f8fff9;
+    border-bottom: solid 3px #f8fff9;
+}
+.lyra-grid .border-light-green:active {
+    border: solid 1px #f8fff9;
+    border-bottom: solid 3px #f8fff9;
+}
+.lyra-grid .border-blue {
+    border: solid 1px #5ac8fa;
+    border-bottom: solid 3px #5ac8fa;
+}
+.lyra-grid .border-blue:hover {
+    border: solid 1px #eefaff;
+    border-bottom: solid 3px #eefaff;
+}
+.lyra-grid .border-blue:active {
+    border: solid 1px #eefaff;
+    border-bottom: solid 3px #eefaff;
+}
+.lyra-grid .border-white {
+    border: solid 1px #ffffff;
+    border-bottom: solid 3px #ffffff;
+}
+.lyra-grid .border-white:hover {
+    border: solid 1px #e7e5dc;
+    border-bottom: solid 3px #e7e5dc;
+}
+.lyra-grid .border-white:active {
+    border: solid 1px #e7e5dc;
+    border-bottom: solid 3px #e7e5dc;
+}
+.lyra-grid .dgrid-row:hover .dgrid-cell {
+    color: #fb6229;
+}
+.lyra-grid .dgrid-scroller {
+    background: #efeff4;
+}
+.lyra-grid .dgrid-scroller::-webkit-scrollbar {
+    width: 15px;
+    height: 8px;
+    background-color: rgba(0, 0, 0, 0);
+}
+.lyra-grid .dgrid {
+    background: #efeff4;
+}
+.lyra-grid .dgrid-scroller::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #e5e5ea;
+}
+.lyra-grid .lyra-type-int div{
+    text-align: center;
+}
+.lyra-grid .lyra-type-varchar div {
+    text-align: center;
+}
+.lyra-grid .lyra-type-bit div {
+    text-align: center;
+}
+.lyra-grid .lyra-type-real div {
+    text-align: center;
+}
+
 
 .lyra-grid .dgrid-header th.dgrid-cell:hover {
     background-image: none;
     background-color: #FAFAFA;
 }
 
-.lyra-grid .dgrid-header.dgrid-header-scroll {
-    background-color: #FAFAFA;
-    border-bottom: 2px solid #DDD;
-}
 
 .lyra-grid .dgrid .ui-icon {
     margin-top: 4px;
@@ -33,11 +162,9 @@
 
 .lyra-grid .dgrid-header .dgrid-cell {
     text-align: center;
-    font-size: 0.9em;
-    border-right-style: dotted;
-    border-left-style: dotted;
-    border-width: 1px 1px 2px 1px;
-    border-color: #DDD;
+    font-size: 12px;
+    font-weight: 300;
+    margin-bottom: 5px;
 }
 
 .lyra-grid .sort-gap {
@@ -60,11 +187,9 @@
 }
 
 .lyra-grid .dgrid-content .dgrid-cell {
-    border-right-style: dotted;
-    border-left-style: dotted;
-    border-width: 1px 1px 1px 1px;
-    border-color: #DDD;
     vertical-align: middle;
+    height: 50px;
+    text-align: center;
 }
 
 .lyra-grid .dgrid-content .dgrid-cell > div {
@@ -90,10 +215,10 @@
 .lyra-grid .dgrid-footer .dgrid-cell {
     text-align: center;
     font-size: 0.9em;
-    border-right-style: dotted;
-    border-left-style: dotted;
-    border-width: 0px 1px 0px 1px;
-    border-color: #DDD;
+    /*border-right-style: dotted;*/
+    /*border-left-style: dotted;*/
+    /*border-width: 0px 1px 0px 1px;*/
+    /*border-color: #DDD;*/
     vertical-align: middle;
     font-weight: bold;
 }
