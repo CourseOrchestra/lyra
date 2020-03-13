@@ -1,13 +1,10 @@
 import { shallowMount } from '@vue/test-utils';
-import Vue from 'vue';
-import { ModalPlugin } from 'bootstrap-vue';
 import SockJS from 'sockjs-client';
 import { mockData, mockMetadata } from './const';
 import LyraGrid, { lyraGridSocket } from '../../src/LyraGrid.vue';
 
 lyraGridSocket.reconnectDelay = 0;
 
-Vue.use(ModalPlugin);
 
 describe('LyraGrid.vue', () => {
   describe('create lyra grid', () => {
@@ -591,6 +588,13 @@ describe('LyraGrid.vue', () => {
 
       sinon.useFakeXMLHttpRequest().onCreate = function onCreate(xhr) {
         req = xhr;
+
+        window.getLyraConfig = function getLyraConfig() {
+          return {
+            showMessageFunction() {
+            },
+          };
+        };
       };
 
       wrapper = shallowMount(LyraGrid, {
@@ -625,6 +629,8 @@ describe('LyraGrid.vue', () => {
     after(() => {
       sinon.useFakeXMLHttpRequest()
         .restore();
+
+      window.getLyraConfig = null;
     });
 
     it('showMessage(message)', () => {

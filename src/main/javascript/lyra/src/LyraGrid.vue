@@ -18,7 +18,9 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import axios from 'axios';
 
-import { getFullContext, getMetadataUrl, getScrollbackUrl } from './util';
+import {
+  getFullContext, getMetadataUrl, getScrollbackUrl, getShowMessageFunction,
+} from './util';
 import createGrid from './grid';
 import { refreshGrid, scrollBack, setColumnsVisibility } from './grid2';
 
@@ -137,12 +139,10 @@ export default {
       this.$emit(eventType, this.formclass, this.instanceid, obj);
     },
     showMessage(message) {
-      this.$bvModal.msgBoxOk(message, {
-        title: 'Error',
-        headerClass: 'p-2 border-bottom-0',
-        footerClass: 'p-2 border-top-0',
-        centered: true,
-      });
+      const showMessageFunction = getShowMessageFunction();
+      if (showMessageFunction) {
+        showMessageFunction(this, message);
+      }
       throw new Error(message);
     },
   },

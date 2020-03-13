@@ -25,6 +25,11 @@ export function getScrollbackUrl() {
   return url;
 }
 
+export function getShowMessageFunction() {
+  const lyraConfig = window.getLyraConfig ? window.getLyraConfig() : null;
+  return lyraConfig && lyraConfig.showMessageFunction ? lyraConfig.showMessageFunction : null;
+}
+
 
 export function getTitle(title) {
   let res = title;

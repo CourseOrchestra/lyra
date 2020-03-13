@@ -4,6 +4,7 @@ import {
   getMetadataUrl,
   getScrollbackUrl,
   getSelectObject,
+  getShowMessageFunction,
   getTitle,
   isEqual,
 } from '../../src/util';
@@ -90,8 +91,6 @@ describe('utils.js', () => {
         .to
         .equal('http://localhost:8081/lyra/scrollback');
     });
-
-
     it('lyraConfig is defined, baseUrl is defined, baseUrlScrollback is defined', () => {
       window.getLyraConfig = function getLyraConfig() {
         return {
@@ -104,6 +103,29 @@ describe('utils.js', () => {
         .equal('http://localhost:8088/lyra/scrollback');
     });
   });
+
+  describe('getShowMessageFunction()', () => {
+    it('lyraConfig is not defined', () => {
+      expect(getShowMessageFunction()).to.be.null;
+    });
+
+    it('lyraConfig is defined, showMessageFunction is not defined', () => {
+      window.getLyraConfig = function getLyraConfig() {
+        return {};
+      };
+      expect(getShowMessageFunction()).to.be.null;
+    });
+    it('lyraConfig is defined, showMessageFunction is defined', () => {
+      window.getLyraConfig = function getLyraConfig() {
+        return {
+          showMessageFunction() {
+          },
+        };
+      };
+      expect(getShowMessageFunction()).to.be.not.null;
+    });
+  });
+
 
   describe('getTitle(title)', () => {
     it('title is not defined', () => {
