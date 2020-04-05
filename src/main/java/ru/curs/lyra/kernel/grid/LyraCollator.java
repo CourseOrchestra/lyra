@@ -64,7 +64,7 @@ public final class LyraCollator {
         if (e == null) {
             throw new LyraCollatorException(c);
         }
-        return e.intValue();
+        return e;
     }
 
     char getElement(int primOrder, int secOrder, int terOrder) {
@@ -80,7 +80,7 @@ public final class LyraCollator {
 
         int e = getElementCode(primOrder, secOrder, terOrder);
         Character c = codeToElement.floorEntry(e).getValue();
-        return c.charValue();
+        return c;
     }
 
     private void parseRules(String rules) {

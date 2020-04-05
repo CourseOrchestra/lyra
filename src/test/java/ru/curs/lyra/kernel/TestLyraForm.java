@@ -16,11 +16,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestLyraForm {
 
-    static class DummyMeta implements ColumnMeta {
+    static class DummyMeta implements ColumnMeta<Integer> {
         private final String cDoc;
 
         DummyMeta(String cDoc) {
             this.cDoc = cDoc;
+        }
+
+        @Override
+        public String getName() {
+            return null;
         }
 
         @Override

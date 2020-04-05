@@ -49,7 +49,7 @@ final class FieldAccessorFactory {
 
         @Override
         public final Object getValue(BasicCursor c) {
-            return c._currentValues()[index];
+            return c.getCurrentValues()[index];
         }
 
         @Override
@@ -139,9 +139,9 @@ final class UnboundFieldAccessor implements FieldAccessor {
 
     private Method getter;
     private Method setter;
-    BasicLyraForm basicLyraForm;
+    BasicLyraForm<?> basicLyraForm;
 
-    UnboundFieldAccessor(Method getter, Method setter, BasicLyraForm basicLyraForm) {
+    UnboundFieldAccessor(Method getter, Method setter, BasicLyraForm<?> basicLyraForm) {
         this.getter = getter;
         this.setter = setter;
         this.basicLyraForm = basicLyraForm;

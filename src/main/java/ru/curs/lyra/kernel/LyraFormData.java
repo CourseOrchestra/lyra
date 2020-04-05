@@ -15,13 +15,22 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 
-import static ru.curs.lyra.kernel.LyraFormField.*;
+import static ru.curs.lyra.kernel.LyraFormField.CSS_CLASS_NAME;
+import static ru.curs.lyra.kernel.LyraFormField.CSS_STYLE;
+import static ru.curs.lyra.kernel.LyraFormField.DATE_FORMAT;
+import static ru.curs.lyra.kernel.LyraFormField.DECIMAL_SEPARATOR;
+import static ru.curs.lyra.kernel.LyraFormField.DEFAULT_DATE_FORMAT;
+import static ru.curs.lyra.kernel.LyraFormField.DEFAULT_DECIMAL_SEPARATOR;
+import static ru.curs.lyra.kernel.LyraFormField.DEFAULT_GROUPING_SEPARATOR;
+import static ru.curs.lyra.kernel.LyraFormField.GROUPING_SEPARATOR;
+import static ru.curs.lyra.kernel.LyraFormField.REQUIRED;
+import static ru.curs.lyra.kernel.LyraFormField.SCALE;
 
 /**
  * A serializable cursor data represention.
@@ -57,7 +66,7 @@ public final class LyraFormData {
             // TODO: here we have an assumption that the first field is the key
             // field
             keyValues = new Object[1];
-            keyValues[0] = c._currentValues()[0];
+            keyValues[0] = c.getCurrentValues()[0];
         }
 
         this.formId = formId;
@@ -110,7 +119,7 @@ public final class LyraFormData {
     public void serialize(OutputStream outputStream) {
         try {
             XMLStreamWriter xmlWriter = XMLOutputFactory.newInstance()
-                    .createXMLStreamWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                    .createXMLStreamWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8));
             xmlWriter.writeStartDocument();
             xmlWriter.writeStartElement("schema");
             xmlWriter.writeAttribute("recversion", Integer.toString(recversion));
@@ -118,9 +127,8 @@ public final class LyraFormData {
                 xmlWriter.writeAttribute("formId", formId);
             }
 
-            Iterator<LyraFieldValue> i = fields.iterator();
-            while (i.hasNext()) {
-                i.next().serialize(xmlWriter);
+            for (LyraFieldValue field : fields) {
+                field.serialize(xmlWriter);
             }
             xmlWriter.writeEndDocument();
             xmlWriter.flush();
@@ -177,13 +185,13 @@ public final class LyraFormData {
                     type = LyraFieldType.valueOf(attributes.getValue("type"));
 
                     String buf = attributes.getValue("null");
-                    isNull = buf == null ? false : Boolean.parseBoolean(buf);
+                    isNull = Boolean.parseBoolean(buf);
 
                     buf = attributes.getValue(SCALE);
                     scale = buf == null ? LyraFormField.DEFAULT_SCALE : Integer.parseInt(buf);
 
                     buf = attributes.getValue(REQUIRED);
-                    required = buf == null ? false : Boolean.parseBoolean(buf);
+                    required = Boolean.parseBoolean(buf);
 
 
                     // adding_field's_property
@@ -210,7 +218,7 @@ public final class LyraFormData {
         }
 
         @Override
-        public void characters(char[] ch, int start, int length) throws SAXException {
+        public void characters(char[] ch, int start, int length) {
             if (status == 2) {
                 sb.append(ch, start, length);
             }

@@ -71,8 +71,7 @@ public abstract class InterpolationInitializer {
         }
         refinementsCount = 1;
 
-        int amountOfInterpolationPoints = (count > DEFAULT_AMOUNT_OF_INTERPOLATION_POINTS)
-                ? DEFAULT_AMOUNT_OF_INTERPOLATION_POINTS : count;
+        int amountOfInterpolationPoints = Math.min(count, DEFAULT_AMOUNT_OF_INTERPOLATION_POINTS);
 
         int offset = count / amountOfInterpolationPoints;
 
