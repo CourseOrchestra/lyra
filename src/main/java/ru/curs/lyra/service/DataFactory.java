@@ -159,11 +159,7 @@ class DataFactory {
         if (records.size() < dataRetrievalParams.getLimit()) {
             dataRetrievalParams.setTotalCount(records.size());
         } else {
-            if (lyraApproxTotalCountAfterGetRows <= LyraGridScrollBack.DGRID_MAX_TOTALCOUNT) {
-                dataRetrievalParams.setTotalCount(lyraApproxTotalCountAfterGetRows);
-            } else {
-                dataRetrievalParams.setTotalCount(LyraGridScrollBack.DGRID_MAX_TOTALCOUNT);
-            }
+            dataRetrievalParams.setTotalCount(Math.min(lyraApproxTotalCountAfterGetRows, LyraGridScrollBack.DGRID_MAX_TOTALCOUNT));
         }
     }
 
@@ -256,7 +252,7 @@ class DataFactory {
             if (c instanceof Cursor) {
                 data.get(0).put(DGRID_NEW_POSITION_ID, ((Cursor) c).getCurrentKeyValues());
             } else {
-                data.get(0).put(DGRID_NEW_POSITION_ID, c._currentValues()[0]);
+                data.get(0).put(DGRID_NEW_POSITION_ID, c.getCurrentValues()[0]);
             }
 
         }

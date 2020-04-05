@@ -88,7 +88,7 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
     public synchronized List<LyraFormData> getRowsH(CallContext ctx, int h) {
         BasicCursor bc = rec(ctx);
         String cmd =
-                Arrays.stream(bc._currentValues()).anyMatch(Objects::nonNull)
+                Arrays.stream(bc.getCurrentValues()).anyMatch(Objects::nonNull)
                         ? "=<-" : "-";
         if (bc.navigate(cmd)) {
             gd.setPosition(bc);
@@ -140,7 +140,7 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
         final String id = getId();
         final List<LyraFormData> result = new ArrayList<>(h);
         final Map<String, LyraFormField> meta = getFieldsMeta();
-        BasicCursor copy = c._getBufferCopy(c.callContext(), null);
+        BasicCursor copy = c.getBufferCopy(c.callContext(), null);
         copy.close();
         for (int i = 0; i < h; i++) {
             beforeSending(c);
@@ -215,7 +215,7 @@ public abstract class BasicGridForm<T extends BasicCursor> extends BasicLyraForm
 
     public void saveCursorPosition(CallContext ctx) {
         BasicCursor c = rec(ctx);
-        BasicCursor copy = c._getBufferCopy(ctx, null);
+        BasicCursor copy = c.getBufferCopy(ctx, null);
         copy.close();
         savedPositions.push(copy);
     }

@@ -6,12 +6,22 @@ import ru.curs.celesta.SystemCallContext;
 import ru.curs.celesta.dbutils.BasicCursor;
 import ru.curs.celesta.dbutils.adaptors.DBAdaptor;
 import ru.curs.celesta.dbutils.term.WhereTermsMaker;
-import ru.curs.celesta.score.*;
+import ru.curs.celesta.score.BooleanColumn;
+import ru.curs.celesta.score.ColumnMeta;
+import ru.curs.celesta.score.DataGrainElement;
+import ru.curs.celesta.score.DateTimeColumn;
+import ru.curs.celesta.score.IntegerColumn;
+import ru.curs.celesta.score.StringColumn;
+import ru.curs.celesta.score.ViewColumnMeta;
 import ru.curs.lyra.kernel.RefinementScheduler;
 import ru.curs.lyra.kernel.RefinementTask;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -81,7 +91,7 @@ public final class GridDriver {
                     new SystemCallContext(
                             closedCopy.callContext().getCelesta(),
                             "LyraCounterThread");
-            c = closedCopy._getBufferCopy(sysContext, columns);
+            c = closedCopy.getBufferCopy(sysContext, columns);
             c.copyFiltersFrom(closedCopy);
             c.copyOrderFrom(closedCopy);
         }
@@ -95,7 +105,7 @@ public final class GridDriver {
     public GridDriver(BasicCursor c, Runnable changeNotifier) {
         this.changeNotifier = changeNotifier;
         // place to save filters and ordering
-        closedCopy = c._getBufferCopy(c.callContext(), null);
+        closedCopy = c.getBufferCopy(c.callContext(), null);
         closedCopy.copyFiltersFrom(c);
         closedCopy.copyOrderFrom(c);
         closedCopy.close();
@@ -120,14 +130,14 @@ public final class GridDriver {
         DBAdaptor dbAdaptor = c.callContext().getDbAdaptor();
         if (names.length == 1) {
             // Single field key enumerator
-            ColumnMeta m = meta.getColumns().get(names[0]);
+            ColumnMeta<?> m = meta.getColumns().get(names[0]);
             rootKeyEnumerator = createKeyEnumerator(m, dbAdaptor.nullsFirst(), dbAdaptor);
             keyEnumerators.put(names[0], rootKeyEnumerator);
         } else {
             // Multiple field key enumerator
             KeyEnumerator[] km = new KeyEnumerator[names.length];
             for (int i = 0; i < names.length; i++) {
-                ColumnMeta m = meta.getColumns().get(names[i]);
+                ColumnMeta<?> m = meta.getColumns().get(names[i]);
                 km[i] = createKeyEnumerator(m, dbAdaptor.nullsFirst(), dbAdaptor);
                 keyEnumerators.put(names[i], km[i]);
             }
@@ -219,7 +229,7 @@ public final class GridDriver {
             return true;
         } else {
             // table became empty!
-            c._clearBuffer(true);
+            c.clearBuffer(true);
             truncate();
             return false;
         }
@@ -258,7 +268,7 @@ public final class GridDriver {
 
     synchronized BigInteger getCursorOrdinal(BasicCursor c, Collection<String> fields) {
         int i = 0;
-        Object[] values = c._currentValues();
+        Object[] values = c.getCurrentValues();
         KeyEnumerator km;
         for (String cname : fields) {
             km = keyEnumerators.get(cname);
@@ -284,7 +294,7 @@ public final class GridDriver {
         return interpolator.getApproximatePosition(topVisiblePosition);
     }
 
-    private KeyEnumerator createKeyEnumerator(ColumnMeta m, boolean nullsFirst, DBAdaptor dbAdaptor) {
+    private KeyEnumerator createKeyEnumerator(ColumnMeta<?> m, boolean nullsFirst, DBAdaptor dbAdaptor) {
         KeyEnumerator result;
 
         final String celestaType = m.getCelestaType();
@@ -298,7 +308,7 @@ public final class GridDriver {
                 StringColumn s = (StringColumn) m;
                 length = s.getLength();
             } else {
-                ViewColumnMeta vcm = (ViewColumnMeta) m;
+                ViewColumnMeta<?> vcm = (ViewColumnMeta<?>) m;
                 if (vcm.getLength() < 0) {
                     throw new CelestaException(
                             "Undefined length for VARCHAR view field: cannot use it as a key field in a grid.");
