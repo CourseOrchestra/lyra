@@ -233,8 +233,7 @@ public class VarcharFieldEnumerator extends KeyEnumerator {
     }
 
     private String calcRules(StaticDataAdaptor staticDataAdaptor) {
-        List<String> data = staticDataAdaptor.selectStaticStrings(VarcharFieldEnumerator.CHARS, "\"id\"", "\"id\" ASC");
-
+        List<String> data = staticDataAdaptor.selectStaticStrings(VarcharFieldEnumerator.CHARS, "\"id\"", "ASC");
         StringBuilder ruleBuilder = new StringBuilder();
         ruleBuilder.append("<'" + data.get(0) + "'");
         for (int i = 1; i < data.size(); ++i) {
