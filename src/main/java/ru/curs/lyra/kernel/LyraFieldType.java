@@ -1,6 +1,5 @@
 package ru.curs.lyra.kernel;
 
-import ru.curs.celesta.dbutils.BLOB;
 import ru.curs.celesta.score.*;
 
 import java.util.Date;

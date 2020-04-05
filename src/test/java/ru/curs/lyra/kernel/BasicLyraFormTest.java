@@ -92,8 +92,7 @@ class BasicLyraFormTest {
     @Test
     void createDuplicatedUnboundFields(CallContext ctx) {
         TestFormWithDuplicatedFields form = new TestFormWithDuplicatedFields(ctx, null);
-        assertTrue(assertThrows(CelestaException.class, () ->
-                form.createAllUnboundFields()).getMessage().contains("foo"));
+        assertTrue(assertThrows(CelestaException.class, form::createAllUnboundFields).getMessage().contains("foo"));
     }
 
     @Test

@@ -43,7 +43,7 @@ class MetadataFactory {
         common.setAllowTextSelection(basicGridForm.getFormProperties().getAllowTextSelection());
 
         if (basicGridForm.meta() instanceof Table) {
-            common.setPrimaryKey(((Table) basicGridForm.meta()).getPrimaryKey().keySet().stream().toArray(String[]::new));
+            common.setPrimaryKey(((Table) basicGridForm.meta()).getPrimaryKey().keySet().toArray(new String[0]));
         }
 
         common.setSummaryRow(basicGridForm.getSummaryRow());
