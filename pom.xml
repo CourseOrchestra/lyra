@@ -53,7 +53,7 @@
         <checkstyle.version>8.31</checkstyle.version>
         <maven.checkstyle.plugin.version>3.1.1</maven.checkstyle.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
-        <maven.javadoc.plugin.version>3.1.1</maven.javadoc.plugin.version>
+        <maven.javadoc.plugin.version>3.2.0</maven.javadoc.plugin.version>
         <frontend.maven.plugin.version>1.8.0</frontend.maven.plugin.version>
         <node.version>v12.10.0</node.version>
         <npm.version>6.11.3</npm.version>
