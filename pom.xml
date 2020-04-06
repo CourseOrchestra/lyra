@@ -65,7 +65,7 @@
         <spring.boot.starter.celesta.version>2.1.15</spring.boot.starter.celesta.version>
         <celesta.version>7.3.4</celesta.version>
         <jackson.core.version>2.10.3</jackson.core.version>
-        <jacoco.version>0.8.4</jacoco.version>
+        <jacoco.version>0.8.5</jacoco.version>
     </properties>
 
     <dependencies>
