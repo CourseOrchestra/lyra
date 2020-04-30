@@ -47,7 +47,7 @@
     "eslint-plugin-chai-friendly": "^0.6.0",
     "@vue/test-utils": "^1.0.0-beta.33",
     "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-env": "^7.9.6",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^5.2.0",
     "babel-plugin-rewire": "^1.2.0",
