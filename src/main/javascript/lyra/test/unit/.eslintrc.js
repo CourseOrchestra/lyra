@@ -4,7 +4,7 @@ module.exports = {
   },
   globals: {
     sinon: true,
-    expect: true
+    expect: true,
   },
   plugins: ['chai-friendly', 'chai-expect'],
   rules: {
@@ -24,9 +24,9 @@ module.exports = {
           '_updateColumns',
           '__vue__',
           '_stompHandler',
-          '_subscriptions'
-        ]
-      }
-    ]
-  }
+          '_subscriptions',
+        ],
+      },
+    ],
+  },
 };
