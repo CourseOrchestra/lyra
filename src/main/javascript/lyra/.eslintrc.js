@@ -2,14 +2,14 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: 'babel-eslint',
   },
   extends: [
     'airbnb-base',
-    'plugin:vue/recommended'
+    'plugin:vue/recommended',
   ],
   rules: {
     'import/no-extraneous-dependencies': [
@@ -18,9 +18,9 @@ module.exports = {
         devDependencies: [
           '**/*.spec.js',
           'webpack.config.js',
-          'karma.conf.js'
-        ]
-      }
+          'karma.conf.js',
+        ],
+      },
     ],
     'no-underscore-dangle': [
       'error',
@@ -34,9 +34,9 @@ module.exports = {
           '_resizedColumns',
           '_getResizedColumnWidths',
           '_focusedNode',
-          '_columns'
-        ]
-      }
-    ]
-  }
+          '_columns',
+        ],
+      },
+    ],
+  },
 };
