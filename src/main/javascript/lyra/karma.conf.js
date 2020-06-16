@@ -25,7 +25,6 @@ module.exports = function setConfig(config) {
       '/dojo/resources/': '/base/node_modules/dojo/resources/',
     },
 
-
     webpack: webpackConfig,
 
     reporters: ['spec', 'coverage'],

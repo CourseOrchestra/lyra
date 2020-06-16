@@ -30,7 +30,6 @@ export function getShowMessageFunction() {
   return lyraConfig && lyraConfig.showMessageFunction ? lyraConfig.showMessageFunction : null;
 }
 
-
 export function getTitle(title) {
   let res = title;
   if (res) {
@@ -41,7 +40,6 @@ export function getTitle(title) {
   return res;
 }
 
-
 export function getSelectObject(row, col, selection) {
   return {
     currentColId: col.id,
@@ -50,7 +48,6 @@ export function getSelectObject(row, col, selection) {
     selection,
   };
 }
-
 
 export function getFullContext(aContext, sort, filter) {
   let context = aContext;

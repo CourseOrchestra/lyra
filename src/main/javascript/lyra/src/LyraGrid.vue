@@ -6,13 +6,10 @@
   </div>
 </template>
 
-
 <style src="dgrid/css/dgrid.css"></style>
 <style src="./css/lyra.css"></style>
 
-
 <script>
-
 
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
@@ -23,7 +20,6 @@ import {
 } from './util';
 import createGrid from './grid';
 import { refreshGrid, scrollBack, setColumnsVisibility } from './grid2';
-
 
 export const lyraGridSocket = new Client({
   webSocketFactory() {
@@ -50,7 +46,6 @@ export const lyraGridSocket = new Client({
   },
 });
 lyraGridSocket.activate();
-
 
 export default {
   name: 'LyraGrid',
@@ -147,8 +142,6 @@ export default {
     },
   },
 
-
 };
-
 
 </script>

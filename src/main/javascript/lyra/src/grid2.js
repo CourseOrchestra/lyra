@@ -1,6 +1,5 @@
 import { getFullContext, isEqual } from './util';
 
-
 export function scrollBack(aGrid, position) {
   const grid = aGrid;
   if (grid.needBackScroll) {
@@ -30,7 +29,6 @@ export function getSelection(grid) {
     });
   return selection;
 }
-
 
 export function setExternalSorting(aColumns, sort) {
   const columns = aColumns;
@@ -66,7 +64,6 @@ export function setExternalSorting(aColumns, sort) {
     }
   }
 }
-
 
 export function refreshGrid(aGrid, aContext, showMessage) {
   const grid = aGrid;

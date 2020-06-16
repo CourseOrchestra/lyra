@@ -95,7 +95,6 @@ export const mockMetadata = {
   ],
 };
 
-
 export const mockData = [{
   internalAddData: {
     header: '<h5>Eto heder lira-grida</h5>',
@@ -702,7 +701,6 @@ export const mockData = [{
   socr: 'liniya',
 }];
 
-
 export const mockResScroll = [{
   internalAddData: {
     header: '<h5>Eto heder lira-grida</h5>',
@@ -1308,7 +1306,6 @@ export const mockResScroll = [{
   field2: 'pole2_02059001000002600',
   socr: 'ul',
 }];
-
 
 export const mockDataNewPosition = [{
   internalAddData: {
@@ -1918,14 +1915,12 @@ export const mockDataNewPosition = [{
   socr: 'ul',
 }];
 
-
 export const mockDataEmpty = {
   internalAddData: {
     header: '<h5>\'Showcase\' tipy stolbcov</h5>',
     footer: '<h5>refreshParams: {sort=[code], filter={filter=filter conditions}}</h5>',
   },
 };
-
 
 export const mockDataNoAddData = [{
   rnum: '1',
@@ -1940,7 +1935,6 @@ export const mockDataNoAddData = [{
   field2: 'pole2_63028000006005400',
   socr: 'p',
 }];
-
 
 export const mockDataRowCss = [{
   internalAddData: {
@@ -2498,7 +2492,6 @@ export const mockDataRowCss = [{
   recordProperties: { rowstyle: 'jslivegrid-record-bold jslivegrid-record-italic' },
 }];
 
-
 export const mockMetadataSummaryRow = {
   common: {
     gridWidth: '95%',
@@ -2577,7 +2570,6 @@ export const mockMetadataSummaryRow = {
     sortingAvailable: true,
   }],
 };
-
 
 export const mockMetadataNoPrimaryKey = {
   common: {

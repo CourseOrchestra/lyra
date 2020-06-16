@@ -8,7 +8,6 @@ import {
 } from './const';
 import createGrid from '../../src/grid';
 
-
 describe('grid.js', () => {
   describe('create grid', () => {
     let grid = null;
@@ -224,7 +223,6 @@ describe('grid.js', () => {
         .equal('newField');
     });
   });
-
 
   describe('row css', () => {
     let grid = null;
@@ -454,7 +452,6 @@ describe('grid.js', () => {
       expect(grid._resizedColumns).to.be.true;
     });
   });
-
 
   describe('emitEvent', () => {
     let grid = null;
@@ -688,7 +685,6 @@ describe('grid.js', () => {
     });
   });
 
-
   describe('internal sorting', () => {
     function showMessage() {
     }
@@ -739,7 +735,6 @@ describe('grid.js', () => {
           'Content-Range': 'items 0-49/20000',
         },
         JSON.stringify(mockData));
-
 
       grid.columns.rnum
         .headerNode
@@ -794,7 +789,6 @@ describe('grid.js', () => {
         .equal(['rnum desc', 'code desc']);
     });
 
-
     it('no primary key', () => {
       const grid = createGrid(
         mockMetadataNoPrimaryKey,
@@ -824,7 +818,6 @@ describe('grid.js', () => {
           'Content-Range': 'items 0-49/20000',
         },
         JSON.stringify(mockData));
-
 
       grid.columns.rnum
         .headerNode
@@ -866,7 +859,6 @@ describe('grid.js', () => {
         },
         JSON.stringify(mockData));
 
-
       grid.columns.code
         .headerNode
         .click();
@@ -877,7 +869,6 @@ describe('grid.js', () => {
         .equal(['code']);
     });
   });
-
 
   describe('positioning by primary key ', () => {
     let grid = null;

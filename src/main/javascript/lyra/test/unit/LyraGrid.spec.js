@@ -5,7 +5,6 @@ import LyraGrid, { lyraGridSocket } from '../../src/LyraGrid.vue';
 
 lyraGridSocket.reconnectDelay = 0;
 
-
 describe('LyraGrid.vue', () => {
   describe('create lyra grid', () => {
     let req;
