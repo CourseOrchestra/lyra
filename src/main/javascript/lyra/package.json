@@ -29,7 +29,7 @@
   "dependencies": {
     "dgrid": "1.1.0",
     "dojo-dstore": "^1.2.1",
-    "dojo": "^1.16.2",
+    "dojo": "^1.16.3",
     "dojo-util": "^1.16.3",
     "sockjs-client": "^1.4.0",
     "@stomp/stompjs": "^5.4.4",
