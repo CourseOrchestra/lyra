@@ -60,7 +60,7 @@
     "chai": "^4.2.0",
     "sinon": "^9.0.2",
     "sinon-chai": "^3.5.0",
-    "puppeteer": "^3.3.0",
+    "puppeteer": "^4.0.0",
     "karma": "^5.0.9",
     "karma-chrome-launcher": "^3.1.0",
     "karma-mocha": "^2.0.1",
