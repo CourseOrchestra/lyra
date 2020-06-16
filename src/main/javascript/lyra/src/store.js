@@ -8,7 +8,6 @@ import when from 'dojo/when';
 
 import { getDataUrl, isEqual } from './util';
 
-
 export default function createStore(aGrid, showMessage, setLabels) {
   const grid = aGrid;
 
@@ -49,7 +48,6 @@ export default function createStore(aGrid, showMessage, setLabels) {
       return results;
     },
 
-
     _fetch(kwArgs) {
       let results = null;
 
@@ -77,7 +75,6 @@ export default function createStore(aGrid, showMessage, setLabels) {
       }
 
       grid.oldStart = kwArgs[0].start;
-
 
       const formInstantiationParams = {
         clientParams: grid.context,
@@ -107,7 +104,6 @@ export default function createStore(aGrid, showMessage, setLabels) {
         grid.oldSort = sort;
         grid.oldFilter = filter;
       }
-
 
       const fetchRangeResults = this.fetchRange2({
         formInstantiationParams,

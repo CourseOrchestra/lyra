@@ -13,7 +13,6 @@ import { getFullContext, getSelectObject, getTitle } from './util';
 import { getSelection, setExternalSorting } from './grid2';
 import createStore from './store';
 
-
 export default function createGrid(
   metadata, gridDivId,
   formClass, instanceId, aContext,
@@ -36,7 +35,6 @@ export default function createGrid(
     column.className = metadata.columns[k].cssClassName;
     columnsInfo.push({ ...column });
 
-
     column.renderCell = function actionRenderCell(object, aValue /* node, options */) {
       let value = aValue;
       if (!value) {
@@ -50,7 +48,6 @@ export default function createGrid(
 
       return div;
     };
-
 
     column.renderHeaderCell = function actionRenderCell(/* node */) {
       const div = document.createElement('div');
@@ -96,14 +93,11 @@ export default function createGrid(
       return div;
     };
 
-
     columns.push(column);
   }
   emitEvent('columns-info', columnsInfo);
 
-
   setExternalSorting(columns, context.refreshParams.sort);
-
 
   const localizedParams = {
     loadingMessage: 'Загрузка...',
@@ -222,9 +216,7 @@ export default function createGrid(
       this.resizeColumnWidth(lastCol, 'auto');
     },
 
-
   }, gridDivId);
-
 
   for (let k = 0; k < metadata.columns.length; k += 1) {
     grid.styleColumn(metadata.columns[k].id, metadata.columns[k].cssStyle);
@@ -235,7 +227,6 @@ export default function createGrid(
     grid.adjustFooterCellsWidths();
   }
 
-
   grid.on('dgrid-columnreorder', (event) => {
     setTimeout(() => {
       if (event.grid.summary) {
@@ -243,7 +234,6 @@ export default function createGrid(
       }
     });
   });
-
 
   grid.on('dgrid-select', (event) => {
     const row = grid.row(event.grid._focusedNode);
@@ -268,7 +258,6 @@ export default function createGrid(
     }
   });
 
-
   grid.on('dgrid-sort', (event) => {
     const sort = [];
     const desc = event.sort[0].descending ? ' desc' : '';
@@ -283,17 +272,14 @@ export default function createGrid(
       }
     }
 
-
     grid.context.refreshParams.sort = sort;
     grid.context.refreshParams.selectKey = null;
-
 
     setExternalSorting(grid._columns, sort);
     grid.renderHeader();
 
     grid.firstLoading = true;
   });
-
 
   grid.on('dgrid-refresh-complete', () => {
     grid.refreshId = null;
@@ -322,10 +308,8 @@ export default function createGrid(
     grid.firstLoading = false;
   });
 
-
   const store = createStore(grid, showMessage, setLabels);
   grid.set('collection', store);
-
 
   return grid;
 }

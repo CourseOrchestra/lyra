@@ -9,7 +9,6 @@ import {
   isEqual,
 } from '../../src/util';
 
-
 describe('utils.js', () => {
   afterEach(() => {
     window.getLyraConfig = null;
@@ -125,7 +124,6 @@ describe('utils.js', () => {
       expect(getShowMessageFunction()).to.be.not.null;
     });
   });
-
 
   describe('getTitle(title)', () => {
     it('title is not defined', () => {
@@ -287,7 +285,6 @@ describe('utils.js', () => {
         });
     });
   });
-
 
   describe('isEqual(obj1, obj2)', () => {
     it('sort is equal', () => {

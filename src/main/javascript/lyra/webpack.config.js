@@ -2,7 +2,6 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const DojoWebpackPlugin = require('dojo-webpack-plugin');
 const loaderConfig = require('./config/loaderConfig');
 
-
 module.exports = {
   mode: 'production',
 

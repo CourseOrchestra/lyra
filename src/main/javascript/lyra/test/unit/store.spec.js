@@ -7,7 +7,6 @@ import {
 } from './const';
 import createStore from '../../src/store';
 
-
 describe('store.js', () => {
   describe('create store', () => {
     it('check store properties', () => {
@@ -122,7 +121,6 @@ describe('store.js', () => {
     });
   });
 
-
   describe('_fetch(kwArgs)', () => {
     let req;
     beforeEach(() => {
@@ -135,7 +133,6 @@ describe('store.js', () => {
       sinon.useFakeXMLHttpRequest()
         .restore();
     });
-
 
     it('backScroll, request is not fired', (done) => {
       const grid = {
@@ -665,7 +662,6 @@ describe('store.js', () => {
       });
     });
 
-
     it('standard, check QueryResults, data', (done) => {
       const grid = {
         backScroll: false,
@@ -737,7 +733,6 @@ describe('store.js', () => {
         done();
       });
     });
-
 
     it('dgridNewPosition, check grid properties', (done) => {
       const grid = {
@@ -820,7 +815,6 @@ describe('store.js', () => {
       done();
     });
 
-
     it('empty data, check grid properties && QueryResults data', (done) => {
       const grid = {
         backScroll: false,
@@ -885,7 +879,6 @@ describe('store.js', () => {
       });
     });
 
-
     it('setLabels, standard', () => {
       const grid = {
         backScroll: false,
@@ -940,7 +933,6 @@ describe('store.js', () => {
         '<h5>refreshParams: {sort=[name, code], filter={filter=filter conditions}}</h5>',
       ).should.have.been.calledOnce;
     });
-
 
     it('setLabels, empty data', () => {
       const grid = {
@@ -997,7 +989,6 @@ describe('store.js', () => {
       ).should.have.been.calledOnce;
     });
 
-
     it('setLabels, no addData', () => {
       const grid = {
         backScroll: false,
@@ -1049,7 +1040,6 @@ describe('store.js', () => {
 
       setLabels.should.have.not.been.called;
     });
-
 
     it('showMessage, error on the request', () => {
       const grid = {
