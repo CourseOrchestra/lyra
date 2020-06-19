@@ -7,7 +7,7 @@ module.exports = function setConfig(config) {
     frameworks: ['mocha', 'sinon-chai'],
 
     preprocessors: {
-      '**/*.spec.js': ['webpack', 'sourcemap'],
+      '**/*.spec.js': ['webpack'],
     },
 
     files: [
@@ -27,23 +27,24 @@ module.exports = function setConfig(config) {
 
     webpack: webpackConfig,
 
-    reporters: ['spec', 'coverage'],
+    reporters: ['spec', 'coverage-istanbul'],
 
-    coverageReporter: {
+    coverageIstanbulReporter: {
       dir: '../../../../target/client-coverage',
 
-      reporters: [
-        {
-          type: 'lcov',
+      reports: ['lcov', 'text-summary', 'text', 'cobertura'],
+
+      'report-config': {
+        lcov: {
           subdir: '.',
         },
-        { type: 'text-summary' },
-        { type: 'text' },
-        {
-          type: 'cobertura',
+        cobertura: {
           subdir: '.',
         },
-      ],
+      },
+
+      fixWebpackSourcePaths: true,
+
     },
 
     singleRun: true,

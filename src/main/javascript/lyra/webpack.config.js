@@ -46,8 +46,6 @@ module.exports = {
     hints: false,
   },
 
-  devtool: '#eval-source-map',
-
   plugins: [
     new VueLoaderPlugin(),
     new DojoWebpackPlugin({
