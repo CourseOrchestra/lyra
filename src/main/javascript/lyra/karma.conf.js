@@ -27,22 +27,23 @@ module.exports = function setConfig(config) {
 
     webpack: webpackConfig,
 
-    reporters: ['spec', 'coverage-istanbul'],
+    reporters: ['spec', 'coverage'],
 
-    coverageIstanbulReporter: {
+    coverageReporter: {
       dir: '../../../../target/client-coverage',
 
-      reports: ['lcov', 'text-summary', 'text', 'cobertura'],
-
-      'report-config': {
-        lcov: {
+      reporters: [
+        {
+          type: 'lcov',
           subdir: '.',
         },
-        cobertura: {
+        { type: 'text-summary' },
+        { type: 'text' },
+        {
+          type: 'cobertura',
           subdir: '.',
         },
-      },
-
+      ],
     },
 
     singleRun: true,
