@@ -43,8 +43,6 @@ module.exports = function setConfig(config) {
         },
       },
 
-      fixWebpackSourcePaths: true,
-
     },
 
     singleRun: true,
