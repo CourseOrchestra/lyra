@@ -3,14 +3,14 @@ const DojoWebpackPlugin = require('dojo-webpack-plugin');
 const loaderConfig = require('./config/loaderConfig');
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
 
   module: {
     rules: [
       {
         test: /\.css$/,
         use: [
-          'vue-style-loader',
+          'style-loader',
           'css-loader',
         ],
       }, {
