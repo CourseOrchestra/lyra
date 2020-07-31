@@ -1,14 +1,7 @@
 module.exports = {
-  presets: [
-    [
-      '@babel/env',
-      {
-        modules: false
-      }
+    presets: [['@babel/env']],
+    plugins: [
+        'rewire',
+        'istanbul'
     ]
-  ],
-  plugins: [
-    'rewire',
-    'istanbul'
-  ]
 };
