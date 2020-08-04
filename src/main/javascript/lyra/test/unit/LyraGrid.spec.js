@@ -28,12 +28,12 @@ describe('LyraGrid.vue', () => {
             part1: 'part1',
             part2: 'part2',
             refreshParams:
-              {
-                sort: ['name', 'code'],
-                filter: {
-                  filter: 'filter conditions',
-                },
-              },
+                            {
+                              sort: ['name', 'code'],
+                              filter: {
+                                filter: 'filter conditions',
+                              },
+                            },
           },
         },
       });
@@ -129,12 +129,12 @@ describe('LyraGrid.vue', () => {
           part1: 'part1',
           part2: 'part2',
           refreshParams:
-            {
-              sort: ['name', 'code'],
-              filter: {
-                filter: 'filter conditions',
-              },
-            },
+                        {
+                          sort: ['name', 'code'],
+                          filter: {
+                            filter: 'filter conditions',
+                          },
+                        },
         });
 
       expect(wrapper.vm.grid.showFooter, 'showFooter').to.be.false;
@@ -214,12 +214,12 @@ describe('LyraGrid.vue', () => {
             part1: 'part1',
             part2: 'part2',
             refreshParams:
-              {
-                sort: ['name', 'code'],
-                filter: {
-                  filter: 'filter conditions',
-                },
-              },
+                            {
+                              sort: ['name', 'code'],
+                              filter: {
+                                filter: 'filter conditions',
+                              },
+                            },
           },
         },
       });
@@ -243,12 +243,12 @@ describe('LyraGrid.vue', () => {
     it('refresh', () => {
       wrapper.vm.$emit('refresh', {
         refreshParams:
-          {
-            sort: ['rnum desc'],
-            filter: {
-              filter: 'filter conditions 2',
-            },
-          },
+                    {
+                      sort: ['rnum desc'],
+                      filter: {
+                        filter: 'filter conditions 2',
+                      },
+                    },
       });
 
       expect(wrapper.vm.grid.context)
@@ -256,12 +256,12 @@ describe('LyraGrid.vue', () => {
         .deep
         .equal({
           refreshParams:
-            {
-              sort: ['rnum desc'],
-              filter: {
-                filter: 'filter conditions 2',
-              },
-            },
+                        {
+                          sort: ['rnum desc'],
+                          filter: {
+                            filter: 'filter conditions 2',
+                          },
+                        },
         });
     });
 
@@ -308,12 +308,12 @@ describe('LyraGrid.vue', () => {
             part1: 'part1',
             part2: 'part2',
             refreshParams:
-              {
-                sort: ['name', 'code'],
-                filter: {
-                  filter: 'filter conditions',
-                },
-              },
+                            {
+                              sort: ['name', 'code'],
+                              filter: {
+                                filter: 'filter conditions',
+                              },
+                            },
           },
         },
       });
@@ -553,12 +553,12 @@ describe('LyraGrid.vue', () => {
             part1: 'part1',
             part2: 'part2',
             refreshParams:
-              {
-                sort: ['name', 'code'],
-                filter: {
-                  filter: 'filter conditions',
-                },
-              },
+                            {
+                              sort: ['name', 'code'],
+                              filter: {
+                                filter: 'filter conditions',
+                              },
+                            },
           },
         },
       });
@@ -604,12 +604,12 @@ describe('LyraGrid.vue', () => {
             part1: 'part1',
             part2: 'part2',
             refreshParams:
-              {
-                sort: ['name', 'code'],
-                filter: {
-                  filter: 'filter conditions',
-                },
-              },
+                            {
+                              sort: ['name', 'code'],
+                              filter: {
+                                filter: 'filter conditions',
+                              },
+                            },
           },
         },
       });
@@ -656,12 +656,12 @@ describe('LyraGrid.vue', () => {
             part1: 'part1',
             part2: 'part2',
             refreshParams:
-              {
-                sort: ['name', 'code'],
-                filter: {
-                  filter: 'filter conditions',
-                },
-              },
+                            {
+                              sort: ['name', 'code'],
+                              filter: {
+                                filter: 'filter conditions',
+                              },
+                            },
           },
         },
       });
@@ -686,12 +686,12 @@ describe('LyraGrid.vue', () => {
             part1: 'part1',
             part2: 'part2',
             refreshParams:
-              {
-                sort: ['name', 'code'],
-                filter: {
-                  filter: 'filter conditions',
-                },
-              },
+                            {
+                              sort: ['name', 'code'],
+                              filter: {
+                                filter: 'filter conditions',
+                              },
+                            },
           },
         },
       });
@@ -730,12 +730,12 @@ describe('LyraGrid.vue', () => {
             part1: 'part1',
             part2: 'part2',
             refreshParams:
-              {
-                sort: ['name', 'code'],
-                filter: {
-                  filter: 'filter conditions',
-                },
-              },
+                            {
+                              sort: ['name', 'code'],
+                              filter: {
+                                filter: 'filter conditions',
+                              },
+                            },
           },
         },
       });
@@ -773,12 +773,12 @@ describe('LyraGrid.vue', () => {
             part1: 'part1',
             part2: 'part2',
             refreshParams:
-              {
-                sort: ['name', 'code'],
-                filter: {
-                  filter: 'filter conditions',
-                },
-              },
+                            {
+                              sort: ['name', 'code'],
+                              filter: {
+                                filter: 'filter conditions',
+                              },
+                            },
           },
         },
       });
@@ -863,7 +863,7 @@ describe('LyraGrid.vue', () => {
     it('sockJS version', () => {
       expect(SockJS.version)
         .to
-        .equal('1.4.0');
+        .equal('1.5.0');
     });
   });
 });

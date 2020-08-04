@@ -4,7 +4,7 @@
 
     <groupId>ru.curs</groupId>
     <artifactId>lyra</artifactId>
-    <version>1.2.23-SNAPSHOT</version>
+    <version>1.2.24-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Lyra grid Java library</name>
@@ -62,9 +62,9 @@
 
         <spring.test.version>5.2.8.RELEASE</spring.test.version>
         <spring.boot.version>2.3.2.RELEASE</spring.boot.version>
-        <spring.boot.starter.celesta.version>2.1.25</spring.boot.starter.celesta.version>
-        <celesta.version>7.3.14</celesta.version>
-        <jackson.core.version>2.11.1</jackson.core.version>
+        <spring.boot.starter.celesta.version>2.1.26</spring.boot.starter.celesta.version>
+        <celesta.version>7.3.15</celesta.version>
+        <jackson.core.version>2.11.2</jackson.core.version>
         <jacoco.version>0.8.5</jacoco.version>
     </properties>
 
