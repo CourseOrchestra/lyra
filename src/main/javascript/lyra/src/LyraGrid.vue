@@ -6,9 +6,6 @@
   </div>
 </template>
 
-<style src="dgrid/css/dgrid.css"></style>
-<style src="./css/lyra.css"></style>
-
 <script>
 
 import SockJS from 'sockjs-client';
@@ -145,3 +142,6 @@ export default {
 };
 
 </script>
+
+<style src="dgrid/css/dgrid.css"></style>
+<style src="./css/lyra.css"></style>
