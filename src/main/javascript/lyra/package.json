@@ -71,7 +71,7 @@
     "karma-sinon": "^1.0.5",
     "karma-sinon-chai": "^2.0.2",
     "karma-webpack": "^4.0.2",
-    "dojo-webpack-plugin": "^2.8.17"
+    "dojo-webpack-plugin": "^2.8.18"
   },
   "directories": {
     "lib": "."
