@@ -41,7 +41,7 @@
     "eslint": "^7.10.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-vue": "^7.0.0",
+    "eslint-plugin-vue": "^7.0.1",
     "eslint-plugin-chai-expect": "^2.2.0",
     "eslint-plugin-chai-friendly": "^0.6.0",
     "@vue/test-utils": "^1.1.0",
