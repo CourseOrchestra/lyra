@@ -63,7 +63,7 @@
 
         <spring.test.version>5.2.9.RELEASE</spring.test.version>
         <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
-        <spring.boot.starter.celesta.version>2.1.29</spring.boot.starter.celesta.version>
+        <spring.boot.starter.celesta.version>2.1.30</spring.boot.starter.celesta.version>
         <celesta.version>7.3.20</celesta.version>
         <jackson.core.version>2.11.3</jackson.core.version>
         <jacoco.version>0.8.6</jacoco.version>
