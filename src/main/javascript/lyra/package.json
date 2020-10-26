@@ -34,7 +34,7 @@
     "sockjs-client": "^1.5.0",
     "@stomp/stompjs": "^5.4.4",
     "vue": "^2.6.12",
-    "axios": "^0.20.0",
+    "axios": "^0.21.0",
     "deep-diff": "^1.0.2"
   },
   "devDependencies": {
