@@ -1,7 +1,7 @@
 {
   "name": "lyra-grid",
   "author": "CourseIT",
-  "version": "1.2.31-SNAPSHOT",
+  "version": "1.2.35-SNAPSHOT",
   "description": "Lyra-client is a client counterpart of Lyra Grid",
   "license": "LGPL-3.0",
   "repository": {
