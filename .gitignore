@@ -4,6 +4,7 @@
 .settings
 .DS_Store
 .idea
+.gradle
 *.tmp
 /build
 /target
