@@ -4,7 +4,7 @@
 
     <groupId>ru.curs</groupId>
     <artifactId>lyra</artifactId>
-    <version>1.2.41-SNAPSHOT</version>
+    <version>1.2.47-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Lyra grid Java library</name>
@@ -45,25 +45,25 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.7.0</junit.version>
 
-        <mockito.version>3.7.0</mockito.version>
+        <mockito.version>3.7.7</mockito.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
         <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
         <spotbugs.maven.plugin.version>4.2.0</spotbugs.maven.plugin.version>
-        <checkstyle.version>8.39</checkstyle.version>
-        <maven.checkstyle.plugin.version>3.1.1</maven.checkstyle.plugin.version>
+        <checkstyle.version>8.40</checkstyle.version>
+        <maven.checkstyle.plugin.version>3.1.2</maven.checkstyle.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>3.2.0</maven.javadoc.plugin.version>
         <frontend.maven.plugin.version>1.11.0</frontend.maven.plugin.version>
-        <node.version>v15.5.0</node.version>
-        <npm.version>7.3.0</npm.version>
+        <node.version>v15.6.0</node.version>
+        <npm.version>7.4.0</npm.version>
         <asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
-        <asciidoctorj.diagram.version>2.0.5</asciidoctorj.diagram.version>
+        <asciidoctorj.diagram.version>2.1.0</asciidoctorj.diagram.version>
 
-        <spring.test.version>5.3.2</spring.test.version>
-        <spring.boot.version>2.3.4.RELEASE</spring.boot.version>
-        <spring.boot.starter.celesta.version>2.1.37</spring.boot.starter.celesta.version>
-        <celesta.version>7.3.30</celesta.version>
+        <spring.test.version>5.3.3</spring.test.version>
+        <spring.boot.version>2.4.2</spring.boot.version>
+        <spring.boot.starter.celesta.version>2.1.39</spring.boot.starter.celesta.version>
+        <celesta.version>7.3.31</celesta.version>
         <jackson.core.version>2.12.1</jackson.core.version>
         <jacoco.version>0.8.6</jacoco.version>
     </properties>
