@@ -863,7 +863,7 @@ describe('LyraGrid.vue', () => {
     it('sockJS version', () => {
       expect(SockJS.version)
         .to
-        .equal('1.5.0');
+        .equal('1.5.1');
     });
   });
 });
