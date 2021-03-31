@@ -62,7 +62,7 @@
         <asciidoctorj.diagram.version>2.1.1</asciidoctorj.diagram.version>
 
         <spring.test.version>5.3.5</spring.test.version>
-        <spring.boot.version>2.4.2</spring.boot.version>
+        <spring.boot.version>2.4.4</spring.boot.version>
         <spring.boot.starter.celesta.version>2.1.43</spring.boot.starter.celesta.version>
         <celesta.version>7.3.37</celesta.version>
         <jackson.core.version>2.12.2</jackson.core.version>
