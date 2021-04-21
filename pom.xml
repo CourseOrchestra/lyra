@@ -61,7 +61,7 @@
         <asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
         <asciidoctorj.diagram.version>2.1.2</asciidoctorj.diagram.version>
 
-        <spring.test.version>5.3.5</spring.test.version>
+        <spring.test.version>5.3.6</spring.test.version>
         <spring.boot.version>2.4.5</spring.boot.version>
         <spring.boot.starter.celesta.version>2.1.44</spring.boot.starter.celesta.version>
         <celesta.version>7.3.37</celesta.version>
