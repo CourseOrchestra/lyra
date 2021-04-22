@@ -56,8 +56,8 @@
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
         <maven.javadoc.plugin.version>3.2.0</maven.javadoc.plugin.version>
         <frontend.maven.plugin.version>1.11.3</frontend.maven.plugin.version>
-        <node.version>v15.14.0</node.version>
-        <npm.version>7.7.6</npm.version>
+        <node.version>v16.0.0</node.version>
+        <npm.version>7.10.0</npm.version>
         <asciidoctor.maven.plugin.version>2.1.0</asciidoctor.maven.plugin.version>
         <asciidoctorj.diagram.version>2.1.2</asciidoctorj.diagram.version>
 
