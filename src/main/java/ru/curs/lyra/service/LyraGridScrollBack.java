@@ -56,9 +56,9 @@ public final class LyraGridScrollBack implements GridRefinementHandler {
             return;
         }
 
-        if ((Math.abs(basicGridForm.getTopVisiblePosition()
-                - lyraGridAddInfo.getLyraOldPosition()) <= lyraApproxTotalCount / LYRA_SMALLFACTOR)
-                || (basicGridForm.getApproxTotalCount() < basicGridForm.getGridHeight() * 2)) {
+        if (Math.abs(basicGridForm.getTopVisiblePosition()
+                - lyraGridAddInfo.getLyraOldPosition()) <= lyraApproxTotalCount / LYRA_SMALLFACTOR
+                || basicGridForm.getApproxTotalCount() < basicGridForm.getGridHeight() * 2) {
             lyraGridAddInfo.setLyraOldPosition(basicGridForm.getTopVisiblePosition());
             return;
         }

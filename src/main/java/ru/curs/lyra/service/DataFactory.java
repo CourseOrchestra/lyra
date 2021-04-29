@@ -239,8 +239,8 @@ class DataFactory {
 
 
         // Record Key Positioning
-        if (dataRetrievalParams.isFirstLoading() && (data.size() > 0)
-                && (basicGridForm.getTopVisiblePosition() > 0)) {
+        if (dataRetrievalParams.isFirstLoading() && data.size() > 0
+                && basicGridForm.getTopVisiblePosition() > 0) {
 
             double d = basicGridForm.getTopVisiblePosition();
             d = (d / lyraApproxTotalCountAfterGetRows)
@@ -300,7 +300,7 @@ class DataFactory {
 
         String decimalSeparator = lyraFieldValue.meta().getDecimalSeparator();
         String groupingSeparator = lyraFieldValue.meta().getGroupingSeparator();
-        if ((decimalSeparator != null) || (groupingSeparator != null)) {
+        if (decimalSeparator != null || groupingSeparator != null) {
             DecimalFormat df = (DecimalFormat) nf;
             DecimalFormatSymbols dfs = DecimalFormatSymbols.getInstance();
             if (decimalSeparator != null) {
