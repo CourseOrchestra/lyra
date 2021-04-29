@@ -250,17 +250,14 @@ public abstract class BasicLyraForm<T extends BasicCursor> {
 
     private static boolean isGetter(Method method) {
         Class<?>[] parameterTypes = method.getParameterTypes();
-        if (parameterTypes.length == 0 || (
-                parameterTypes.length == 1
-                        && parameterTypes[0].equals(CallContext.class))) {
+        if (parameterTypes.length == 0
+                || parameterTypes.length == 1 && parameterTypes[0].equals(CallContext.class)) {
             if (method.getName().matches("^get[A-Z].*")
                     && !method.getReturnType().equals(void.class)) {
                 return true;
             }
-            if (method.getName().matches("^is[A-Z].*")
-                    && method.getReturnType().equals(boolean.class)) {
-                return true;
-            }
+            return method.getName().matches("^is[A-Z].*")
+                    && method.getReturnType().equals(boolean.class);
         }
         return false;
     }
