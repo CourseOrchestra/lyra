@@ -43,7 +43,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-vue": "^7.9.0",
     "eslint-plugin-chai-expect": "^2.2.0",
-    "eslint-plugin-chai-friendly": "^0.6.0",
+    "eslint-plugin-chai-friendly": "^0.7.1",
     "@vue/test-utils": "^1.2.0",
     "@babel/preset-env": "^7.14.1",
     "@babel/core": "^7.14.0",
