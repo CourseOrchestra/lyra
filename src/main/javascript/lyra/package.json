@@ -57,7 +57,7 @@
     "vue-loader": "^15.9.6",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^4.46.0",
-    "mocha": "^8.3.2",
+    "mocha": "^8.4.0",
     "chai": "^4.3.4",
     "sinon": "^10.0.0",
     "sinon-chai": "^3.6.0",
