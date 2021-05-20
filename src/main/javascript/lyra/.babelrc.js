@@ -2,6 +2,8 @@ module.exports = {
     presets: [['@babel/env']],
     plugins: [
         'rewire',
-        'istanbul'
+        ['babel-plugin-istanbul', {
+            extension: ['.js', '.vue']
+        }]
     ]
 };
