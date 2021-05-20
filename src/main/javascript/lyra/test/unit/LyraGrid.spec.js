@@ -851,13 +851,12 @@ describe('LyraGrid.vue', () => {
 
   describe('lyraGridSocket', () => {
     it('initialize', () => {
-      lyraGridSocket.webSocket.readyState = 2;
+      expect(lyraGridSocket.active).to.be.true;
 
+      lyraGridSocket.subscribe = sinon.spy();
       lyraGridSocket.onConnect();
-
-      expect(lyraGridSocket._stompHandler._subscriptions['lyra-grid'].name)
-        .to
-        .equal('scrollBackGrid');
+      lyraGridSocket.subscribe.withArgs('/position', lyraGridSocket.scrollBackGrid, { id: 'lyra-grid' })
+        .should.have.been.calledOnce;
     });
 
     it('sockJS version', () => {
