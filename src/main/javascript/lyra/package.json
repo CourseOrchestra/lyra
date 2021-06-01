@@ -46,7 +46,7 @@
     "babel-plugin-istanbul": "^6.0.0",
     "babel-plugin-rewire": "^1.2.0",
     "chai": "^4.3.4",
-    "css-loader": "^5.2.5",
+    "css-loader": "^5.2.6",
     "dojo-webpack-plugin": "^2.8.19",
     "eslint": "^7.27.0",
     "eslint-config-airbnb-base": "^14.2.1",
