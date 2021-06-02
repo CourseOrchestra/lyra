@@ -55,7 +55,7 @@
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-vue": "^7.10.0",
     "file-loader": "^6.2.0",
-    "karma": "^6.3.2",
+    "karma": "^6.3.3",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
     "karma-coverage": "^2.0.3",
