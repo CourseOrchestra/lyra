@@ -1,0 +1,7 @@
+ru.curs.lyra.controller
+ru.curs.lyra.dto
+ru.curs.lyra.kernel
+ru.curs.lyra.kernel.annotations
+ru.curs.lyra.kernel.grid
+ru.curs.lyra.service
+ru.curs.lyra.spring.boot
