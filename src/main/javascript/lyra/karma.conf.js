@@ -1,10 +1,9 @@
-process.env.CHROME_BIN = require('puppeteer')
-  .executablePath();
+process.env.CHROME_BIN = require('puppeteer').executablePath();
 const webpackConfig = require('./webpack.config');
 
 module.exports = function setConfig(config) {
   config.set({
-    frameworks: ['mocha', 'sinon-chai'],
+    frameworks: ['mocha', 'sinon-chai', 'webpack'],
 
     preprocessors: {
       '**/*.spec.js': ['webpack'],
@@ -46,10 +45,9 @@ module.exports = function setConfig(config) {
       ],
     },
 
-    singleRun: true,
-
     browserNoActivityTimeout: 900000,
 
+    singleRun: true,
     browsers: ['ChromeHeadless'],
     // browsers: ['Chrome'],
 
