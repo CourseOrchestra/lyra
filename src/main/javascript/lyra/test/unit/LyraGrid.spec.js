@@ -38,7 +38,7 @@ describe('LyraGrid.vue', () => {
         },
       });
 
-      setImmediate(() => {
+      setTimeout(() => {
         wrapper.vm.grid.startup();
         req.respond(200,
           {
@@ -47,7 +47,7 @@ describe('LyraGrid.vue', () => {
           },
           JSON.stringify(mockData));
         done();
-      });
+      }, 0);
     });
     after(() => {
       sinon.useFakeXMLHttpRequest()
@@ -224,7 +224,7 @@ describe('LyraGrid.vue', () => {
         },
       });
 
-      setImmediate(() => {
+      setTimeout(() => {
         wrapper.vm.grid.startup();
         req.respond(200,
           {
@@ -233,7 +233,7 @@ describe('LyraGrid.vue', () => {
           },
           JSON.stringify(mockData));
         done();
-      });
+      }, 0);
     });
     after(() => {
       sinon.useFakeXMLHttpRequest()
@@ -318,7 +318,7 @@ describe('LyraGrid.vue', () => {
         },
       });
 
-      setImmediate(() => {
+      setTimeout(() => {
         wrapper.vm.grid.startup();
         req.respond(200,
           {
@@ -327,7 +327,7 @@ describe('LyraGrid.vue', () => {
           },
           JSON.stringify(mockData));
         done();
-      });
+      }, 0);
     });
     afterEach(() => {
       sinon.useFakeXMLHttpRequest()
@@ -568,10 +568,10 @@ describe('LyraGrid.vue', () => {
     });
 
     it('lyra grid div not found', (done) => {
-      setImmediate(() => {
+      setTimeout(() => {
         expect(wrapper.vm.grid).to.be.undefined;
         done();
-      });
+      }, 0);
     });
   });
 
@@ -614,7 +614,7 @@ describe('LyraGrid.vue', () => {
         },
       });
 
-      setImmediate(() => {
+      setTimeout(() => {
         wrapper.vm.grid.startup();
         req.respond(200,
           {
@@ -623,7 +623,7 @@ describe('LyraGrid.vue', () => {
           },
           JSON.stringify(mockData));
         done();
-      });
+      }, 0);
     });
     after(() => {
       sinon.useFakeXMLHttpRequest()
@@ -740,10 +740,10 @@ describe('LyraGrid.vue', () => {
         },
       });
 
-      setImmediate(() => {
+      setTimeout(() => {
         showMessage.should.have.been.calledOnceWith(requestError);
         done();
-      });
+      }, 0);
     });
   });
 
@@ -783,7 +783,7 @@ describe('LyraGrid.vue', () => {
         },
       });
 
-      setImmediate(() => {
+      setTimeout(() => {
         wrapper.vm.grid.startup();
         req.respond(200,
           {
@@ -792,7 +792,7 @@ describe('LyraGrid.vue', () => {
           },
           JSON.stringify(mockData));
         done();
-      });
+      }, 0);
     });
     afterEach(() => {
       sinon.useFakeXMLHttpRequest()
