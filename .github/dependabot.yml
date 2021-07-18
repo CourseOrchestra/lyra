@@ -1,0 +1,84 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "02:00"
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: ru.curs:celesta-maven-plugin
+    versions:
+    - 7.3.33
+    - 7.3.35
+    - 7.3.36
+    - 7.3.38
+    - 7.3.39
+  - dependency-name: ru.curs:celesta-unit
+    versions:
+    - 7.3.33
+    - 7.3.35
+    - 7.3.36
+    - 7.3.38
+    - 7.3.39
+  - dependency-name: ru.curs:celesta-core
+    versions:
+    - 7.3.33
+    - 7.3.35
+    - 7.3.36
+    - 7.3.38
+    - 7.3.39
+  - dependency-name: ru.curs:celesta-system-services
+    versions:
+    - 7.3.33
+    - 7.3.35
+    - 7.3.36
+    - 7.3.38
+    - 7.3.39
+  - dependency-name: org.springframework.boot:spring-boot-starter-test
+    versions:
+    - 2.4.3
+  - dependency-name: org.springframework.boot:spring-boot-test-autoconfigure
+    versions:
+    - 2.4.3
+  - dependency-name: org.springframework.boot:spring-boot-starter-websocket
+    versions:
+    - 2.4.3
+  - dependency-name: org.springframework.boot:spring-boot-starter-web
+    versions:
+    - 2.4.3
+- package-ecosystem: npm
+  directory: "/src/main/javascript/lyra"
+  schedule:
+    interval: daily
+    time: "02:00"
+  open-pull-requests-limit: 10
+  versioning-strategy: increase
+  ignore:
+  - dependency-name: dgrid
+    versions:
+    - ">= 1.2.a, < 1.3"
+  - dependency-name: dgrid
+    versions:
+    - ">= 1.3.a, < 1.4"
+  - dependency-name: "@stomp/stompjs"
+    versions:
+    - ">= 6.a, < 7"
+  - dependency-name: css-loader
+    versions:
+    - 5.2.1
+  - dependency-name: sinon
+    versions:
+    - 10.0.1
+  - dependency-name: sockjs-client
+    versions:
+    - 1.5.1
+  - dependency-name: chai
+    versions:
+    - 4.3.1
+  - dependency-name: "@babel/eslint-parser"
+    versions:
+    - 7.13.0
+  - dependency-name: "@babel/preset-env"
+    versions:
+    - 7.13.0
